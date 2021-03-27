@@ -1,7 +1,7 @@
 import React, {Component,Fragment} from 'react';
 import {StyleSheet,Image,Dimensions,TouchableOpacity,TouchableHighlight} from "react-native";
 import {Carousel} from "@ant-design/react-native";
-import {host} from "../config";
+import {HOST} from "../config";
 import PropTypes from 'prop-types'
 // import { TouchableHighlight } from 'react-native-gesture-handler';
 
@@ -19,24 +19,24 @@ export default class  CarouselComponent extends Component {
     static defaultProps={
         carouselData:[]
     }
-    
-   
+
+
     render(){
         let {carouselData} = this.props;
         return (
             <Fragment>
             {
-                carouselData.length > 0 ? 
+                carouselData.length > 0 ?
                 <Carousel autoplay={true} infinite={true} style={styles.carouseImageStyle}>
                     {
                         carouselData.map((item,index)=>{
-                            return <TouchableHighlight onPress={e=>this.goDetail(item)}>
-                                <Image key={"carouselItem"+index} style={styles.carouseImageStyle} source={{uri:item.local_img ? host+item.local_img : item.img}}></Image>
+                            return <TouchableHighlight key={'carouselData'+index} onPress={e=>this.goDetail(item)}>
+                                <Image key={"carouselItem"+index} style={styles.carouseImageStyle} source={{uri:item.local_img ? HOST+item.local_img : item.img}}></Image>
                              </TouchableHighlight>
-                             
+
                         })
                     }
-                </Carousel> 
+                </Carousel>
                 : null
             }
             </Fragment>
@@ -54,4 +54,4 @@ const styles = StyleSheet.create({
         width:Dimensions.get('window').width,
         height:220
     }
-});  
+});

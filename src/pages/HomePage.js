@@ -1,18 +1,20 @@
 import React, {Component} from 'react';
-import {StyleSheet, View,Image,Text,ActivityIndicator,FlatList} from "react-native";
-import {host} from "../config";
-import {getUserData,getCategoryList,getAllCategoryListByPageName} from "../service";
+import {StyleSheet, View, Image, Text, FlatList,} from 'react-native';
+import {HOST} from "../config";
+import {getUserDataService,getCategoryList,getAllCategoryListByPageName} from "../service";
 import CarouselComponent from "../components/CarouselComponent";
 import CategoryComponent from "../components/CategoryComponent";
 import SearchBarComponent from "../components/SearchBarComponent";
 import ClassifyComponent from "../components/ClassifyComponent";
 import {connect} from "react-redux";
-import {getUserInfo} from "../actions";
+import {getUserData,getToken} from "../store/actions";
+import StorageUtil from "../utils/StorageUtil";
+
 class  HomePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userInfo:{},//用户数据json
+            userData:{},//用户数据json
             carouselData:[],//轮播数据
             allCategoryListByPageName:[],//按页面名称获取所有小类
             dataSource:[[],{name:"classify"}],//当前显示的小类，懒加载
@@ -22,12 +24,18 @@ class  HomePage extends Component {
     }
 
     initData=()=>{
-        this.state.dataSource = [[],{name:"classify"}],//当前显示的小类，懒加载
+        this.state.dataSource = [[],{name:"classify"}];//当前显示的小类，懒加载
+        let loadCarousel = false,loadCategoryList = false;
+
         //获取轮播数据
         getCategoryList("电影","轮播").then((res)=>{
             let {dataSource} = this.state;
             dataSource[0] = res.data;
-            this.setState({dataSource});
+        }).finally(()=>{
+            loadCarousel = true;
+            if(loadCarousel && loadCategoryList){
+                this.setState({dataSource});
+            }
         });
 
         getAllCategoryListByPageName("首页").then((res)=>{
@@ -41,7 +49,10 @@ class  HomePage extends Component {
                 }).finally(()=>{
                     count++;
                     if(count == temp.length){
-                        this.setState({dataSource});
+                        loadCategoryList = true;
+                        if(loadCarousel && loadCategoryList){
+                            this.setState({dataSource});
+                        }
                     }
                 })
             })
@@ -49,12 +60,15 @@ class  HomePage extends Component {
         });
     }
 
-    componentDidMount(){
-
+    async componentDidMount() {
+        let token = await StorageUtil.get("token");
+        if(token){
+            this.props.dispatch(getToken(token));
+        }
         //获取用户数据
-        getUserData().then((res)=>{
-            this.setState({userInfo:res.data})
-            this.props.dispatch(getUserInfo({userInfo:res.data}))
+        await getUserDataService().then((res) => {
+            this.setState({userData: res.data})
+            this.props.dispatch(getUserData(res.data))
         });
 
         this.initData();
@@ -74,9 +88,10 @@ class  HomePage extends Component {
             })
         })
     }
-    
+
 
     _renderItem=({item,index})=>{
+        if (!item)return null;
         if(index == 0){
             return <CarouselComponent {...this.props} carouselData={item}></CarouselComponent>
         }else if(item.name == "classify"){
@@ -109,19 +124,19 @@ class  HomePage extends Component {
         }else{
             return null
         }
-        
+
     }
 
     render() {
-        let {userInfo,loading,dataSource} = this.state;
-        let {avater} = userInfo;
+        let {userData,loading,dataSource} = this.state;
+        let {avater} = userData;
         return (
             <View style={styles.wrapper}>
                 <View style={styles.headerWrapper}>
-                    {avater ? <Image roundAsCircle={true} style={styles.imageStyle} source={{uri:host+avater}}></Image>:null}
+                    {avater ? <Image roundAsCircle={true} style={styles.imageStyle} source={{uri:HOST+avater}}></Image>:null}
                     <View style={styles.searchWrapper}>
                         <SearchBarComponent {...this.props} classify={"电影"}></SearchBarComponent>
-                    </View>      
+                    </View>
                 </View>
                 <FlatList
                     data={dataSource}
@@ -132,7 +147,7 @@ class  HomePage extends Component {
                     onEndReachedThreshold={0.1}  // 这里取值0.1，可以根据实际情况调整，取值尽量小
                     ListFooterComponent={this._renderFooter}
                     renderItem={this._renderItem}
-                    keyExtractor={(item,index)=>index}
+                    keyExtractor={(item,index)=>index.toString()}
                     //设置下拉加载更多的指示器的位置
                     progressViewOffset={50}
                 ></FlatList>
@@ -186,5 +201,4 @@ const styles = StyleSheet.create({
     loadingMore: {
         marginVertical: 20
     },
-});    
-  
+});

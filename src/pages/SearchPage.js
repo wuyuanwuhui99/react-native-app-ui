@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import {StyleSheet, View,Text,Image,FlatList,TouchableOpacity,TextInput,ActivityIndicator} from "react-native";
 import {connect} from "react-redux";
 import {search} from "../service";
-import {host} from "../config";
-import AsyncStorage from '@react-native-community/async-storage';
+import {HOST} from "../config";
+import StorageUtil from "../utils/StorageUtil"
 class  MyPage extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +17,7 @@ class  MyPage extends Component {
     }
 
     componentDidMount(){
-        AsyncStorage.getItem("historyLabels").then((res)=>{
+        StorageUtil.get("historyLabels").then((res)=>{
             if(res){
                 this.setState({historyLabels:JSON.parse(res)})
             }
@@ -30,9 +30,9 @@ class  MyPage extends Component {
         return (
             <View style={styles.wrapper}>
                 <View style={styles.searchBarWrapper}>
-                    <TextInput 
-                    style={styles.textInput} 
-                    onChangeText={this._onChangeText} 
+                    <TextInput
+                    style={styles.textInput}
+                    onChangeText={this._onChangeText}
                     placeholder={placeholder}
                     value={keyword}
                     clearButtonMode={"while-editing"}
@@ -44,19 +44,20 @@ class  MyPage extends Component {
                     </TouchableOpacity>
                 </View>
                 {
-                    searching ? 
+                    searching ?
                     <View style={styles.flatList}>
                         {
                             loading?
                             <ActivityIndicator/>
                             :<FlatList
+                                keyExtractor={(item, index) => index.toString()}
                                 data ={searchResult}
                                 renderItem = {
                                     ({item,index}) => this._renderItem(item,index)
                                 }
                             ></FlatList>
                         }
-                        
+
                     </View>
                      :
                     <View>
@@ -73,7 +74,7 @@ class  MyPage extends Component {
                                                 <Text style={styles.labelText}>{item}</Text>
                                             </View>
                                         </TouchableOpacity>
-                                        
+
                                     )
                                 })
                             }
@@ -88,7 +89,7 @@ class  MyPage extends Component {
         return (
             <TouchableOpacity key={"searchResult"+index} onPress={e=>this.goDetail(item)}>
                 <View  style={styles.categoryView}>
-                    <Image style={styles.categoryImage} source={{uri:item.local_img?`${host}/movie/images/qishi/${item.local_img}`:item.img}}></Image>
+                    <Image style={styles.categoryImage} source={{uri:item.local_img?`${HOST}/movie/images/qishi/${item.local_img}`:item.img}}></Image>
                     <View style={styles.movieInfo}>
                         <Text numberOfLines={1} style={styles.movieName}>{item.name}</Text>
                         <Text numberOfLines={1} style={styles.subName}>{'主演:'+item.star}</Text>
@@ -132,7 +133,7 @@ class  MyPage extends Component {
     }
 
     _onSearch=()=>{
-        let {keyword,pageNum,pageSize} = this.state; 
+        let {keyword,pageNum,pageSize} = this.state;
         this.setState({loading:true});
         search({keyword,pageNum,pageSize}).then((res)=>{
             this.setState({
@@ -145,7 +146,7 @@ class  MyPage extends Component {
         });
     }
 
-    
+
 
     goDetail=(item)=>{
         console.log(item)
@@ -154,16 +155,16 @@ class  MyPage extends Component {
 }
 
 export default  connect((state)=>{
-    let {userInfo} = state;
+    let {userData} = state;
     return {
-        userInfo
+        userData
       }
 })(MyPage);
 
 const styles = StyleSheet.create({
     wrapper:{
         flex:1
-    },  
+    },
     searchBarWrapper:{
         flexDirection:"row",
         padding:20,

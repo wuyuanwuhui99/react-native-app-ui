@@ -1,4 +1,4 @@
-import {AsyncStorage} from 'react-native';
+import AsyncStorage from "@react-native-community/async-storage";
 
 class StorageUtil {
 
@@ -20,7 +20,7 @@ class StorageUtil {
      * @param value
      * @returns {*}
      */
-    static save(key, value) {
+    static set(key, value) {
         return AsyncStorage.setItem(key, JSON.stringify(value));
     }
 

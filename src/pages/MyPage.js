@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, View,Text,Image,ScrollView,FlatList,TouchableOpacity} from "react-native";
-import {host} from "../config";
+import {HOST} from "../config";
 import {getHistory,getUserMsg} from "../service"
 import {connect} from "react-redux";
 import arrow from "../static/image/icon-arrow.png"
@@ -14,7 +14,7 @@ class  MyPage extends Component {
     }
 
     componentDidMount(){
-        let {userId} = this.props.userInfo;
+        let {userId} = this.props.userData;
         getHistory(userId).then((res)=>{
             this.setState({historyList:res.data});
         });
@@ -27,7 +27,7 @@ class  MyPage extends Component {
         return (
             <TouchableOpacity key={"TouchableOpacity" + index}>
                 <View  style={styles.categoryView}>
-                    <Image style={styles.categoryImage} source={{uri:item.local_img ? host+item.local_img : item.img}}></Image>
+                    <Image style={styles.categoryImage} source={{uri:item.local_img ? HOST+item.local_img : item.img}}></Image>
                     <Text numberOfLines={1} style={styles.movieName}>{item.name}</Text>
                 </View>
             </TouchableOpacity>
@@ -36,13 +36,13 @@ class  MyPage extends Component {
 
     render() {
         let {historyList,userMsg} = this.state;
-        let {userInfo={}} = this.props;
-        let {avater,username} = userInfo
+        let {userData={}} = this.props;
+        let {avater,username} = userData
         let {userAge=0,recordCount=0,playCount=0,favoriteCount=0} = userMsg
-        return( 
+        return(
             <View style={styles.wrapper}>
                 <View style={styles.avaterWrapper}>
-                    {avater ? <Image roundAsCircle={true} style={styles.avaterImage} source={{uri:host+avater}}></Image>:null}
+                    {avater ? <Image roundAsCircle={true} style={styles.avaterImage} source={{uri:HOST+avater}}></Image>:null}
                     <Text style={styles.username}>{username}</Text>
                     <View style={styles.myLabelWrapper}>
                         <View style={styles.myLabel}>
@@ -72,6 +72,7 @@ class  MyPage extends Component {
                         <FlatList
                             horizontal={true}
                             data ={historyList}
+                            keyExtractor={(item, index) => index.toString()}
                             renderItem = {
                                 ({item,index}) => this._renderItem(item,index)
                             }
@@ -114,16 +115,16 @@ class  MyPage extends Component {
 }
 
 export default  connect((state)=>{
-    let {userInfo} = state;
+    let {userData} = state;
     return {
-        userInfo
+        userData
       }
 })(MyPage);
 
 const styles = StyleSheet.create({
     wrapper:{
         flex:1
-    },  
+    },
     avaterWrapper:{
         justifyContent:"center",
         alignItems:"center",
@@ -217,4 +218,4 @@ const styles = StyleSheet.create({
         height:25,
         marginRight:10
     }
-});    
+});

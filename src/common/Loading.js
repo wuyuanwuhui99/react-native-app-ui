@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ActivityIndicator, Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window')
-_this = null;
+let _this = null;
 class Loading extends Component {
     constructor(props) {
         super(props);

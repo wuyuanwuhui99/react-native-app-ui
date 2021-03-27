@@ -1,16 +1,26 @@
 import React, {Component} from 'react';
 import {StyleSheet, View,Image,Text,TouchableOpacity,FlatList,ImageBackground,Dimensions,ScrollView} from "react-native";
-import {host} from "../config";
+import {HOST} from "../config";
+import {recordService,getStarsService} from "../service"
+
 export default class DetaiPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            performerList:[]
+            performerList:[],
+            stars:[]
         }
     }
 
-    componentDidMount(){
-        console.log(this.props.navigation.state.params)
+    componentWillMount(){
+        let params = this.props.navigation.state.params;
+        let {movieId} = params
+        if(movieId){
+            getStarsService(movieId).then((res)=>{
+                this.setState({stars:res.data})
+            })
+        };
+        recordService(params);//浏览记录
     }
 
     _renderItem=(item,index)=>{
@@ -29,15 +39,16 @@ export default class DetaiPage extends Component {
         let count = parseFloat(score)/2;//3.8
         let integer = Math.floor(count)
         let result = []
+        let index = 0;
         for(let i = 0; i < integer; i++){//实心星星
-            result.push(<Image style={styles.star} source={require("../static/image/icon-full-star.png")}></Image>)
+            result.push(<Image  key={'start'+index++} style={styles.star} source={require("../static/image/icon-full-star.png")}></Image>)
         }
         if(Math.round(count) - Math.floor(count*10/5)/2 == 0.5){//半个星星
-            result.push(<Image style={styles.star} source={require("../static/image/icon-half-star.png")}></Image>)
+            result.push(<Image  key={'start'+index++} style={styles.star} source={require("../static/image/icon-half-star.png")}></Image>)
         }
         let leftover = 5-result.length
         for(let i = 0; i < leftover; i++){//空心星星
-            result.push(<Image style={styles.star} source={require("../static/image/icon-empty-star.png")}></Image>)
+            result.push(<Image key={'start'+index++} style={styles.star} source={require("../static/image/icon-empty-star.png")}></Image>)
         }
         return (
             <View style={styles.starBox}>
@@ -51,45 +62,42 @@ export default class DetaiPage extends Component {
         this.props.navigation.push('PlayPage',params)
     }
 
+
     render() {
-        let {local_img,img,name,score,plot,star_group} = this.props.navigation.state.params;
-        if(star_group){
-            star_group = JSON.parse(star_group.replace(/'/g,'"'));
-        }else{
-            star_group = [];
-        }
+        let {localImg,img,name,score,plot,star} = this.props.navigation.state.params;
+        let {stars} = this.state;
         return (
             <ScrollView>
                 <View style={styles.imageBackground}>
                     <TouchableOpacity onPress={e=>this.goPlay(this.props.navigation.state.params)}>
-                        <ImageBackground 
+                        <ImageBackground
                             style={styles.imageBackground}
-                            source={{uri:local_img?`${host}/movie/images/qishi/${local_img}`:img}}
+                            source={{uri:localImg? HOST + localImg:img}}
                         >
                         <Image style={styles.playIcon} source={require("../static/image/icon-detail-play.png")}></Image>
                     </ImageBackground>
                     </TouchableOpacity>
-                
+
                 </View>
                 <View style={styles.movieInfo}>
                     <View style={styles.portrait}>
-                        <Image style={styles.movieImage} source={{uri:local_img?`${host}/movie/images/qishi/${local_img}`:img}}></Image>
+                        <Image style={styles.movieImage} source={{uri:localImg?HOST+localImg:img}}></Image>
                     </View>
                     <View style={styles.titleWrapper}>
                         <View style={styles.nameWrapper}>
                             <View style={styles.nameBox}>
                                 <Text numberOfLines={2} style={styles.name}>{name}</Text>
-                                <Text numberOfLines={1} style={styles.subName}>111</Text>
+                                <Text numberOfLines={1} style={styles.subName}>{star}</Text>
                             </View>
                             {
                                 score ? this._renderStar(score):null
                             }
-                            
+
                         </View>
                     </View>
                 </View>
                 {
-                    plot ? 
+                    plot ?
                     <View style={styles.slotWrapper}>
                         <View style={styles.categoryWrapper}>
                             <View style={styles.line}></View>
@@ -100,7 +108,7 @@ export default class DetaiPage extends Component {
                     :null
                 }
                 {
-                    star_group.length > 0 ? 
+                    stars.length > 0 ?
                         <View style={styles.groupWrapper}>
                         <View style={styles.categoryWrapper}>
                             <View style={styles.line}></View>
@@ -109,7 +117,8 @@ export default class DetaiPage extends Component {
                         <View>
                             <FlatList
                                 horizontal={true}
-                                data ={star_group}
+                                data ={stars}
+                                keyExtractor={(item, index) => index.toString()}
                                 renderItem = {
                                     ({item,index}) => this._renderItem(item,index)
                                 }
@@ -118,9 +127,9 @@ export default class DetaiPage extends Component {
                     </View>
                     :null
                 }
-            </ScrollView>    
+            </ScrollView>
         )
-    }    
+    }
 }
 
 const styles = StyleSheet.create({
@@ -137,7 +146,7 @@ const styles = StyleSheet.create({
     movieInfo:{
         flexDirection:"row",
         height:150
-    },  
+    },
     portrait:{
         width:178,
         position:"relative",
@@ -159,7 +168,7 @@ const styles = StyleSheet.create({
     nameWrapper:{
         flexDirection:"column",
         padding:20
-    },  
+    },
     starBox:{
         flexDirection:"row",
         marginTop:10,
@@ -178,7 +187,7 @@ const styles = StyleSheet.create({
     star:{
         width:15,
         height:15,
-        marginRight:5    
+        marginRight:5
     },
     score:{
         fontSize:16,
@@ -187,7 +196,7 @@ const styles = StyleSheet.create({
     },
     slotWrapper:{
         padding:20
-    },  
+    },
     categoryText:{
         fontSize:16,
     },
@@ -228,5 +237,5 @@ const styles = StyleSheet.create({
         marginRight:20,
         marginBottom:20
     },
-    
+
 })

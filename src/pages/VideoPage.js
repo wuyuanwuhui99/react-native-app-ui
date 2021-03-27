@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View,Image,Text,FlatList} from "react-native";
-import {host} from "../config";
-import {getUserData,getCategoryList,getAllCategoryListByPageName} from "../service";
+import {HOST} from "../config";
+import {getCategoryList,getAllCategoryListByPageName} from "../service";
 import CarouselComponent from "../components/CarouselComponent";
 import CategoryComponent from "../components/CategoryComponent";
 import SearchBarComponent from "../components/SearchBarComponent";
@@ -47,13 +47,6 @@ class  VideoPage extends Component {
     }
 
     componentDidMount(){
-
-        //获取用户数据
-        getUserData().then((res)=>{
-            this.setState({userInfo:res.data})
-            this.props.dispatch(getUserInfo({userInfo:res.data}))
-        });
-
         this.initData();
     }
 
@@ -71,7 +64,7 @@ class  VideoPage extends Component {
             })
         })
     }
-    
+
     _renderItem=({item,index})=>{
         if(index == 0){
             return <CarouselComponent carouselData={item}></CarouselComponent>
@@ -105,20 +98,20 @@ class  VideoPage extends Component {
         }else{
             return null
         }
-        
+
     }
 
     render() {
         let {loading,dataSource} = this.state;
-        let {userInfo={}} = this.props;
-        let {avater=""} = userInfo;
+        let {userData={}} = this.props;
+        let {avater=""} = userData;
         return (
             <View style={styles.wrapper}>
                 <View style={styles.headerWrapper}>
-                    {avater ? <Image roundAsCircle={true} style={styles.imageStyle} source={{uri:host+avater}}></Image>:null}
+                    {avater ? <Image roundAsCircle={true} style={styles.imageStyle} source={{uri:HOST+avater}}></Image>:null}
                     <View style={styles.searchWrapper}>
                         <SearchBarComponent classify={"电视剧"}></SearchBarComponent>
-                    </View>      
+                    </View>
                 </View>
                 <FlatList
                     data={dataSource}
@@ -129,7 +122,7 @@ class  VideoPage extends Component {
                     onEndReachedThreshold={0.1}  // 这里取值0.1，可以根据实际情况调整，取值尽量小
                     ListFooterComponent={this._renderFooter}
                     renderItem={this._renderItem}
-                    keyExtractor={(item,index)=>index}
+                    keyExtractor={(item, index) => index.toString()}
                     //设置下拉加载更多的指示器的位置
                     progressViewOffset={50}
                 ></FlatList>
@@ -139,9 +132,9 @@ class  VideoPage extends Component {
 }
 
 export default  connect((state)=>{
-    let {userInfo} = state;
+    let {userData} = state;
     return {
-        userInfo
+        userData
       }
 })(VideoPage);
 
@@ -186,5 +179,4 @@ const styles = StyleSheet.create({
     loadingMore: {
         marginVertical: 20
     },
-});    
-  
+});

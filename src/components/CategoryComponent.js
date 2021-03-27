@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import {StyleSheet,Image,View,Text,FlatList,TouchableOpacity} from "react-native";
-import {host} from "../config";
+import {HOST} from "../config";
 import PropTypes from 'prop-types'
-import {getCategoryList} from "../service";
-//https://github.com/ant-design/ant-design-mobile-rn/blob/master/rn-kitchen-sink/components/index.js
+
 export default class  CategoryComponent extends Component {
     constructor(props){
         super(props);
@@ -21,8 +20,8 @@ export default class  CategoryComponent extends Component {
     static defaultProps={
         categoryList:[],
     }
-    
-    
+
+
     render(){
         let {categoryList} = this.props;
         return (
@@ -35,10 +34,11 @@ export default class  CategoryComponent extends Component {
                     <FlatList
                         horizontal={true}
                         data ={categoryList}
+                        keyExtractor={(item, index) => index.toString()}
                         renderItem = {
                             ({item,index}) => this._renderItem(item,index)
                         }
-                    >   
+                    >
                     </FlatList>
                 </View>
             </View>
@@ -49,7 +49,7 @@ export default class  CategoryComponent extends Component {
         return (
             <TouchableOpacity key={item.category + index} onPress={e=>this.goDetail(item)}>
                 <View  style={styles.categoryView}>
-                    <Image style={styles.categoryImage} source={{uri:item.local_img ? host+item.local_img : item.img}}></Image>
+                    <Image style={styles.categoryImage} source={{uri:item.local_img ? HOST+item.local_img : item.img}}></Image>
                     <Text numberOfLines={1} style={styles.movieName}>{item.name}</Text>
                 </View>
             </TouchableOpacity>
@@ -95,4 +95,4 @@ const styles = StyleSheet.create({
         marginRight:20,
         marginBottom:20
     }
-});  
+});
