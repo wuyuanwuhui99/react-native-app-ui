@@ -3,24 +3,41 @@ import {StyleSheet, View,Text,Image,ScrollView,FlatList,Dimensions,TouchableOpac
 import {connect} from "react-redux";
 import {HOST} from "../config";
 import { WebView } from 'react-native-webview';
-import {getMovieUrlService,getRecommendService,saveFavoriteService,isFavoriteService,deleteFavoriteeService} from "../service";
+import {
+    getMovieUrlService,
+    getYourLikesService,
+    saveFavoriteService,
+    isFavoriteService,
+    deleteFavoriteeService,
+} from "../service";
 import StarsComponent from "../components/StarsComponent";
+import RecommendComponent from "../components/RecommendComponent";
 
 class PlayerPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            recommendList:[],
+            yourLikesList:[],//猜你喜欢的电影
+            recommendList:[],//推荐的电影
             movieUrl:[],//二维数组，分组电影列表
             currentUrl:null,//当前播放的url
             isFavoriteStatus:false,//是否已经收藏
+            currentPlayGroup:0
         }
     }
 
     componentWillMount() {
         this.getMovieUrl();
-        this.getRecommend();
+        this.getYourLikes()
         this.isFavorite();
+    }
+
+    getYourLikes =()=>{
+        let {label} = this.props.navigation.state.params;
+        if(!label)return;
+        getYourLikesService(label).then((res)=>{
+            this.setState({yourLikesList:res.data});
+        });
     }
 
     getMovieUrl=()=>{
@@ -37,12 +54,6 @@ class PlayerPage extends Component {
         });
     }
 
-    getRecommend=()=>{
-        let {label} = this.props.navigation.state.params;
-        getRecommendService(label).then((res)=>{
-            this.setState({recommendList:res.data});
-        });
-    }
 
     //查询是否已经收藏
     saveFavorite=()=>{
@@ -89,19 +100,23 @@ class PlayerPage extends Component {
         this.setState({currentUrl:url});
     }
 
+    tabGroup =(index)=>{
+        this.setState({currentPlayGroup:index});
+    }
+
     render(){
-        let {recommendList,currentUrl,movieUrl,isFavoriteStatus} = this.state;
-        let {name,score,star} = this.props.navigation.state.params;
+        let {yourLikesList,currentUrl,movieUrl,isFavoriteStatus,currentPlayGroup} = this.state;
+        let {name,score,star,classify} = this.props.navigation.state.params;
         return(
             <ScrollView>
                 <View style={styles.webView}>
                     {currentUrl ? <WebView source={{uri:currentUrl}} style={styles.playWrapper}></WebView> : null}
                 </View>
                 <View style={styles.iconWrapper}>
-                    {/*<Image style={styles.iconComment} source={require("../static/image/icon-comment.png")}></Image>*/}
-                    {/*<Text>111</Text>*/}
+                    <Image style={styles.iconComment} source={require("../static/image/icon-comment.png")}></Image>
+                    <Text>0</Text>
                     <View style={styles.rightIcon}>
-                        {/*<Image source={require("../static/image/icon-share.png")} style={styles.iconComment}></Image>*/}
+                        <Image source={require("../static/image/icon-share.png")} style={styles.iconComment}></Image>
                         <TouchableOpacity onPress={this.handleFavorite}>
                             <Image source={isFavoriteStatus ? require("../static/image/icon-collection-active.png") : require("../static/image/icon-collection.png")} style={styles.iconComment}></Image>
                         </TouchableOpacity>
@@ -115,37 +130,47 @@ class PlayerPage extends Component {
                     </View>
                 </View>
                 <View style={styles.playNumberWrapper}>
-                    <Text style={styles.title}>剧集</Text>
+                    {/*<Text style={styles.title}>剧集</Text>*/}
+                    <View  style={styles.playGroup}>
+                        {
+                            movieUrl.map((items,aIndex)=>{
+                                return (
+                                    <TouchableOpacity key={'playGroupItem'+aIndex} onPress={e=>this.tabGroup(aIndex)}>
+                                        <Text style={[styles.playGroupItem,currentPlayGroup == aIndex ? styles.playGroupActive: null]}>播放源{aIndex+1}</Text>
+                                    </TouchableOpacity>
+                                )
+                            })
+                        }
+                        <View style={styles.emptyTab}></View>
+                    </View>
                     {
                         movieUrl.map((items,aIndex)=>{
-                           return  (
-                            <View style={{marginTop:aIndex > 0 ? 10: 0}}>
-                                {movieUrl.length > 0 ? <Text style={styles.playSource}>播放源{aIndex+1}</Text> : null}
-                                <ScrollView horizontal={true} key={'ScrollView'+aIndex}>
-                                    {
-                                        items.map((item,index)=>{
-                                            return (
-                                                <TouchableOpacity onPress={e=>this.tabMovie(item)}>
-                                                    <View style={{...styles.seriesWrapper,borderColor:currentUrl == item.url ? "#ffbb15": "#333"}} key={'seriesText'+aIndex + index}>
-                                                        <Text style={currentUrl == item.url ? styles.seriesTextActive : styles.seriesText}>{item.label}</Text>
-                                                    </View>
-                                                </TouchableOpacity>
-
-                                            )
-                                        })
-                                    }
-                                </ScrollView>
-                            </View>
+                            return (
+                                currentPlayGroup == aIndex ?
+                                    <ScrollView horizontal={true} key={'ScrollView'+aIndex}>
+                                        {
+                                            items.map((item, index) => {
+                                                return (
+                                                    <TouchableOpacity onPress={e => this.tabMovie(item)} key={'seriesText' + aIndex + index}>
+                                                        <View style={{...styles.seriesWrapper, borderColor: currentUrl == item.url ? "#ffbb15" : "#333"}}>
+                                                            <Text style={currentUrl == item.url ? styles.seriesTextActive : styles.seriesText}>{item.label}</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                )
+                                            })
+                                        }
+                                    </ScrollView>
+                                 :null
                             )
                         })
                     }
                 </View>
-                {recommendList.length > 0
+                {yourLikesList.length > 0
                     ? <View style={styles.titleWrapper}>
                         <Text style={styles.title}>猜你想看</Text>
                         <FlatList
                             horizontal={true}
-                            data ={recommendList}
+                            data ={yourLikesList}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem = {
                                 ({item,index}) => this._renderItem(item,index)
@@ -156,6 +181,7 @@ class PlayerPage extends Component {
                     </View>
                     : null
                 }
+                <RecommendComponent classify={classify}/>
             </ScrollView>
         )
     }
@@ -216,9 +242,30 @@ const styles = StyleSheet.create({
         borderBottomColor:"#ddd",
         padding:20,
     },
-    playSource:{
-      marginLeft:10,
-      marginBottom:10
+    playGroup:{
+        marginBottom: 10,
+        display:"flex",
+        flexDirection:"row",
+    },
+    playGroupActive:{
+        borderTopWidth:1,
+        borderBottomWidth:1,
+        borderLeftWidth:1,
+        borderRightWidth:1,
+        borderTopColor:"#ddd",
+        borderLeftColor:"#ddd",
+        borderRightColor:"#ddd",
+        borderBottomColor:"#FFFFFF"
+    },
+    emptyTab:{
+        borderBottomWidth:1,
+        borderBottomColor: "#ddd",
+        flex:1
+    },
+    playGroupItem:{
+        padding:10,
+        borderBottomWidth:1,
+        borderBottomColor:"#ddd"
     },
     title:{
         fontSize:20,
@@ -249,7 +296,6 @@ const styles = StyleSheet.create({
         justifyContent:"center",
         alignItems:"center",
         borderWidth:1,
-
         marginRight:20
     },
     seriesWrapperNormal:{

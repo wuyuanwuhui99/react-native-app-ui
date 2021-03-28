@@ -173,9 +173,9 @@ export const getMovieUrlService = (movieId)=>{
  * @description: 获取猜你想看电影
  * @date: 2020-8-16 22:29
  */
-export const getRecommendService = (label)=>{
+export const getYourLikesService = (labels)=>{
     return new Promise((resolve,reject)=>{
-        HttpUtil.get(`${api.getRecommend}?label=${label}`).then((res)=>{
+        HttpUtil.get(`${api.getYourLikes}?labels=${labels}`).then((res)=>{
             if(res.status == SUCCESS){
                 resolve(res);
             }else{
@@ -236,3 +236,20 @@ export const deleteFavoriteeService = (movieId)=>{
     });
 }
 
+
+/**
+ * @author: wuwenqiang
+ * @description: 获取推荐的电影
+ * @date: 2020-8-16 22:29
+ */
+export const getRecommendService = (classify)=>{
+    return new Promise((resolve,reject)=>{
+        HttpUtil.get(`${api.getRecommend}?classify=${classify}`).then((res)=>{
+            if(res.status == SUCCESS){
+                resolve(res);
+            }else{
+                reject()
+            }
+        }).catch(reject);
+    });
+}

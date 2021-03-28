@@ -17,6 +17,7 @@ export default {
     deleteFavorite: HOST + '/service/movie-getway/deleteFavorite',//取消收藏
     saveFavorite: HOST + '/service/movie-getway/saveFavorite',//保存收藏
     isFavorite: HOST + '/service/movie-getway/isFavorite',//是否已经收藏
+    getYourLikes: HOST + '/service/movie/getYourLikes',//猜你想看
 };
 
 

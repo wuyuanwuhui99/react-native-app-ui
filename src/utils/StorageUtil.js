@@ -9,8 +9,14 @@ class StorageUtil {
      */
     static get(key) {
         return AsyncStorage.getItem(key).then((value) => {
-            const jsonValue = JSON.parse(value);
-            return jsonValue;
+            if(value){
+                try {
+                    return JSON.parse(value);
+                }catch (e) {
+                    return value
+                }
+            }
+            return value
         });
     }
 
@@ -21,7 +27,8 @@ class StorageUtil {
      * @returns {*}
      */
     static set(key, value) {
-        return AsyncStorage.setItem(key, JSON.stringify(value));
+        if(typeof value == "object")value = JSON.stringify(value)
+        return AsyncStorage.setItem(key, value);
     }
 
     /**

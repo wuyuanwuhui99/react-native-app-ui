@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
-import {StyleSheet, View,Text,Image,FlatList,TouchableOpacity,TextInput,ActivityIndicator} from "react-native";
+import {StyleSheet, View,Text,Image,FlatList,ScrollView,TouchableOpacity,TextInput,ActivityIndicator} from "react-native";
 import {connect} from "react-redux";
-import {searchService} from "../service";
+import {searchService,getRecommendService} from "../service";
 import {HOST} from "../config";
-import StorageUtil from "../utils/StorageUtil"
+import StorageUtil from "../utils/StorageUtil";
+import StarsComponent from "../components/StarsComponent";
+import RecommendComponent from "../components/RecommendComponent";
+
 class  MyPage extends Component {
     constructor(props) {
         super(props);
@@ -19,13 +22,21 @@ class  MyPage extends Component {
     componentDidMount(){
         StorageUtil.get("historyLabels").then((res)=>{
             if(res){
-                this.setState({historyLabels:JSON.parse(res)})
+                this.setState({historyLabels:res})
             }
+        });
+        this.getRecommend();
+    }
+
+    getRecommend=()=>{
+        let {classify} = this.props.navigation.state.params;
+        getRecommendService(classify).then((res)=>{
+            this.setState({recommendList:res.data});
         });
     }
 
     render(){
-        let {placeholder} = this.props.navigation.state.params;
+        let {placeholder,classify} = this.props.navigation.state.params;
         let {historyLabels,searching,searchResult,keyword,loading} = this.state;
         return (
             <View style={styles.wrapper}>
@@ -57,10 +68,9 @@ class  MyPage extends Component {
                                 }
                             ></FlatList>
                         }
-
                     </View>
                      :
-                    <View>
+                    <ScrollView>
                         <View style={styles.categoryHeader}>
                             <View style={styles.categoryLine}></View>
                             <Text style={styles.categoryTitle}>历史搜索</Text>
@@ -78,8 +88,10 @@ class  MyPage extends Component {
                                     )
                                 })
                             }
+
                         </View>
-                    </View>
+                        <RecommendComponent horizontal={false} classify={classify}/>
+                    </ScrollView>
                 }
             </View>
         )
@@ -92,11 +104,11 @@ class  MyPage extends Component {
                     <Image style={styles.categoryImage} source={{uri:item.local_img?`${HOST}/movie/images/qishi/${item.local_img}`:item.img}}></Image>
                     <View style={styles.movieInfo}>
                         <Text numberOfLines={1} style={styles.movieName}>{item.name}</Text>
-                        <Text numberOfLines={1} style={styles.subName}>{'主演:'+item.star}</Text>
-                        <Text numberOfLines={1} style={styles.subName}>{'导演:'+item.director}</Text>
-                        <Text numberOfLines={1} style={styles.subName}>{'类型:'+item.director}</Text>
-                        <Text numberOfLines={1} style={styles.subName}>{'上映时间:'+item.release_time}</Text>
-                        <Text numberOfLines={2} style={styles.subTitle}>{item.plot}</Text>
+                        {item.star ? <Text numberOfLines={1} style={styles.subName}>{'主演:'+item.star}</Text> : null}
+                        {item.director ? <Text numberOfLines={1} style={styles.subName}>{'导演:'+item.director}</Text>: null}
+                        {item.type ? <Text numberOfLines={1} style={styles.subName}>{'类型:'+item.type}</Text> : null}
+                        {item.releaseTime ? <Text numberOfLines={1} style={styles.subName}>{'上映时间:'+item.releaseTime}</Text> : null}
+                        <StarsComponent score={item.score}/>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -105,16 +117,18 @@ class  MyPage extends Component {
 
     _goSearch=()=>{
         let kw = this.state.keyword || this.props.navigation.state.params.placeholder
-        this.setState({historyLabels:this.state.historyLabels});
-        let index = this.state.historyLabels.findIndex((item)=>{
+        let {historyLabels} = this.state;
+        let index = historyLabels.findIndex((item)=>{
             return item == kw;
         });
         if(index != -1){
-            this.state.historyLabels.splice(index,1)
+            historyLabels.splice(index,1)
         }
-        this.state.historyLabels.unshift(kw);
-        AsyncStorage.setItem("historyLabels",JSON.stringify( this.state.historyLabels));
-        this._onSearch()
+        historyLabels.unshift(kw);
+        this.state.pageNum = 1;
+        this.setState({historyLabels,pageNum:1});
+        StorageUtil.set("historyLabels", this.state.historyLabels);
+        this._onSearch(kw)
     }
 
     _onHistorySearch=(keyword)=>{
@@ -132,10 +146,10 @@ class  MyPage extends Component {
         }
     }
 
-    _onSearch=()=>{
-        let {keyword,pageNum,pageSize} = this.state;
+    _onSearch=(kw)=>{
+        let {pageNum,pageSize} = this.state;
         this.setState({loading:true});
-        searchService({keyword,pageNum,pageSize}).then((res)=>{
+        searchService({keyword:kw,pageNum,pageSize}).then((res)=>{
             this.setState({
                 searchResult:res.data,
                 total:res.total,
@@ -229,7 +243,7 @@ const styles = StyleSheet.create({
         padding:20
     },
     movieName:{
-        fontSize:16
+        fontSize:18
     },
     categoryView:{
         marginBottom:20,
