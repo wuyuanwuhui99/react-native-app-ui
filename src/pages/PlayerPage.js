@@ -1,97 +1,169 @@
 import React, {Component} from 'react';
-import {StyleSheet, View,Text,Image,ScrollView,FlatList,Dimensions} from "react-native";
+import {StyleSheet, View,Text,Image,ScrollView,FlatList,Dimensions,TouchableOpacity} from "react-native";
 import {connect} from "react-redux";
 import {HOST} from "../config";
 import { WebView } from 'react-native-webview';
+import {getMovieUrlService,getRecommendService,saveFavoriteService,isFavoriteService,deleteFavoriteeService} from "../service";
+import StarsComponent from "../components/StarsComponent";
+
 class PlayerPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            recommendList:[]
+            recommendList:[],
+            movieUrl:[],//二维数组，分组电影列表
+            currentUrl:null,//当前播放的url
+            isFavoriteStatus:false,//是否已经收藏
         }
     }
 
+    componentWillMount() {
+        this.getMovieUrl();
+        this.getRecommend();
+        this.isFavorite();
+    }
+
+    getMovieUrl=()=>{
+        let {movieId} = this.props.navigation.state.params;
+        getMovieUrlService(movieId).then((res)=>{
+            let movieUrl = [],currentUrl=null;
+            res.data.forEach((item)=>{//分组
+                let {playGroup} = item;
+                if(!movieUrl[playGroup-1]) movieUrl[playGroup-1] = [];
+                movieUrl[playGroup-1].push(item);
+            });
+            if(movieUrl.length > 0) currentUrl = movieUrl[0][0].url
+            this.setState({movieUrl,currentUrl})
+        });
+    }
+
+    getRecommend=()=>{
+        let {label} = this.props.navigation.state.params;
+        getRecommendService(label).then((res)=>{
+            this.setState({recommendList:res.data});
+        });
+    }
+
+    //查询是否已经收藏
+    saveFavorite=()=>{
+        saveFavoriteService(this.props.navigation.state.params).then((res)=>{
+            if(res.data == 1){
+                this.setState({isFavoriteStatus:true});
+            }
+        })
+    }
+
+
+    /**
+     * @author: wuwenqiang
+     * @description: 添加收藏和取消收藏
+     * @date: 2020-8-16 22:29
+     */
+    handleFavorite=()=>{
+        if(this.state.isFavoriteStatus){//已经收藏过，点击之后取消收藏
+            this.deleteFavorite()
+        }else{//如果没有收藏过，点击之后添加收藏
+            this.saveFavorite()
+        }
+    }
+
+    //查询是否已经收藏
+    deleteFavorite=()=>{
+        let {movieId} = this.props.navigation.state.params;
+        deleteFavoriteeService(movieId).then((res)=>{
+            if(res.data >= 1){
+                this.setState({isFavoriteStatus:false});
+            }
+        })
+    }
+
+    //查询是否已经收藏
+    isFavorite=()=>{
+        let {movieId} = this.props.navigation.state.params;
+        isFavoriteService(movieId).then((res)=>{
+            this.setState({isFavoriteStatus:res.data > 0 ? true :false})
+        })
+    }
+
+    tabMovie=({url})=>{
+        this.setState({currentUrl:url});
+    }
+
     render(){
-        let {recommendList} = this.state;
+        let {recommendList,currentUrl,movieUrl,isFavoriteStatus} = this.state;
+        let {name,score,star} = this.props.navigation.state.params;
         return(
             <ScrollView>
                 <View style={styles.webView}>
-                    <WebView source={{uri: "https://jiexi.bm6ig.cn/?url=http://bili.meijuzuida.com/20191012/21631_c953019f/index.m3u8"}} style={styles.playWrapper}></WebView>
+                    {currentUrl ? <WebView source={{uri:currentUrl}} style={styles.playWrapper}></WebView> : null}
                 </View>
                 <View style={styles.iconWrapper}>
-                    <Image style={styles.iconComment} source={require("../static/image/icon-comment.png")}></Image>
-                    <Text>111</Text>
+                    {/*<Image style={styles.iconComment} source={require("../static/image/icon-comment.png")}></Image>*/}
+                    {/*<Text>111</Text>*/}
                     <View style={styles.rightIcon}>
-                        <Image source={require("../static/image/icon-share.png")} style={styles.iconComment}></Image>
-                        <Image source={require("../static/image/icon-collection.png")} style={styles.iconComment}></Image>
+                        {/*<Image source={require("../static/image/icon-share.png")} style={styles.iconComment}></Image>*/}
+                        <TouchableOpacity onPress={this.handleFavorite}>
+                            <Image source={isFavoriteStatus ? require("../static/image/icon-collection-active.png") : require("../static/image/icon-collection.png")} style={styles.iconComment}></Image>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 <View style={styles.titleWrapper}>
-                    <Text style={styles.title}>少年叶问之危机时刻</Text>
+                    <Text style={styles.title}>{name}</Text>
                     <View style={styles.subTitleWrapper}>
-                        <Text style={styles.score}>9.0分</Text>
-                        <Text style={styles.subTitle} numberOfLines={1}>赵文浩 / 牟凤彬 / 李浩轩 / 邵夏 / 石雨晴 / 佟小虎 / 西尔扎提 / 董崇华 / 张磊 / 许睿晗 / 曹操</Text>
+                        <Text style={styles.subTitle} numberOfLines={1}>{star}</Text>
+                        <StarsComponent score={score}></StarsComponent>
                     </View>
                 </View>
                 <View style={styles.playNumberWrapper}>
                     <Text style={styles.title}>剧集</Text>
-                    <ScrollView horizontal={true}>
-                        <View style={styles.seriesWrapperActive}>
-                            <Text style={styles.seriesText}>1</Text>
-                        </View>
-                        <View style={styles.seriesWrapper}>
-                            <Text>2</Text>
-                        </View>
-                        <View style={styles.seriesWrapper}>
-                            <Text>3</Text>
-                        </View>
-                        <View style={styles.seriesWrapper}>
-                            <Text>4</Text>
-                        </View>
-                        <View style={styles.seriesWrapper}>
-                            <Text>5</Text>
-                        </View>
-                        <View style={styles.seriesWrapper}>
-                            <Text>6</Text>
-                        </View>
-                        <View style={styles.seriesWrapper}>
-                            <Text>7</Text>
-                        </View>
-                        <View style={styles.seriesWrapper}>
-                            <Text>8</Text>
-                        </View>
-                        <View style={styles.seriesWrapper}>
-                            <Text>9</Text>
-                        </View>
-                        <View style={styles.seriesWrapper}>
-                            <Text>10</Text>
-                        </View>
-                        <View style={styles.seriesWrapper}>
-                            <Text>11</Text>
-                        </View>
-                    </ScrollView>
-                </View>
-                <View style={styles.titleWrapper}>
-                    <Text style={styles.title}>推荐</Text>
-                    <FlatList
-                        horizontal={true}
-                        data ={recommendList}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem = {
-                            ({item,index}) => this._renderItem(item,index)
-                        }
-                    >
-                    </FlatList>
+                    {
+                        movieUrl.map((items,aIndex)=>{
+                           return  (
+                            <View style={{marginTop:aIndex > 0 ? 10: 0}}>
+                                {movieUrl.length > 0 ? <Text style={styles.playSource}>播放源{aIndex+1}</Text> : null}
+                                <ScrollView horizontal={true} key={'ScrollView'+aIndex}>
+                                    {
+                                        items.map((item,index)=>{
+                                            return (
+                                                <TouchableOpacity onPress={e=>this.tabMovie(item)}>
+                                                    <View style={{...styles.seriesWrapper,borderColor:currentUrl == item.url ? "#ffbb15": "#333"}} key={'seriesText'+aIndex + index}>
+                                                        <Text style={currentUrl == item.url ? styles.seriesTextActive : styles.seriesText}>{item.label}</Text>
+                                                    </View>
+                                                </TouchableOpacity>
 
+                                            )
+                                        })
+                                    }
+                                </ScrollView>
+                            </View>
+                            )
+                        })
+                    }
                 </View>
+                {recommendList.length > 0
+                    ? <View style={styles.titleWrapper}>
+                        <Text style={styles.title}>猜你想看</Text>
+                        <FlatList
+                            horizontal={true}
+                            data ={recommendList}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem = {
+                                ({item,index}) => this._renderItem(item,index)
+                            }
+                        >
+                        </FlatList>
+
+                    </View>
+                    : null
+                }
             </ScrollView>
         )
     }
 
     _renderItem=(item,index)=>{
         return (
-            <View style={styles.recommondItem}>
-                <Image style={styles.recommondImg} source={{uri:item.local_img?`${HOST}/movie/images/qishi/${item.local_img}`:item.img}}></Image>
+            <View key={"recommondImg"+index} style={styles.recommondItem}>
+                <Image style={styles.recommondImg} source={{uri:item.localImg? HOST + item.localImg :item.img}}></Image>
                 <Text numberOfLines={1}>{item.name}</Text>
             </View>
         )
@@ -108,6 +180,7 @@ export default  connect((state)=>{
 const styles = StyleSheet.create({
     webView:{
         height:Dimensions.get("window").width*9/16,
+        backgroundColor:"#000"
     },
     playWrapper:{
         position:"relative"
@@ -143,13 +216,17 @@ const styles = StyleSheet.create({
         borderBottomColor:"#ddd",
         padding:20,
     },
+    playSource:{
+      marginLeft:10,
+      marginBottom:10
+    },
     title:{
         fontSize:20,
         marginBottom:10,
         fontWeight:"bold"
     },
     subTitleWrapper:{
-        flexDirection:"row"
+        flexDirection:"column"
     },
     score:{
         fontWeight:"bold",
@@ -172,20 +249,19 @@ const styles = StyleSheet.create({
         justifyContent:"center",
         alignItems:"center",
         borderWidth:1,
-        borderColor:"#bbb",
+
         marginRight:20
+    },
+    seriesWrapperNormal:{
+        borderColor:"#bbb",
     },
     seriesWrapperActive:{
-        width:80,
-        height:80,
-        borderRadius:50,
-        justifyContent:"center",
-        alignItems:"center",
-        borderWidth:1,
-        borderColor:"#ffbb15",
-        marginRight:20
+        borderColor:"#333",
     },
     seriesText:{
+        color:"#333",
+    },
+    seriesTextActive:{
         color:"#ffbb15",
     },
     rowWrapper:{

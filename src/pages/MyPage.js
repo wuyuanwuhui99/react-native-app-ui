@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View,Text,Image,ScrollView,FlatList,TouchableOpacity} from "react-native";
 import {HOST} from "../config";
-import {getHistory,getUserMsg} from "../service"
+import {getHistoryService,getUserMsgService} from "../service"
 import {connect} from "react-redux";
 import arrow from "../static/image/icon-arrow.png"
 class  MyPage extends Component {
@@ -15,10 +15,10 @@ class  MyPage extends Component {
 
     componentDidMount(){
         let {userId} = this.props.userData;
-        getHistory(userId).then((res)=>{
+        getHistoryService(userId).then((res)=>{
             this.setState({historyList:res.data});
         });
-        getUserMsg(userId).then((res)=>{
+        getUserMsgService(userId).then((res)=>{
             this.setState({userMsg:res.data});
         })
     }

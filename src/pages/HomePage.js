@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Image, Text, FlatList,} from 'react-native';
 import {HOST} from "../config";
-import {getUserDataService,getCategoryList,getAllCategoryListByPageName} from "../service";
+import {getUserDataService,getCategoryListService,getAllCategoryListByPageNameService} from "../service";
 import CarouselComponent from "../components/CarouselComponent";
 import CategoryComponent from "../components/CategoryComponent";
 import SearchBarComponent from "../components/SearchBarComponent";
@@ -28,7 +28,7 @@ class  HomePage extends Component {
         let loadCarousel = false,loadCategoryList = false;
 
         //获取轮播数据
-        getCategoryList("电影","轮播").then((res)=>{
+        getCategoryListService("电影","轮播").then((res)=>{
             let {dataSource} = this.state;
             dataSource[0] = res.data;
         }).finally(()=>{
@@ -38,13 +38,13 @@ class  HomePage extends Component {
             }
         });
 
-        getAllCategoryListByPageName("首页").then((res)=>{
+        getAllCategoryListByPageNameService("首页").then((res)=>{
             let {allCategoryListByPageName,dataSource} = this.state;
             allCategoryListByPageName.push(...res.data);
             let temp = res.data.slice(0,2);
             let count = 0;
             temp.forEach(({classify,category},index)=>{
-                getCategoryList(classify,category).then((res)=>{
+                getCategoryListService(classify,category).then((res)=>{
                     dataSource[index+2] = res.data;
                 }).finally(()=>{
                     count++;
@@ -78,7 +78,7 @@ class  HomePage extends Component {
         let {dataSource} = this.state;
         this.state.loading = true;
         this.setState({loading:true});
-        getCategoryList(classify,category).then((res)=>{
+        getCategoryListService(classify,category).then((res)=>{
             dataSource.push(res.data)
         }).finally(()=>{
             this.state.loading = false;

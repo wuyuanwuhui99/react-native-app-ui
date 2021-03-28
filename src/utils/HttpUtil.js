@@ -69,7 +69,7 @@ export default class HttpUtil {
     static put(url, params) {
         return new Promise((resolve, reject) => {
             fetch(url, {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ export default class HttpUtil {
     static delete(url, params) {
         return new Promise((resolve, reject) => {
             fetch(url, {
-                method: 'POST',
+                method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View,Text,Image,FlatList,TouchableOpacity,TextInput,ActivityIndicator} from "react-native";
 import {connect} from "react-redux";
-import {search} from "../service";
+import {searchService} from "../service";
 import {HOST} from "../config";
 import StorageUtil from "../utils/StorageUtil"
 class  MyPage extends Component {
@@ -135,7 +135,7 @@ class  MyPage extends Component {
     _onSearch=()=>{
         let {keyword,pageNum,pageSize} = this.state;
         this.setState({loading:true});
-        search({keyword,pageNum,pageSize}).then((res)=>{
+        searchService({keyword,pageNum,pageSize}).then((res)=>{
             this.setState({
                 searchResult:res.data,
                 total:res.total,

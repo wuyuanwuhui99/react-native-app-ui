@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View,Image,Text,FlatList} from "react-native";
 import {HOST} from "../config";
-import {getCategoryList,getAllCategoryListByPageName} from "../service";
+import {getCategoryListService,getAllCategoryListByPageNameService} from "../service";
 import CarouselComponent from "../components/CarouselComponent";
 import CategoryComponent from "../components/CategoryComponent";
 import SearchBarComponent from "../components/SearchBarComponent";
@@ -21,19 +21,19 @@ class  MoviePage extends Component {
     initData=()=>{
         this.state.dataSource = [[]],//当前显示的小类，懒加载
         //获取轮播数据
-        getCategoryList("电影","轮播").then((res)=>{
+        getCategoryListService("电影","轮播").then((res)=>{
             let {dataSource} = this.state;
             dataSource[0] = res.data;
             this.setState({dataSource});
         });
 
-        getAllCategoryListByPageName("电影").then((res)=>{
+        getAllCategoryListByPageNameService("电影").then((res)=>{
             let {allCategoryListByPageName,dataSource} = this.state;
             allCategoryListByPageName.push(...res.data);
             let temp = res.data.slice(0,2);
             let count = 0;
             temp.forEach(({classify,category},index)=>{
-                getCategoryList(classify,category).then((res)=>{
+                getCategoryListService(classify,category).then((res)=>{
                     dataSource[index+2] = res.data;
                 }).finally(()=>{
                     count++;
@@ -54,7 +54,7 @@ class  MoviePage extends Component {
         let {dataSource} = this.state;
         this.state.loading = true;
         this.setState({loading:true});
-        getCategoryList(classify,category).then((res)=>{
+        getCategoryListService(classify,category).then((res)=>{
             dataSource.push(res.data)
         }).finally(()=>{
             this.state.loading = false;

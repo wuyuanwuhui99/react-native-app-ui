@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {StyleSheet, View,Image,Text,TouchableOpacity,FlatList,ImageBackground,Dimensions,ScrollView} from "react-native";
 import {HOST} from "../config";
-import {recordService,getStarsService} from "../service"
+import {saveViewRecordService,getStarsService} from "../service"
+import StarsComponent from "../components/StarsComponent";
 
 export default class DetaiPage extends Component {
     constructor(props) {
@@ -20,7 +21,7 @@ export default class DetaiPage extends Component {
                 this.setState({stars:res.data})
             })
         };
-        recordService(params);//浏览记录
+        saveViewRecordService(params);//浏览记录
     }
 
     _renderItem=(item,index)=>{
@@ -32,29 +33,6 @@ export default class DetaiPage extends Component {
                     <Text numberOfLines={1} style={styles.subName}>{item.role}</Text>
                 </View>
             </TouchableOpacity>
-        )
-    }
-
-    _renderStar=(score)=>{
-        let count = parseFloat(score)/2;//3.8
-        let integer = Math.floor(count)
-        let result = []
-        let index = 0;
-        for(let i = 0; i < integer; i++){//实心星星
-            result.push(<Image  key={'start'+index++} style={styles.star} source={require("../static/image/icon-full-star.png")}></Image>)
-        }
-        if(Math.round(count) - Math.floor(count*10/5)/2 == 0.5){//半个星星
-            result.push(<Image  key={'start'+index++} style={styles.star} source={require("../static/image/icon-half-star.png")}></Image>)
-        }
-        let leftover = 5-result.length
-        for(let i = 0; i < leftover; i++){//空心星星
-            result.push(<Image key={'start'+index++} style={styles.star} source={require("../static/image/icon-empty-star.png")}></Image>)
-        }
-        return (
-            <View style={styles.starBox}>
-                {result}
-                <Text style={styles.score}>{score}</Text>
-            </View>
         )
     }
 
@@ -89,10 +67,7 @@ export default class DetaiPage extends Component {
                                 <Text numberOfLines={2} style={styles.name}>{name}</Text>
                                 <Text numberOfLines={1} style={styles.subName}>{star}</Text>
                             </View>
-                            {
-                                score ? this._renderStar(score):null
-                            }
-
+                            <StarsComponent score={score}></StarsComponent>
                         </View>
                     </View>
                 </View>
@@ -169,11 +144,6 @@ const styles = StyleSheet.create({
         flexDirection:"column",
         padding:20
     },
-    starBox:{
-        flexDirection:"row",
-        marginTop:10,
-        alignItems:"center",
-    },
     nameBox:{
         marginRight:20,
     },
@@ -183,16 +153,6 @@ const styles = StyleSheet.create({
     subName:{
         paddingTop:5,
         color:"#bbb"
-    },
-    star:{
-        width:15,
-        height:15,
-        marginRight:5
-    },
-    score:{
-        fontSize:16,
-        color:"red",
-        textAlignVertical:"center"
     },
     slotWrapper:{
         padding:20

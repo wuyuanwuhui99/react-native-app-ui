@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View,Text,TouchableOpacity} from "react-native";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {getKeyWord} from "../service"
+import {getKeyWordService} from "../service"
 import PropTypes from 'prop-types'
 export default class  CategoryComponent extends Component {
     constructor(props){
@@ -30,12 +30,12 @@ export default class  CategoryComponent extends Component {
                 <MaterialIcons name={'search'} size={30} style={styles.searchIcon}></MaterialIcons>
             </View>
             </TouchableOpacity>
-            
+
         )
     }
 
     componentDidMount(){
-        getKeyWord(this.props.classify).then((res)=>{
+        getKeyWordService(this.props.classify).then((res)=>{
             this.setState({keyword:res.data.name});
         });
     }
