@@ -57,7 +57,6 @@ export default class  CategoryComponent extends Component {
     }
 
     goDetail=(item)=>{
-        console.log(item)
         this.props.navigation.push('DetailPage',item)
     }
 }

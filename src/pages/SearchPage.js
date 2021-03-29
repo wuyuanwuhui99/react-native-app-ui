@@ -22,7 +22,7 @@ class  MyPage extends Component {
     componentDidMount(){
         StorageUtil.get("historyLabels").then((res)=>{
             if(res){
-                this.setState({historyLabels:res})
+                this.setState({historyLabels:res.slice(0,20)})
             }
         });
         this.getRecommend();
@@ -35,19 +35,33 @@ class  MyPage extends Component {
         });
     }
 
+    clearInput =()=>{
+        this.setState({keyword:null,searching:false})
+    }
+
     render(){
         let {placeholder,classify} = this.props.navigation.state.params;
         let {historyLabels,searching,searchResult,keyword,loading} = this.state;
         return (
             <View style={styles.wrapper}>
                 <View style={styles.searchBarWrapper}>
-                    <TextInput
-                    style={styles.textInput}
-                    onChangeText={this._onChangeText}
-                    placeholder={placeholder}
-                    value={keyword}
-                    clearButtonMode={"while-editing"}
-                ></TextInput>
+                    <View style={styles.textInputWrapper}>
+                        <TextInput
+                            style={styles.textInput}
+                            onChangeText={this._onChangeText}
+                            placeholder={placeholder}
+                            value={keyword}
+                            clearButtonMode={"while-editing"}
+                        ></TextInput>
+                        {
+                            keyword ?
+                                <TouchableOpacity onPress={this.clearInput}>
+                                    <Image style={styles.clearIcon} source={require("../static/image/icon-clear.png")}/>
+                                </TouchableOpacity> : null
+                        }
+
+                    </View>
+
                     <TouchableOpacity onPress={this._goSearch} >
                         <View style={styles.button}>
                             <Text style={styles.searchText}>搜索</Text>
@@ -90,7 +104,7 @@ class  MyPage extends Component {
                             }
 
                         </View>
-                        <RecommendComponent horizontal={false} classify={classify}/>
+                        <RecommendComponent {...this.props} horizontal={false} classify={classify}/>
                     </ScrollView>
                 }
             </View>
@@ -115,20 +129,23 @@ class  MyPage extends Component {
         )
     }
 
-    _goSearch=()=>{
+    _goSearch= async () => {
         let kw = this.state.keyword || this.props.navigation.state.params.placeholder
         let {historyLabels} = this.state;
-        let index = historyLabels.findIndex((item)=>{
+        let index = historyLabels.findIndex((item) => {
             return item == kw;
         });
-        if(index != -1){
-            historyLabels.splice(index,1)
+        if (index != -1) {
+            historyLabels.splice(index, 1)
         }
         historyLabels.unshift(kw);
+        historyLabels = historyLabels.slice(0,20)
         this.state.pageNum = 1;
-        this.setState({historyLabels,pageNum:1});
+        await this._onSearch(kw);
+        //等待请求完成再设置缓存
+        this.setState({historyLabels, pageNum: 1});
         StorageUtil.set("historyLabels", this.state.historyLabels);
-        this._onSearch(kw)
+
     }
 
     _onHistorySearch=(keyword)=>{
@@ -147,17 +164,21 @@ class  MyPage extends Component {
     }
 
     _onSearch=(kw)=>{
-        let {pageNum,pageSize} = this.state;
-        this.setState({loading:true});
-        searchService({keyword:kw,pageNum,pageSize}).then((res)=>{
-            this.setState({
-                searchResult:res.data,
-                total:res.total,
-                searching:true
-            })
-        }).finally(()=>{
-            this.setState({loading:false})
-        });
+        return new Promise((resolve)=>{
+            let {pageNum,pageSize} = this.state;
+            this.setState({loading:true});
+            searchService({keyword:kw,pageNum,pageSize}).then((res)=>{
+                this.setState({
+                    searchResult:res.data,
+                    total:res.total,
+                    searching:true
+                })
+            }).finally(()=>{
+                this.setState({loading:false})
+                resolve()
+            });
+        })
+
     }
 
 
@@ -184,13 +205,23 @@ const styles = StyleSheet.create({
         padding:20,
         alignItems:"center"
     },
+    textInputWrapper:{
+        flex:1,
+        borderRadius:50,
+        backgroundColor:"#ddd",
+        flexDirection:"row",
+        alignItems:"center"
+    },
     textInput:{
         flex:1,
         height:50,
-        borderRadius:50,
-        backgroundColor:"#ddd",
         justifyContent:"center",
         paddingLeft:20
+    },
+    clearIcon:{
+        width:30,
+        height:30,
+        marginRight:10
     },
     button:{
         borderRadius:50,

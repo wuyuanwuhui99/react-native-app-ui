@@ -35,6 +35,10 @@ export default class  RecommendComponent extends Component {
             this.setState({recommendList:res.data});
         });
     }
+    //点击跳转到详情
+    goDetail=(item)=>{
+        this.props.navigation.push('DetailPage',item)
+    }
 
     render(){
         let {recommendList} = this.state;
@@ -61,8 +65,6 @@ export default class  RecommendComponent extends Component {
                                 }
                         </View>
                     }
-
-
                 </View>
                 : null
         )
@@ -75,11 +77,14 @@ export default class  RecommendComponent extends Component {
     }
 
     _renderItem=(item,index)=>{
+        let {horizontal} = this.props;
         return (
-            <View key={"recommondImg"+index} style={[styles.recommondItem,this.props.horizontal ? null : styles.gridItem]}>
-                <Image style={styles.recommondImg} source={{uri:item.localImg? HOST + item.localImg :item.img}}></Image>
-                <Text numberOfLines={1}>{item.name}</Text>
-            </View>
+            <TouchableOpacity onPress={e=>this.goDetail(item)} key={"_renderItem"+index}>
+                <View key={"recommondImg"+index} style={horizontal ? styles.recommondItem : [styles.recommendItemVertical,{marginTop: index>1? 20 : 0}]}>
+                    <Image style={styles.recommondImg} source={{uri:item.localImg? HOST + item.localImg :item.img}}></Image>
+                    <Text numberOfLines={1}>{item.name}</Text>
+                </View>
+            </TouchableOpacity>
         )
     }
 
@@ -96,13 +101,25 @@ const styles = StyleSheet.create({
         width:150,
         marginRight:20,
         display:"flex",
-        alignItems:"center"
+        alignItems:"center",
+        justifyContent:"center",
+        overflow:"hidden"
     },
     recommondImg:{
         width:150,
         height:200,
         borderRadius:10,
         marginBottom:10
+    },
+    recommendItemVertical:{
+        width:(width - 40)/2,
+        justifyContent:"center",
+        display:"flex",
+        alignItems:"center",
+        overflow:"hidden"
+    },
+    recommendItemWrapper:{
+        width: (width - 40)/2,
     },
     titleWrapper:{
         borderBottomWidth:1,

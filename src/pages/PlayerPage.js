@@ -181,7 +181,7 @@ class PlayerPage extends Component {
                     </View>
                     : null
                 }
-                <RecommendComponent classify={classify}/>
+                <RecommendComponent {...this.props} classify={classify}/>
             </ScrollView>
         )
     }
