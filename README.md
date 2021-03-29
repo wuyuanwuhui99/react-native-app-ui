@@ -1,6 +1,8 @@
 # react-native-app-ui
 使用react-native开发的电影APP，所有数据来自第三方电影网站实时数据，包含首页，电影，电视剧，我的，登录，个人中心，电影详情页，播放页，搜索，缓存，浏览记录，播放记录等功能和模块，功能齐全，持续更新中......
 
+开发者：吴怨吴悔
+
 =============================界面预览==========================
 
 ![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie1.png)
