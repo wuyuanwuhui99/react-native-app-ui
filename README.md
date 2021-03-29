@@ -1,13 +1,16 @@
 # react-native-app-ui
 使用react-native开发的电影APP，所有数据来自第三方电影网站实时数据，包含首页，电影，电视剧，我的，登录，个人中心，电影详情页，播放页，搜索，缓存，浏览记录，播放记录等功能和模块，功能齐全，持续更新中......
 
+开发者：吴怨吴悔
+
 =============================界面预览==========================
 
 ![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie1.png)
 ![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie2.png)
 ![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie3.png)
-![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie2.png)
-
+![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie4.png)
+![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie5.png)
+![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie6.png)
 =============================界面预览==========================
 
 使用的插件
@@ -44,3 +47,5 @@ webview：react-native-webview: 10.9.2
 redux浏览器工具：reredux-devtools-extension: 2.13.8
 
 redux状态管理器：redux-thunk: 2.3.0
+
+后端项目和sql语句：https://github.com/wuyuanwuhui99/springboot-app-service
