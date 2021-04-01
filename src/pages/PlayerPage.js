@@ -106,7 +106,7 @@ class PlayerPage extends Component {
 
     render(){
         let {yourLikesList,currentUrl,movieUrl,isFavoriteStatus,currentPlayGroup} = this.state;
-        let {name,score,star,classify} = this.props.navigation.state.params;
+        let {movieName,score,star,classify} = this.props.navigation.state.params;
         return(
             <ScrollView>
                 <View style={styles.webView}>
@@ -123,7 +123,7 @@ class PlayerPage extends Component {
                     </View>
                 </View>
                 <View style={styles.titleWrapper}>
-                    <Text style={styles.title}>{name}</Text>
+                    <Text style={styles.title}>{movieName}</Text>
                     <View style={styles.subTitleWrapper}>
                         <Text style={styles.subTitle} numberOfLines={1}>{star}</Text>
                         <StarsComponent score={score}></StarsComponent>
@@ -190,7 +190,7 @@ class PlayerPage extends Component {
         return (
             <View key={"recommondImg"+index} style={styles.recommondItem}>
                 <Image style={styles.recommondImg} source={{uri:item.localImg? HOST + item.localImg :item.img}}></Image>
-                <Text numberOfLines={1}>{item.name}</Text>
+                <Text numberOfLines={1}>{item.movieName}</Text>
             </View>
         )
     }

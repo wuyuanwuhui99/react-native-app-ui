@@ -28,7 +28,7 @@ class  MyPage extends Component {
             <TouchableOpacity key={"TouchableOpacity" + index}>
                 <View  style={styles.categoryView}>
                     <Image style={styles.categoryImage} source={{uri:item.local_img ? HOST+item.local_img : item.img}}></Image>
-                    <Text numberOfLines={1} style={styles.movieName}>{item.name}</Text>
+                    <Text numberOfLines={1} style={styles.movieName}>{item.movieName}</Text>
                 </View>
             </TouchableOpacity>
         )

@@ -117,7 +117,7 @@ class  MyPage extends Component {
                 <View  style={styles.categoryView}>
                     <Image style={styles.categoryImage} source={{uri:item.local_img?`${HOST}/movie/images/qishi/${item.local_img}`:item.img}}></Image>
                     <View style={styles.movieInfo}>
-                        <Text numberOfLines={1} style={styles.movieName}>{item.name}</Text>
+                        <Text numberOfLines={1} style={styles.movieName}>{item.movieName}</Text>
                         {item.star ? <Text numberOfLines={1} style={styles.subName}>{'主演:'+item.star}</Text> : null}
                         {item.director ? <Text numberOfLines={1} style={styles.subName}>{'导演:'+item.director}</Text>: null}
                         {item.type ? <Text numberOfLines={1} style={styles.subName}>{'类型:'+item.type}</Text> : null}

@@ -50,7 +50,7 @@ export default class  CategoryComponent extends Component {
             <TouchableOpacity key={item.category + index} onPress={e=>this.goDetail(item)}>
                 <View  style={styles.categoryView}>
                     <Image style={styles.categoryImage} source={{uri:item.local_img ? HOST+item.local_img : item.img}}></Image>
-                    <Text numberOfLines={1} style={styles.movieName}>{item.name}</Text>
+                    <Text numberOfLines={1} style={styles.movieName}>{item.movieName}</Text>
                 </View>
             </TouchableOpacity>
         )
