@@ -53,6 +53,25 @@ export const getAllCategoryListByPageNameService = async(pageName)=>{
     });
 }
 
+
+/**
+ * @author: wuwenqiang
+ * @description: 按页面获取所有小类
+ * @date: 2020-8-15 22:29
+ */
+export const getAllCategoryByClassify = async(classify)=>{
+    return new Promise((resolve,reject)=>{
+        HttpUtil.get(`${api.getAllCategoryByClassify}?classify=${classify}`).then((res)=>{
+            if(res.status == SUCCESS){
+                resolve(res);
+            }else{
+                reject()
+            }
+        }).catch(reject);
+    });
+}
+
+
 /**
  * @author: wuwenqiang
  * @description: 获取搜索栏里面的关键词

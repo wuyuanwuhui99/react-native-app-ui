@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View,Image,Text,FlatList} from "react-native";
 import {HOST} from "../config";
-import {getCategoryListService,getAllCategoryListByPageNameService} from "../service";
+import {getCategoryListService,getAllCategoryByClassify} from "../service";
 import CarouselComponent from "../components/CarouselComponent";
 import CategoryComponent from "../components/CategoryComponent";
 import SearchBarComponent from "../components/SearchBarComponent";
@@ -27,7 +27,7 @@ class  MoviePage extends Component {
             this.setState({dataSource});
         });
 
-        getAllCategoryListByPageNameService("电影").then((res)=>{
+        getAllCategoryByClassify("电影").then((res)=>{
             let {allCategoryListByPageName,dataSource} = this.state;
             allCategoryListByPageName.push(...res.data);
             let temp = res.data.slice(0,2);
