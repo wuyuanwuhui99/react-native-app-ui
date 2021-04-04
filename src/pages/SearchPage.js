@@ -25,14 +25,6 @@ class  MyPage extends Component {
                 this.setState({historyLabels:res.slice(0,20)})
             }
         });
-        this.getRecommend();
-    }
-
-    getRecommend=()=>{
-        let {classify} = this.props.navigation.state.params;
-        getRecommendService(classify).then((res)=>{
-            this.setState({recommendList:res.data});
-        });
     }
 
     clearInput =()=>{
@@ -98,13 +90,11 @@ class  MyPage extends Component {
                                                 <Text style={styles.labelText}>{item}</Text>
                                             </View>
                                         </TouchableOpacity>
-
                                     )
                                 })
                             }
-
                         </View>
-                        <RecommendComponent {...this.props} horizontal={false} classify={classify}/>
+                        <RecommendComponent {...this.props} direction={'horizontal'} classify={classify}/>
                     </ScrollView>
                 }
             </View>
@@ -180,8 +170,6 @@ class  MyPage extends Component {
         })
 
     }
-
-
 
     goDetail=(item)=>{
         console.log(item)

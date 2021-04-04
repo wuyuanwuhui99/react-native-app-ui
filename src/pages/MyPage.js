@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View,Text,Image,ScrollView,FlatList,TouchableOpacity} from "react-native";
 import {HOST} from "../config";
-import {getHistoryService,getUserMsgService} from "../service"
+import {getPlayRecordService,getUserMsgService} from "../service"
 import {connect} from "react-redux";
 import arrow from "../static/image/icon-arrow.png"
 class  MyPage extends Component {
@@ -14,11 +14,10 @@ class  MyPage extends Component {
     }
 
     componentDidMount(){
-        let {userId} = this.props.userData;
-        getHistoryService(userId).then((res)=>{
+        getPlayRecordService().then((res)=>{
             this.setState({historyList:res.data});
         });
-        getUserMsgService(userId).then((res)=>{
+        getUserMsgService().then((res)=>{
             this.setState({userMsg:res.data});
         })
     }
@@ -38,7 +37,7 @@ class  MyPage extends Component {
         let {historyList,userMsg} = this.state;
         let {userData={}} = this.props;
         let {avater,username} = userData
-        let {userAge=0,recordCount=0,playCount=0,favoriteCount=0} = userMsg
+        let {userAge=0,viewRecordCount=0,playRecordCount=0,favoriteCount=0} = userMsg
         return(
             <View style={styles.wrapper}>
                 <View style={styles.avaterWrapper}>
@@ -54,11 +53,11 @@ class  MyPage extends Component {
                             <Text style={styles.myLabelTitle}>关注</Text>
                         </View>
                         <View style={styles.myLabel}>
-                            <Text style={styles.myLabelValue}>{playCount}</Text>
+                            <Text style={styles.myLabelValue}>{playRecordCount}</Text>
                             <Text style={styles.myLabelTitle}>观看记录</Text>
                         </View>
                         <View style={{...styles.myLabel,borderRightWidth:0}}>
-                            <Text style={styles.myLabelValue}>{recordCount}</Text>
+                            <Text style={styles.myLabelValue}>{viewRecordCount}</Text>
                             <Text style={styles.myLabelTitle}>历史浏览</Text>
                         </View>
                     </View>
@@ -69,14 +68,19 @@ class  MyPage extends Component {
                             <Image style={styles.historyIcon} source={require("../static/image/icon-history.png")}></Image>
                             <Text>观看记录</Text>
                         </View>
-                        <FlatList
-                            horizontal={true}
-                            data ={historyList}
-                            keyExtractor={(item, index) => index.toString()}
-                            renderItem = {
-                                ({item,index}) => this._renderItem(item,index)
-                            }
-                        ></FlatList>
+                        {
+                            historyList.length == 0 ?
+                                <View style={styles.noData}><Text>暂无观看记录</Text></View>
+                                :<FlatList
+                                    horizontal={true}
+                                    data ={historyList}
+                                    keyExtractor={(item, index) => index.toString()}
+                                    renderItem = {
+                                        ({item,index}) => this._renderItem(item,index)
+                                    }
+                                ></FlatList>
+                        }
+
                     </View>
                     <View style={styles.panelWrapper}>
                         <View style={styles.panelBox}>
@@ -124,6 +128,12 @@ export default  connect((state)=>{
 const styles = StyleSheet.create({
     wrapper:{
         flex:1
+    },
+    noData:{
+        height:100,
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center"
     },
     avaterWrapper:{
         justifyContent:"center",

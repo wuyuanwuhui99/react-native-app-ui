@@ -6,9 +6,6 @@ import PropTypes from 'prop-types'
 export default class  CategoryComponent extends Component {
     constructor(props){
         super(props);
-        this.state = {
-            categoryList:[]
-        }
     }
 
      //类型检测方法一

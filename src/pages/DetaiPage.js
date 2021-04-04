@@ -3,6 +3,8 @@ import {StyleSheet, View,Image,Text,TouchableOpacity,FlatList,ImageBackground,Di
 import {HOST} from "../config";
 import {saveViewRecordService,getStarsService} from "../service"
 import StarsComponent from "../components/StarsComponent";
+import RecommendComponent from "../components/RecommendComponent";
+import YourLikesComponent from "../components/YourLikesComponent";
 
 export default class DetaiPage extends Component {
     constructor(props) {
@@ -42,7 +44,7 @@ export default class DetaiPage extends Component {
 
 
     render() {
-        let {localImg,img,name,score,plot,star} = this.props.navigation.state.params;
+        let {localImg,img,name,score,plot,star,classify,label} = this.props.navigation.state.params;
         let {stars} = this.state;
         return (
             <ScrollView>
@@ -102,6 +104,8 @@ export default class DetaiPage extends Component {
                     </View>
                     :null
                 }
+                <YourLikesComponent  {...this.props} label={label}></YourLikesComponent>
+                <RecommendComponent  {...this.props} classify={classify}></RecommendComponent>
             </ScrollView>
         )
     }
@@ -155,7 +159,9 @@ const styles = StyleSheet.create({
         color:"#bbb"
     },
     slotWrapper:{
-        padding:20
+        paddingLeft:20,
+        paddingRight: 20,
+        paddingTop:20
     },
     categoryText:{
         fontSize:16,

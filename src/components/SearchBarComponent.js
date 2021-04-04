@@ -36,7 +36,7 @@ export default class  CategoryComponent extends Component {
 
     componentDidMount(){
         getKeyWordService(this.props.classify).then((res)=>{
-            this.setState({keyword:res.data.name});
+            this.setState({keyword:res.data.movieName});
         });
     }
 

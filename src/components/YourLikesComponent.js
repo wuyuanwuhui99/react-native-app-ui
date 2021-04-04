@@ -1,37 +1,38 @@
 import React, {Component} from 'react';
-import { getRecommendService} from '../service';
+import {getYourLikesService} from '../service';
 import PropTypes from 'prop-types'
 import MovieListComponent from "./MovieListComponent";
 
-export default class  RecommendComponent extends Component {
+export default class  YourLikesComponent extends Component {
     constructor(props){
         super(props);
         this.state = {
-            recommendList:[]
+            movieList:[]
         }
     }
 
     //类型检测方法一
     static propTypes={
-        classify:PropTypes.string,
+        label:PropTypes.string,
         direction:PropTypes.string
     }
 
     //设置默认属性方法一
     static defaultProps={
-        classify:"",
+        label:"",
         direction: "horizontal"
     }
 
     componentWillMount() {
-       this.getRecommend()
+        this.getYourLikes()
 
     }
 
-    getRecommend=()=>{
-        let {classify} = this.props;
-        getRecommendService(classify).then((res)=>{
-            this.setState({recommendList:res.data});
+    getYourLikes=()=>{
+        let {label} = this.props;
+        if(!label)return;
+        getYourLikesService(label).then((res)=>{
+            this.setState({movieList:res.data});
         });
     }
     //点击跳转到详情
@@ -40,7 +41,7 @@ export default class  RecommendComponent extends Component {
     }
 
     render(){
-        let {recommendList} = this.state;
-        return <MovieListComponent {...this.props} title={'推荐'} movieList={recommendList}></MovieListComponent>
+        let {movieList} = this.state;
+        return <MovieListComponent {...this.props} direction={"horizontal"} title={"猜你想看"} movieList={movieList}></MovieListComponent>
     }
 }

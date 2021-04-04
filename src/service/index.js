@@ -72,12 +72,29 @@ export const getKeyWordService = async(classify)=>{
 
 /**
  * @author: wuwenqiang
- * @description: 获取搜索栏里面的关键词
+ * @description: 获取播放记录
  * @date: 2020-8-15 22:29
  */
-export const getHistoryService = async(userId)=>{
+export const getPlayRecordService = async()=>{
     return new Promise((resolve,reject)=>{
-        HttpUtil.get(`${api.getHistory}?userId=${userId}`).then((res)=>{
+        HttpUtil.get(api.getPlayRecord).then((res)=>{
+            if(res.status == SUCCESS){
+                resolve(res);
+            }else{
+                reject()
+            }
+        }).catch(reject);
+    });
+}
+
+/**
+ * @author: wuwenqiang
+ * @description: 保存播放记录
+ * @date: 2020-8-15 22:29
+ */
+export const savePlayRecordService = async()=>{
+    return new Promise((resolve,reject)=>{
+        HttpUtil.get(api.savePlayRecord).then((res)=>{
             if(res.status == SUCCESS){
                 resolve(res);
             }else{

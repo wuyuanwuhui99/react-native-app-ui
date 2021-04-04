@@ -9,9 +9,11 @@ import {
     saveFavoriteService,
     isFavoriteService,
     deleteFavoriteeService,
+    savePlayRecordService
 } from "../service";
 import StarsComponent from "../components/StarsComponent";
 import RecommendComponent from "../components/RecommendComponent";
+import YourLikesComponent from "../components/YourLikesComponent";
 
 class PlayerPage extends Component {
     constructor(props) {
@@ -28,16 +30,8 @@ class PlayerPage extends Component {
 
     componentWillMount() {
         this.getMovieUrl();
-        this.getYourLikes()
         this.isFavorite();
-    }
-
-    getYourLikes =()=>{
-        let {label} = this.props.navigation.state.params;
-        if(!label)return;
-        getYourLikesService(label).then((res)=>{
-            this.setState({yourLikesList:res.data});
-        });
+        savePlayRecordService(this.props.navigation.state.params);
     }
 
     getMovieUrl=()=>{
@@ -106,7 +100,7 @@ class PlayerPage extends Component {
 
     render(){
         let {yourLikesList,currentUrl,movieUrl,isFavoriteStatus,currentPlayGroup} = this.state;
-        let {movieName,score,star,classify} = this.props.navigation.state.params;
+        let {movieName,score,star,classify,label} = this.props.navigation.state.params;
         return(
             <ScrollView>
                 <View style={styles.webView}>
@@ -165,22 +159,7 @@ class PlayerPage extends Component {
                         })
                     }
                 </View>
-                {yourLikesList.length > 0
-                    ? <View style={styles.titleWrapper}>
-                        <Text style={styles.title}>猜你想看</Text>
-                        <FlatList
-                            horizontal={true}
-                            data ={yourLikesList}
-                            keyExtractor={(item, index) => index.toString()}
-                            renderItem = {
-                                ({item,index}) => this._renderItem(item,index)
-                            }
-                        >
-                        </FlatList>
-
-                    </View>
-                    : null
-                }
+                <YourLikesComponent {...this.props} label={label}></YourLikesComponent>
                 <RecommendComponent {...this.props} classify={classify}/>
             </ScrollView>
         )
