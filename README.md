@@ -52,6 +52,14 @@ redux浏览器工具：reredux-devtools-extension: 2.13.8
 
 redux状态管理器：redux-thunk: 2.3.0
 
-后端项目和sql语句：https://github.com/wuyuanwuhui99/springboot-app-service
+
 
 flutter版本参见: https://github.com/wuyuanwuhui99/flutter-movie-app-ui
+
+在线音乐和电影后端接口项目和sql语句：https://github.com/wuyuanwuhui99/springboot-app-service
+
+flutter在线电影项目：https://github.com/wuyuanwuhui99/flutter-movie-app-ui
+
+vue在线音乐项目：https://github.com/wuyuanwuhui99/vue-music-app-ui
+
+在线音乐后端项目：https://github.com/wuyuanwuhui99/koa2-music-app-service
