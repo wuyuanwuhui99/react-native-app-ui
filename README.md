@@ -63,3 +63,5 @@ flutter在线电影项目：https://github.com/wuyuanwuhui99/flutter-movie-app-u
 vue在线音乐项目：https://github.com/wuyuanwuhui99/vue-music-app-ui
 
 在线音乐后端项目：https://github.com/wuyuanwuhui99/koa2-music-app-service
+
+使用token做登录验证，/service/movie/接口不需要验证，/service/movie-getway/接口需要token验证
