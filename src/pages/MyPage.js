@@ -3,7 +3,8 @@ import {StyleSheet, View,Text,Image,ScrollView,FlatList,TouchableOpacity} from "
 import {HOST} from "../config";
 import {getPlayRecordService,getUserMsgService} from "../service"
 import {connect} from "react-redux";
-import arrow from "../static/image/icon-arrow.png"
+import arrow from "../static/image/icon-arrow.png";
+import AvaterComponent from "../components/AvaterComponent";
 class  MyPage extends Component {
     constructor(props) {
         super(props);
@@ -36,12 +37,12 @@ class  MyPage extends Component {
     render() {
         let {historyList,userMsg} = this.state;
         let {userData={}} = this.props;
-        let {avater,username} = userData
+        let {username} = userData
         let {userAge=0,viewRecordCount=0,playRecordCount=0,favoriteCount=0} = userMsg
         return(
             <View style={styles.wrapper}>
                 <View style={styles.avaterWrapper}>
-                    {avater ? <Image roundAsCircle={true} style={styles.avaterImage} source={{uri:HOST+avater}}></Image>:null}
+                    <AvaterComponent style={styles.avaterImage} {...this.props}/>
                     <Text style={styles.username}>{username}</Text>
                     <View style={styles.myLabelWrapper}>
                         <View style={styles.myLabel}>

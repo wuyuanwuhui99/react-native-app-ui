@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {StyleSheet, View,Image,Text,FlatList} from "react-native";
-import {HOST} from "../config";
 import {getCategoryListService,getAllCategoryByClassify} from "../service";
 import CarouselComponent from "../components/CarouselComponent";
 import CategoryComponent from "../components/CategoryComponent";
 import SearchBarComponent from "../components/SearchBarComponent";
-import {connect} from "react-redux";
-class  VideoPage extends Component {
+import AvaterComponent from "../components/AvaterComponent";
+
+export default class  VideoPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -19,7 +19,7 @@ class  VideoPage extends Component {
     }
 
     initData=()=>{
-        this.state.dataSource = [[]],//当前显示的小类，懒加载
+        this.state.dataSource = [[]];//当前显示的小类，懒加载
         //获取轮播数据
         getCategoryListService("电视剧","轮播").then((res)=>{
             let {dataSource} = this.state;
@@ -108,7 +108,7 @@ class  VideoPage extends Component {
         return (
             <View style={styles.wrapper}>
                 <View style={styles.headerWrapper}>
-                    {avater ? <Image roundAsCircle={true} style={styles.imageStyle} source={{uri:HOST+avater}}></Image>:null}
+                    <AvaterComponent {...this.props}/>
                     <View style={styles.searchWrapper}>
                         <SearchBarComponent classify={"电视剧"}></SearchBarComponent>
                     </View>
@@ -130,13 +130,6 @@ class  VideoPage extends Component {
         );
     }
 }
-
-export default  connect((state)=>{
-    let {userData} = state;
-    return {
-        userData
-      }
-})(VideoPage);
 
 const styles = StyleSheet.create({
     wrapper:{

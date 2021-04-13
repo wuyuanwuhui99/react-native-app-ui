@@ -9,6 +9,7 @@ import MoviePage from '../pages/MoviePage';
 import VideoPage from '../pages/VideoPage';
 import MyPage from '../pages/MyPage';
 import DetailPage from "../pages/DetaiPage";
+import UserPage from "../pages/UserPage";
 import SearchPage from "../pages/SearchPage";
 import PlayerPage from "../pages/PlayerPage";
 const BottomTab = createAppContainer(
@@ -77,10 +78,16 @@ const BottomTab = createAppContainer(
       },
     ),
   );
-  
+
   const AppRouter = createStackNavigator({
     Home: {
       screen: BottomTab,
+      navigationOptions: {
+        headerShown: false, //可以通过将header设为null来禁用StackNavigator的Navigation
+      },
+    },
+    UserPage:{
+      screen: UserPage,
       navigationOptions: {
         headerShown: false, //可以通过将header设为null来禁用StackNavigator的Navigation
       },

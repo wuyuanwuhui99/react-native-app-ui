@@ -6,15 +6,15 @@ import CarouselComponent from "../components/CarouselComponent";
 import CategoryComponent from "../components/CategoryComponent";
 import SearchBarComponent from "../components/SearchBarComponent";
 import ClassifyComponent from "../components/ClassifyComponent";
-import {connect} from "react-redux";
+import AvaterComponent from "../components/AvaterComponent";
 import {getUserData,getToken} from "../store/actions";
 import StorageUtil from "../utils/StorageUtil";
+import {connect} from 'react-redux';
 
 class  HomePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userData:{},//用户数据json
             carouselData:[],//轮播数据
             allCategoryListByPageName:[],//按页面名称获取所有小类
             dataSource:[[],{name:"classify"}],//当前显示的小类，懒加载
@@ -67,7 +67,6 @@ class  HomePage extends Component {
         }
         //获取用户数据
         await getUserDataService().then((res) => {
-            this.setState({userData: res.data})
             this.props.dispatch(getUserData(res.data))
         });
 
@@ -128,12 +127,11 @@ class  HomePage extends Component {
     }
 
     render() {
-        let {userData,loading,dataSource} = this.state;
-        let {avater} = userData;
+        let {loading,dataSource} = this.state;
         return (
             <View style={styles.wrapper}>
                 <View style={styles.headerWrapper}>
-                    {avater ? <Image roundAsCircle={true} style={styles.imageStyle} source={{uri:HOST+avater}}></Image>:null}
+                    <AvaterComponent {...this.props}/>
                     <View style={styles.searchWrapper}>
                         <SearchBarComponent {...this.props} classify={"电影"}></SearchBarComponent>
                     </View>

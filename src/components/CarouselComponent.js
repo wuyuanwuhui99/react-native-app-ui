@@ -1,9 +1,8 @@
 import React, {Component,Fragment} from 'react';
-import {StyleSheet,Image,Dimensions,TouchableOpacity,TouchableHighlight} from "react-native";
+import {StyleSheet,Image,Dimensions,TouchableHighlight} from "react-native";
 import {Carousel} from "@ant-design/react-native";
 import {HOST} from "../config";
 import PropTypes from 'prop-types'
-// import { TouchableHighlight } from 'react-native-gesture-handler';
 
 export default class  CarouselComponent extends Component {
     constructor(props){

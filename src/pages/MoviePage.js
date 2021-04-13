@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
-import {StyleSheet, View,Image,Text,FlatList} from "react-native";
-import {HOST} from "../config";
+import {StyleSheet, View,Text,FlatList} from "react-native";
 import {getCategoryListService,getAllCategoryByClassify} from "../service";
 import CarouselComponent from "../components/CarouselComponent";
 import CategoryComponent from "../components/CategoryComponent";
 import SearchBarComponent from "../components/SearchBarComponent";
-import {connect} from "react-redux";
-class  MoviePage extends Component {
+import AvaterComponent from "../components/AvaterComponent";
+export default class  MoviePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -103,12 +102,10 @@ class  MoviePage extends Component {
 
     render() {
         let {loading,dataSource} = this.state;
-        let {userData={}} = this.props;
-        let {avater=""} = userData;
         return (
             <View style={styles.wrapper}>
                 <View style={styles.headerWrapper}>
-                    {avater ? <Image roundAsCircle={true} style={styles.imageStyle} source={{uri:HOST+avater}}></Image>:null}
+                    <AvaterComponent {...this.props}/>
                     <View style={styles.searchWrapper}>
                         <SearchBarComponent classify={"电影"}></SearchBarComponent>
                     </View>
@@ -130,13 +127,6 @@ class  MoviePage extends Component {
         );
     }
 }
-
-export default  connect((state)=>{
-    let {userData} = state;
-    return {
-        userData
-      }
-})(MoviePage);
 
 const styles = StyleSheet.create({
     wrapper:{

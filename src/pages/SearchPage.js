@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View,Text,Image,FlatList,ScrollView,TouchableOpacity,TextInput,ActivityIndicator} from "react-native";
 import {connect} from "react-redux";
-import {searchService,getRecommendService} from "../service";
+import {searchService} from "../service";
 import {HOST} from "../config";
 import StorageUtil from "../utils/StorageUtil";
 import StarsComponent from "../components/StarsComponent";
