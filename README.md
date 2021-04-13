@@ -3,7 +3,7 @@
 
 开发者：吴怨吴悔
 
-=============================界面预览==========================
+=============================界面预览（如果无法预览图片，请查看项目根目录png文件）==========================
 ![app整体预览](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/%E7%94%B5%E5%BD%B1app%E6%95%B4%E4%BD%93%E9%A2%84%E8%A7%88.jpg)
 ![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie1.png)
 ![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie2.png)
@@ -15,7 +15,7 @@
 ![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie8.png)
 ![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie9.png)
 ![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie10.png)
-=============================界面预览==========================
+=============================界面预览（如果无法预览图片，请查看项目根目录png文件）==========================
 
 使用的插件
 ui组件库：@ant-design/react-native: 4.0.5
@@ -63,3 +63,5 @@ flutter在线电影项目：https://github.com/wuyuanwuhui99/flutter-movie-app-u
 vue在线音乐项目：https://github.com/wuyuanwuhui99/vue-music-app-ui
 
 在线音乐后端项目：https://github.com/wuyuanwuhui99/koa2-music-app-service
+
+使用token做登录验证，/service/movie/接口不需要验证，/service/movie-getway/接口需要token验证
