@@ -18,6 +18,7 @@ export default {
     saveFavorite: HOST + '/service/movie-getway/saveFavorite',//保存收藏
     isFavorite: HOST + '/service/movie-getway/isFavorite',//是否已经收藏
     getYourLikes: HOST + '/service/movie/getYourLikes',//猜你想看
+    login: HOST + '/service/movie/login',//登录
 };
 
 

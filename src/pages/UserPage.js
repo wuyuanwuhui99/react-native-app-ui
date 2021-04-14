@@ -3,6 +3,8 @@ import {StyleSheet, View, Text, Image,TouchableOpacity} from 'react-native';
 import {connect} from "react-redux";
 import {HOST} from '../config';
 import {getUserData} from '../store/actions';
+import StorageUtil from "../utils/StorageUtil";
+
 class  UserPage extends Component {
     constructor(props) {
         super(props);
@@ -22,6 +24,7 @@ class  UserPage extends Component {
      */
     logout=()=>{
         this.props.dispatch(getUserData({}));
+        StorageUtil.delete("token");
         this.props.navigation.push('LoginPage');
     }
 

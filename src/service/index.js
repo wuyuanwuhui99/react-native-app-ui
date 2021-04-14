@@ -1,7 +1,7 @@
 import api from "../api";
 import HttpUtil from "../utils/HttpUtil";
 import {SUCCESS} from "../config"
-
+import md5 from "md5";
 /**
  * @author: wuwenqiang
  * @description: 获取用户信息
@@ -281,6 +281,25 @@ export const deleteFavoriteeService = (movieId)=>{
 export const getRecommendService = (classify)=>{
     return new Promise((resolve,reject)=>{
         HttpUtil.get(`${api.getRecommend}?classify=${classify}`).then((res)=>{
+            if(res.status == SUCCESS){
+                resolve(res);
+            }else{
+                reject()
+            }
+        }).catch(reject);
+    });
+}
+
+
+/**
+ * @author: wuwenqiang
+ * @description: 登录
+ * @date: 2021-04-04 22:29
+ */
+export const loginService = (userId,password)=>{
+    password = md5(password);
+    return new Promise((resolve,reject)=>{
+        HttpUtil.post(api.login,{userId,password}).then((res)=>{
             if(res.status == SUCCESS){
                 resolve(res);
             }else{

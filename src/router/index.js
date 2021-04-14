@@ -12,6 +12,8 @@ import DetailPage from "../pages/DetaiPage";
 import UserPage from "../pages/UserPage";
 import SearchPage from "../pages/SearchPage";
 import PlayerPage from "../pages/PlayerPage";
+import LoginPage from "../pages/LoginPage";
+
 const BottomTab = createAppContainer(
     createBottomTabNavigator(
       {
@@ -109,7 +111,13 @@ const BottomTab = createAppContainer(
       navigationOptions: {
         headerShown: false, //可以通过将header设为null来禁用StackNavigator的Navigation
       },
-    }
+    },
+    LoginPage:{
+      screen: LoginPage,
+      navigationOptions: {
+        headerShown: false, //可以通过将header设为null来禁用StackNavigator的Navigation
+      },
+    },
   });
 
   export default AppRouter
