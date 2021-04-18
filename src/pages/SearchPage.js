@@ -6,6 +6,7 @@ import {HOST} from "../config";
 import StorageUtil from "../utils/StorageUtil";
 import StarsComponent from "../components/StarsComponent";
 import RecommendComponent from "../components/RecommendComponent";
+import Loading from "../common/Loading";
 
 class  MyPage extends Component {
     constructor(props) {
@@ -65,7 +66,7 @@ class  MyPage extends Component {
                     <View style={styles.flatList}>
                         {
                             loading?
-                            <ActivityIndicator/>
+                                null
                             :<FlatList
                                 keyExtractor={(item, index) => index.toString()}
                                 data ={searchResult}
@@ -97,6 +98,7 @@ class  MyPage extends Component {
                         <RecommendComponent {...this.props} direction={'horizontal'} classify={classify}/>
                     </ScrollView>
                 }
+                <Loading></Loading>
             </View>
         )
     }
@@ -157,6 +159,7 @@ class  MyPage extends Component {
         return new Promise((resolve)=>{
             let {pageNum,pageSize} = this.state;
             this.setState({loading:true});
+            Loading.show();
             searchService({keyword:kw,pageNum,pageSize}).then((res)=>{
                 this.setState({
                     searchResult:res.data,
@@ -164,7 +167,8 @@ class  MyPage extends Component {
                     searching:true
                 })
             }).finally(()=>{
-                this.setState({loading:false})
+                this.setState({loading:false});
+                Loading.hide();
                 resolve()
             });
         })

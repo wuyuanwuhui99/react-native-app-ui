@@ -4,13 +4,14 @@ import {connect} from "react-redux";
 import {loginService} from "../service"
 import {getToken, getUserData} from '../store/actions';
 import StorageUtil from "../utils/StorageUtil";
-// import { TipModal } from 'react-native-ms';//https://www.cnblogs.com/zhenfei-jiang/p/9454352.html
+import Loading from "../common/Loading";
+import {Toast} from '@ant-design/react-native';
 class  LoginPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
             userId:"吴时吴刻",
-            password:"123456"
+            password:"123456",
         }
     }
 
@@ -18,7 +19,6 @@ class  LoginPage extends Component {
         let {password,userId} = this.state;
         return (
             <View style={styles.wrapper}>
-                {/*<TipModal ref="tipModal"/>*/}
                 <View style={styles.form}>
                     <Text>账号:</Text>
                     <TextInput
@@ -47,22 +47,26 @@ class  LoginPage extends Component {
                 <TouchableOpacity onPress={this.register}>
                     <View style={styles.registerBtn}><Text>注册</Text></View>
                 </TouchableOpacity>
+                <Loading></Loading>
             </View>
         );
     }
 
     login=()=>{
         let {userId,password} = this.state;
+        Loading.show();
         loginService(userId,password).then((res)=>{
             this.props.dispatch(getToken(res.token));
             this.props.dispatch(getUserData(res.data));
             StorageUtil.set("token",res.token);
-            // this.refs.tipModal._success('登录成功',1000);
+            Toast.success('登录成功');
             setTimeout(()=>{
-                this.props.navigation.push('HomePage');
+                this.props.navigation.push('Home');
             },1000);
         }).catch(()=>{
-            // this.refs.tipModal._error('失败成功',1000);
+            Toast.fail('失败成功');
+        }).finally(()=>{
+            Loading.hide();
         })
     }
 
@@ -77,7 +81,8 @@ export default  connect((state)=>{
 
 const styles = StyleSheet.create({
     wrapper:{
-        marginTop: 150
+        paddingTop: 150,
+        flex: 1
     },
     form:{
         display:"flex",
