@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import {loginService} from "../service"
 import {getToken, getUserData} from '../store/actions';
 import StorageUtil from "../utils/StorageUtil";
-import { TipModal } from 'react-native-ms';
+// import { TipModal } from 'react-native-ms';//https://www.cnblogs.com/zhenfei-jiang/p/9454352.html
 class  LoginPage extends Component {
     constructor(props) {
         super(props);
@@ -18,7 +18,7 @@ class  LoginPage extends Component {
         let {password,userId} = this.state;
         return (
             <View style={styles.wrapper}>
-                <TipModal ref="tipModal"/>
+                {/*<TipModal ref="tipModal"/>*/}
                 <View style={styles.form}>
                     <Text>账号:</Text>
                     <TextInput
@@ -57,12 +57,12 @@ class  LoginPage extends Component {
             this.props.dispatch(getToken(res.token));
             this.props.dispatch(getUserData(res.data));
             StorageUtil.set("token",res.token);
-            this.refs.tipModal._success('登录成功',1000);
+            // this.refs.tipModal._success('登录成功',1000);
             setTimeout(()=>{
                 this.props.navigation.push('HomePage');
             },1000);
         }).catch(()=>{
-            this.refs.tipModal._error('失败成功',1000);
+            // this.refs.tipModal._error('失败成功',1000);
         })
     }
 

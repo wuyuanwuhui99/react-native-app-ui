@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image, Text, FlatList,} from 'react-native';
-import {HOST} from "../config";
+import {StyleSheet, View, Text, FlatList,} from 'react-native';
 import {getUserDataService,getCategoryListService,getAllCategoryListByPageNameService} from "../service";
 import CarouselComponent from "../components/CarouselComponent";
 import CategoryComponent from "../components/CategoryComponent";
