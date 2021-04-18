@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import {HOST} from '../config';
 import {getUserData} from '../store/actions';
 import StorageUtil from "../utils/StorageUtil";
-
+import {Modal,Provider} from "@ant-design/react-native";
 class  UserPage extends Component {
     constructor(props) {
         super(props);
@@ -19,10 +19,26 @@ class  UserPage extends Component {
 
     /**
      * @author: wuwenqiang
-     * @description: 退出登录
+     * @description: 退出登录弹窗
      * @date: 2021-04-13 00:04
      */
     logout=()=>{
+        Modal.alert('', '是否退出', [
+            {
+                text: '取消',
+                onPress: () => console.log('cancel'),
+                style: 'cancel',
+            },
+            { text: '确定', onPress: () => this.doLogout() },
+        ]);
+    }
+
+    /**
+     * @author: wuwenqiang
+     * @description: 退出登录
+     * @date: 2021-04-13 00:04
+     */
+    doLogout=()=>{
         this.props.dispatch(getUserData({}));
         StorageUtil.delete("token");
         this.props.navigation.push('LoginPage');
@@ -33,41 +49,43 @@ class  UserPage extends Component {
         let {userData={}} = this.props;
         let {avater,username,sex,telephone,email,birthday} = userData
         return (
-            <View>
-                <View style={styles.row}>
-                    <Text style={styles.title}>头像</Text>
-                    <Image roundAsCircle={true} style={styles.avater} source={{uri:HOST+avater}}/>
-                    <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
+            <Provider>
+                <View>
+                    <View style={styles.row}>
+                        <Text style={styles.title}>头像</Text>
+                        <Image roundAsCircle={true} style={styles.avater} source={{uri:HOST+avater}}/>
+                        <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={styles.title}>昵称</Text>
+                        <Text>{username}</Text>
+                        <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={styles.title}>性别</Text>
+                        <Text>{sex}</Text>
+                        <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={styles.title}>电话</Text>
+                        <Text>{telephone}</Text>
+                        <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={styles.title}>邮箱</Text>
+                        <Text>{email}</Text>
+                        <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={styles.title}>出生日期</Text>
+                        <Text>{birthday}</Text>
+                        <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
+                    </View>
+                    <TouchableOpacity onPress={this.logout}>
+                        <View style={styles.logoutBtn}><Text style={styles.textBtn}>退出登录</Text></View>
+                    </TouchableOpacity>
                 </View>
-                <View style={styles.row}>
-                    <Text style={styles.title}>昵称</Text>
-                    <Text>{username}</Text>
-                    <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
-                </View>
-                <View style={styles.row}>
-                    <Text style={styles.title}>性别</Text>
-                    <Text>{sex}</Text>
-                    <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
-                </View>
-                <View style={styles.row}>
-                    <Text style={styles.title}>电话</Text>
-                    <Text>{telephone}</Text>
-                    <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
-                </View>
-                <View style={styles.row}>
-                    <Text style={styles.title}>邮箱</Text>
-                    <Text>{email}</Text>
-                    <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
-                </View>
-                <View style={styles.row}>
-                    <Text style={styles.title}>出生日期</Text>
-                    <Text>{birthday}</Text>
-                    <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
-                </View>
-                <TouchableOpacity onPress={this.logout}>
-                    <View style={styles.logoutBtn}><Text style={styles.textBtn}>退出登录</Text></View>
-                </TouchableOpacity>
-            </View>
+            </Provider>
         );
     }
 }
