@@ -15,6 +15,10 @@
 ![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie8.png)
 ![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie9.png)
 ![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie10.png)
+![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie11.png)
+![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie12.png)
+![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie13.png)
+![app首页](https://github.com/wuyuanwuhui99/react-native-app-ui/raw/main/movie14.png)
 =============================界面预览（如果无法预览图片，请查看项目根目录png文件）==========================
 
 使用的插件
