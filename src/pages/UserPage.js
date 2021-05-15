@@ -44,6 +44,19 @@ class  UserPage extends Component {
         this.props.navigation.push('LoginPage');
     }
 
+    /**
+     * @author: wuwenqiang
+     * @description: 进入编辑也
+     * @date: 2021-05-15 21:04
+     * @param title:编辑的标题
+     * @param type:编辑框的类型
+     * @param value: 输入框的值
+     * @param field 对应的userInfo字段
+     * @param isAllowEmpty: 是否允许为空
+     */
+    goEditPage=(title,type,value,field,isAllowEmpty)=>{
+        this.props.navigation.push('EditPage',{title,type,value,field,isAllowEmpty});
+    }
 
     render() {
         let {userData={}} = this.props;
@@ -56,11 +69,14 @@ class  UserPage extends Component {
                         <Image roundAsCircle={true} style={styles.avater} source={{uri:HOST+avater}}/>
                         <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
                     </View>
-                    <View style={styles.row}>
-                        <Text style={styles.title}>昵称</Text>
-                        <Text>{username}</Text>
-                        <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
-                    </View>
+                    <TouchableOpacity onPress={(e)=>{this.goEditPage("昵称","input",username,"username",false)}}>
+                        <View style={styles.row}>
+                            <Text style={styles.title}>昵称</Text>
+                            <Text>{username}</Text>
+                            <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
+                        </View>
+                    </TouchableOpacity>
+
                     <View style={styles.row}>
                         <Text style={styles.title}>性别</Text>
                         <Text>{sex}</Text>

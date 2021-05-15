@@ -50,7 +50,7 @@ export default class  MoviePage extends Component {
     }
 
     getCategoryListData=({classify,category})=>{
-        let {dataSource} = this.state;
+        const {dataSource} = this.state;
         this.state.loading = true;
         this.setState({loading:true});
         getCategoryListService(classify,category).then((res)=>{
@@ -89,7 +89,7 @@ export default class  MoviePage extends Component {
     }
 
     _renderFooter=()=>{
-        let {pageNum,allCategoryListByPageName} = this.state;
+        const {pageNum,allCategoryListByPageName} = this.state;
         if(pageNum < allCategoryListByPageName.length-1){
             return  <View style={styles.footer}><Text>正在加载中</Text></View>
         }else if(pageNum >= allCategoryListByPageName.length-1 && allCategoryListByPageName.length != 0){
@@ -101,7 +101,7 @@ export default class  MoviePage extends Component {
     }
 
     render() {
-        let {loading,dataSource} = this.state;
+        const {loading,dataSource} = this.state;
         return (
             <View style={styles.wrapper}>
                 <View style={styles.headerWrapper}>

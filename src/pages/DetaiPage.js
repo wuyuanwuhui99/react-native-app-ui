@@ -16,8 +16,8 @@ export default class DetaiPage extends Component {
     }
 
     componentWillMount(){
-        let params = this.props.navigation.state.params;
-        let {movieId} = params
+        const params = this.props.navigation.state.params;
+        const {movieId} = params
         if(movieId){
             getStarsService(movieId).then((res)=>{
                 this.setState({stars:res.data})
@@ -44,8 +44,8 @@ export default class DetaiPage extends Component {
 
 
     render() {
-        let {localImg,img,name,score,plot,star,classify,label} = this.props.navigation.state.params;
-        let {stars} = this.state;
+        const {localImg,img,name,score,plot,star,classify,label} = this.props.navigation.state.params;
+        const {stars} = this.state;
         return (
             <ScrollView>
                 <View style={styles.imageBackground}>

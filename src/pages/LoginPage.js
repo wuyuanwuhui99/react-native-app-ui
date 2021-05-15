@@ -16,7 +16,7 @@ class  LoginPage extends Component {
     }
 
     render() {
-        let {password,userId,loading} = this.state;
+        const {password,userId,loading} = this.state;
         return (
             <Provider>
                 <View style={styles.wrapper}>
@@ -58,7 +58,7 @@ class  LoginPage extends Component {
     }
 
     login=()=>{
-        let {userId,password,loading} = this.state;
+        const {userId,password,loading} = this.state;
         if(loading)return ;
         if(!userId){
             return Toast.fail('请输入账号');
