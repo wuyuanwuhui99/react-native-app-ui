@@ -12,7 +12,6 @@ class  EditPage extends Component {
         this.state = {
             value:this.props.navigation.state.params.value,
             loading:false,
-            showDatePicker:false
         }
     }
 
@@ -26,6 +25,7 @@ class  EditPage extends Component {
     }
 
     changeValue=(value)=>{
+        debugger
         console.log(value)
         this.setState({value})
     }
@@ -37,7 +37,7 @@ class  EditPage extends Component {
      */
     renderWidge(){
         const {type} = this.props.navigation.state.params;
-        const {value,showDatePicker} = this.state;
+        const {value} = this.state;
         switch(type){
             case "input":
                 return (
@@ -70,7 +70,6 @@ class  EditPage extends Component {
             case "date":
                 return (
                     <View style={styles.dateInputWrapper}>
-
                         <DatePicker
                             customStyles={{dateInput:styles.dateInput}}
                             date={value}
@@ -79,11 +78,9 @@ class  EditPage extends Component {
                             confirmBtnText="确定"
                             cancelBtnText="取消"
                             showIcon={false}
-                            onDateChange={value=>this.changeValue(value)}
+                            onDateChange={value=>this.setState({value})}
                         ></DatePicker>
-
                     </View>
-
                 );
             default :
                 return null
