@@ -308,3 +308,20 @@ export const loginService = (userId,password)=>{
         }).catch(reject);
     });
 }
+
+/**
+ * @author: wuwenqiang
+ * @description: 登录
+ * @date: 2021-04-04 22:29
+ */
+export const updateUserService = (userData)=>{
+    return new Promise((resolve,reject)=>{
+        HttpUtil.put(api.updateUser,userData).then((res)=>{
+            if(res.status == SUCCESS){
+                resolve(res);
+            }else{
+                reject()
+            }
+        }).catch(reject);
+    });
+}

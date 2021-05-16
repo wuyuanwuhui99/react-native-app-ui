@@ -69,7 +69,7 @@ class  UserPage extends Component {
                         <Image roundAsCircle={true} style={styles.avater} source={{uri:HOST+avater}}/>
                         <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
                     </View>
-                    <TouchableOpacity onPress={(e)=>{this.goEditPage("昵称","input",username,"username",false)}}>
+                    <TouchableOpacity onPress={()=>{this.goEditPage("昵称","input",username,"username",false)}}>
                         <View style={styles.row}>
                             <Text style={styles.title}>昵称</Text>
                             <Text>{username}</Text>
@@ -77,26 +77,38 @@ class  UserPage extends Component {
                         </View>
                     </TouchableOpacity>
 
-                    <View style={styles.row}>
-                        <Text style={styles.title}>性别</Text>
-                        <Text>{sex}</Text>
-                        <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
-                    </View>
-                    <View style={styles.row}>
-                        <Text style={styles.title}>电话</Text>
-                        <Text>{telephone}</Text>
-                        <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
-                    </View>
-                    <View style={styles.row}>
-                        <Text style={styles.title}>邮箱</Text>
-                        <Text>{email}</Text>
-                        <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
-                    </View>
-                    <View style={styles.row}>
-                        <Text style={styles.title}>出生日期</Text>
-                        <Text>{birthday}</Text>
-                        <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
-                    </View>
+                    <TouchableOpacity onPress={()=>{this.goEditPage("性别","radio",sex,"sex",true)}}>
+                        <View style={styles.row}>
+                            <Text style={styles.title}>性别</Text>
+                            <Text>{sex}</Text>
+                            <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
+                        </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={()=>{this.goEditPage("电话","input",telephone,"telephone",true)}}>
+                        <View style={styles.row}>
+                            <Text style={styles.title}>电话</Text>
+                            <Text>{telephone}</Text>
+                            <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
+                        </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={()=>{this.goEditPage("邮箱","input",email,"email",false)}}>
+                        <View style={styles.row}>
+                            <Text style={styles.title}>邮箱</Text>
+                            <Text>{email}</Text>
+                            <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
+                        </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={()=>{this.goEditPage("出生日期","date",birthday,"birthday",true)}}>
+                        <View style={styles.row}>
+                            <Text style={styles.title}>出生日期</Text>
+                            <Text>{birthday}</Text>
+                            <Image style={styles.arrow} source={require("../static/image/icon-arrow.png")}/>
+                        </View>
+                    </TouchableOpacity>
+
                     <TouchableOpacity onPress={this.logout}>
                         <View style={styles.logoutBtn}><Text style={styles.textBtn}>退出登录</Text></View>
                     </TouchableOpacity>
