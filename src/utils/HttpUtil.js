@@ -1,7 +1,7 @@
 import store from '../store';
 import {getToken} from '../store/actions';
 import StorageUtil from "../utils/StorageUtil";
-
+import {SUCCESS} from "../config"
 export default class HttpUtil {
 
     /**
@@ -17,16 +17,17 @@ export default class HttpUtil {
                     'Content-Type': 'application/json',
                     "Authorization":store.getState().token
                 }
-            })
-                .then(response => response.json())
-                .then((result) => {
+            }) .then(response => response.json()).then((result) => {
+                if(result.status == SUCCESS){
                     if (result.token) {
                         store.dispatch(getToken(result.token));
                         StorageUtil.set("token",result.token)
                     }
                     resolve(result);
-                })
-                .catch(error => reject(error));
+                }else{
+                    reject(result);
+                }
+            }).catch(error => reject(error));
         });
     }
 
@@ -47,16 +48,18 @@ export default class HttpUtil {
                     "Authorization":store.getState().token
                 },
                 body: JSON.stringify(params),
-            })
-                .then(response => response.json())
-                .then((result) => {
+            }).then(response => response.json()).then((result) => {
+                if(result.status == SUCCESS){
                     if (result.token) {
                         store.dispatch(getToken(result.token));
                         StorageUtil.set("token",result.token)
                     }
                     resolve(result);
-                })
-                .catch(error => reject(error));
+                }else{
+                    reject(result);
+                }
+
+            }).catch(error => reject(error));
         });
     }
 
@@ -76,16 +79,17 @@ export default class HttpUtil {
                     "Authorization":store.getState().token
                 },
                 body: JSON.stringify(params),
-            })
-                .then(response => response.json())
-                .then((result) => {
+            }).then(response => response.json()).then((result) => {
+                if(result.status == SUCCESS){
                     if (result.token) {
                         store.dispatch(getToken(result.token));
                         StorageUtil.set("token",result.token)
                     }
                     resolve(result);
-                })
-                .catch(error => reject(error));
+                }else{
+                    reject(result);
+                }
+            }).catch(error => reject(error));
         });
     }
 
@@ -105,16 +109,17 @@ export default class HttpUtil {
                     "Authorization":store.getState().token
                 },
                 body: JSON.stringify(params),
-            })
-                .then(response => response.json())
-                .then((result) => {
+            }).then(response => response.json()).then((result) => {
+                if(result.status == SUCCESS){
                     if (result.token) {
                         store.dispatch(getToken(result.token));
                         StorageUtil.set("token",result.token)
                     }
                     resolve(result);
-                })
-                .catch(error => reject(error));
+                }else{
+                    reject(result);
+                }
+            }).catch(error => reject(error));
         });
     }
 }

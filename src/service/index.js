@@ -1,6 +1,5 @@
 import api from "../api";
 import HttpUtil from "../utils/HttpUtil";
-import {SUCCESS} from "../config"
 import md5 from "md5";
 /**
  * @author: wuwenqiang
@@ -8,15 +7,7 @@ import md5 from "md5";
  * @date: 2020-8-15 22:29
  */
 export const getUserDataService = async()=>{
-    return new Promise((resolve,reject)=>{
-        HttpUtil.get(api.getUserData).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    })
+    return HttpUtil.get(api.getUserData);
 }
 
 /**
@@ -25,15 +16,7 @@ export const getUserDataService = async()=>{
  * @date: 2020-8-15 22:29
  */
 export const getCategoryListService = async (classify,category)=>{
-    return new Promise((resolve,reject)=>{
-        HttpUtil.get(`${api.getCategoryList}?classify=${classify}&category=${category}`).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    });
+    return HttpUtil.get(`${api.getCategoryList}?classify=${classify}&category=${category}`);
 }
 
 /**
@@ -42,15 +25,7 @@ export const getCategoryListService = async (classify,category)=>{
  * @date: 2020-8-15 22:29
  */
 export const getAllCategoryListByPageNameService = async(pageName)=>{
-    return new Promise((resolve,reject)=>{
-        HttpUtil.get(`${api.getAllCategoryListByPageName}?pageName=${pageName}`).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    });
+    return HttpUtil.get(`${api.getAllCategoryListByPageName}?pageName=${pageName}`);
 }
 
 
@@ -60,15 +35,7 @@ export const getAllCategoryListByPageNameService = async(pageName)=>{
  * @date: 2020-8-15 22:29
  */
 export const getAllCategoryByClassify = async(classify)=>{
-    return new Promise((resolve,reject)=>{
-        HttpUtil.get(`${api.getAllCategoryByClassify}?classify=${classify}`).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    });
+    return HttpUtil.get(`${api.getAllCategoryByClassify}?classify=${classify}`);
 }
 
 
@@ -78,15 +45,7 @@ export const getAllCategoryByClassify = async(classify)=>{
  * @date: 2020-8-15 22:29
  */
 export const getKeyWordService = async(classify)=>{
-    return new Promise((resolve,reject)=>{
-        HttpUtil.get(`${api.getKeyWord}?classify=${classify}`).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    });
+    return HttpUtil.get(`${api.getKeyWord}?classify=${classify}`);
 }
 
 /**
@@ -95,15 +54,7 @@ export const getKeyWordService = async(classify)=>{
  * @date: 2020-8-15 22:29
  */
 export const getPlayRecordService = async()=>{
-    return new Promise((resolve,reject)=>{
-        HttpUtil.get(api.getPlayRecord).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    });
+    return HttpUtil.get(api.getPlayRecord)
 }
 
 /**
@@ -112,15 +63,7 @@ export const getPlayRecordService = async()=>{
  * @date: 2020-8-15 22:29
  */
 export const savePlayRecordService = async()=>{
-    return new Promise((resolve,reject)=>{
-        HttpUtil.get(api.savePlayRecord).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    });
+    return HttpUtil.get(api.savePlayRecord);
 }
 
 /**
@@ -129,15 +72,7 @@ export const savePlayRecordService = async()=>{
  * @date: 2020-8-15 22:29
  */
 export const getUserMsgService = async(userId)=>{
-    return new Promise((resolve,reject)=>{
-        HttpUtil.get(`${api.getUserMsg}?userId=${userId}`).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    });
+    return HttpUtil.get(`${api.getUserMsg}?userId=${userId}`);
 }
 
 /**
@@ -146,15 +81,7 @@ export const getUserMsgService = async(userId)=>{
  * @date: 2020-8-15 22:29
  */
 export const searchService=({keyword="",pageName=1,pageSize=20})=>{
-    return new Promise((resolve,reject)=>{
-        HttpUtil.get(`${api.search}?keyword=${keyword}&pageNum=${pageName}&pageSize=${pageSize}`).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    });
+    return HttpUtil.get(`${api.search}?keyword=${keyword}&pageNum=${pageName}&pageSize=${pageSize}`);
 }
 
 /**
@@ -163,11 +90,7 @@ export const searchService=({keyword="",pageName=1,pageSize=20})=>{
  * @date: 2020-8-15 22:29
  */
 export const saveViewRecordService=(movieItem)=>{
-    return new Promise((resolve)=>{
-        HttpUtil.post(api.saveViewRecord,movieItem).finally(()=>{
-            resolve()
-        })
-    });
+    return HttpUtil.post(api.saveViewRecord,movieItem)
 }
 
 /**
@@ -176,15 +99,7 @@ export const saveViewRecordService=(movieItem)=>{
  * @date: 2020-8-15 22:29
  */
 export const getStarsService=(movieId)=>{
-    return new Promise((resolve,reject)=>{
-        HttpUtil.get(`${api.getStars}?movieId=${movieId}`).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    });
+    return HttpUtil.get(`${api.getStars}?movieId=${movieId}`)
 }
 
 /**
@@ -193,15 +108,7 @@ export const getStarsService=(movieId)=>{
  * @date: 2020-8-15 22:29
  */
 export const getMovieUrlService = (movieId)=>{
-    return new Promise((resolve,reject)=>{
-        HttpUtil.get(`${api.getMovieUrl}?movieId=${movieId}`).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    });
+    return HttpUtil.get(`${api.getMovieUrl}?movieId=${movieId}`)
 }
 
 /**
@@ -210,15 +117,7 @@ export const getMovieUrlService = (movieId)=>{
  * @date: 2020-8-16 22:29
  */
 export const getYourLikesService = (labels)=>{
-    return new Promise((resolve,reject)=>{
-        HttpUtil.get(`${api.getYourLikes}?labels=${labels}`).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    });
+    return HttpUtil.get(`${api.getYourLikes}?labels=${labels}`);
 }
 
 /**
@@ -227,15 +126,7 @@ export const getYourLikesService = (labels)=>{
  * @date: 2020-8-16 22:29
  */
 export const isFavoriteService = (movieId)=>{
-    return new Promise((resolve,reject)=>{
-        HttpUtil.get(`${api.isFavorite}?movieId=${movieId}`).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    });
+    return HttpUtil.get(`${api.isFavorite}?movieId=${movieId}`)
 }
 
 /**
@@ -244,15 +135,7 @@ export const isFavoriteService = (movieId)=>{
  * @date: 2020-8-16 22:29
  */
 export const saveFavoriteService = (movieItem)=>{
-    return new Promise((resolve,reject)=>{
-        HttpUtil.post(api.saveFavorite,movieItem).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    });
+    return HttpUtil.post(api.saveFavorite,movieItem)
 }
 
 /**
@@ -261,15 +144,7 @@ export const saveFavoriteService = (movieItem)=>{
  * @date: 2020-8-16 22:29
  */
 export const deleteFavoriteeService = (movieId)=>{
-    return new Promise((resolve,reject)=>{
-        HttpUtil.delete(`${api.deleteFavorite}?movieId=${movieId}`).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    });
+    return HttpUtil.delete(`${api.deleteFavorite}?movieId=${movieId}`);
 }
 
 
@@ -279,15 +154,7 @@ export const deleteFavoriteeService = (movieId)=>{
  * @date: 2020-8-16 22:29
  */
 export const getRecommendService = (classify)=>{
-    return new Promise((resolve,reject)=>{
-        HttpUtil.get(`${api.getRecommend}?classify=${classify}`).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    });
+    return HttpUtil.get(`${api.getRecommend}?classify=${classify}`);
 }
 
 
@@ -298,15 +165,7 @@ export const getRecommendService = (classify)=>{
  */
 export const loginService = (userId,password)=>{
     password = md5(password);
-    return new Promise((resolve,reject)=>{
-        HttpUtil.post(api.login,{userId,password}).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    });
+    return HttpUtil.post(api.login,{userId,password});
 }
 
 /**
@@ -315,13 +174,5 @@ export const loginService = (userId,password)=>{
  * @date: 2021-04-04 22:29
  */
 export const updateUserService = (userData)=>{
-    return new Promise((resolve,reject)=>{
-        HttpUtil.put(api.updateUser,userData).then((res)=>{
-            if(res.status == SUCCESS){
-                resolve(res);
-            }else{
-                reject()
-            }
-        }).catch(reject);
-    });
+        return HttpUtil.put(api.updateUser,userData)
 }

@@ -24,18 +24,13 @@ class  EditPage extends Component {
         this.props.navigation.goBack();
     }
 
-    changeValue=(value)=>{
-        debugger
-        console.log(value)
-        this.setState({value})
-    }
 
     /**
      * @author: wuwenqiang
      * @description: 渲染编辑框
      * @date: 2021-05-15 21:04
      */
-    renderWidge(){
+    renderWidget(){
         const {type} = this.props.navigation.state.params;
         const {value} = this.state;
         switch(type){
@@ -120,7 +115,7 @@ class  EditPage extends Component {
                     <Button type="primary" disabled={!isAllowEmpty && !value || primaryValue == value} onPress={this.onSave} >保存</Button>
                 </View>
                 {
-                    this.renderWidge()
+                    this.renderWidget()
                 }
                 {loading ? <ActivityIndicator color="#1890ff" size="large"></ActivityIndicator> : null}
             </View>
