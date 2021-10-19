@@ -14,14 +14,16 @@ export default class  RecommendComponent extends Component {
     //类型检测方法一
     static propTypes={
         classify:PropTypes.string,
-        direction:PropTypes.string
-    }
+        direction:PropTypes.string,
+        title:PropTypes.title
+    };
 
     //设置默认属性方法一
     static defaultProps={
         classify:"",
-        direction: "horizontal"
-    }
+        direction: "horizontal",
+        title:'推荐'
+    };
 
     componentWillMount() {
        this.getRecommend()
@@ -33,14 +35,14 @@ export default class  RecommendComponent extends Component {
         getRecommendService(classify).then((res)=>{
             this.setState({recommendList:res.data});
         });
-    }
+    };
     //点击跳转到详情
     goDetail=(item)=>{
         this.props.navigation.push('DetailPage',item)
-    }
+    };
 
     render(){
         let {recommendList} = this.state;
-        return <MovieListComponent {...this.props} title={'推荐'} movieList={recommendList}></MovieListComponent>
+        return <MovieListComponent {...this.props} movieList={recommendList}></MovieListComponent>
     }
 }

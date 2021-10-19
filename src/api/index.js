@@ -11,7 +11,7 @@ export default {
     saveViewRecord: `${HOST}/service/movie-getway/saveViewRecord`,//浏览记录
     savePlayRecord: `${HOST}/service/movie-getway/savePlayRecord`,//播放记录
     getPlayRecord: `${HOST}/service/movie-getway/getPlayRecord`,//获取播放记录
-    getStars: `${HOST}/service/movie/getStar`,//获取演员列表
+    getStars: `${HOST}/service/movie/getStar/`,//获取演员列表
     getMovieUrl: `${HOST}/service/movie/getMovieUrl`,//获取电影播放地址
     getRecommend: `${HOST}/service/movie/getRecommend`,//根据标签获取相对应的影片
     deleteFavorite: `${HOST}/service/movie-getway/deleteFavorite`,//取消收藏

@@ -54,10 +54,10 @@ class  HomePage extends Component {
                         }
                     }
                 })
-            })
+            });
             this.setState({allCategoryListByPageName});
         });
-    }
+    };
 
     async componentDidMount() {
         let token = await StorageUtil.get("token");
@@ -68,7 +68,6 @@ class  HomePage extends Component {
         await getUserDataService().then((res) => {
             this.props.dispatch(getUserData(res.data))
         });
-
         this.initData();
     }
 
@@ -85,7 +84,7 @@ class  HomePage extends Component {
                 dataSource
             })
         })
-    }
+    };
 
 
     _renderItem=({item,index})=>{
@@ -97,21 +96,21 @@ class  HomePage extends Component {
         }else{
             return <CategoryComponent {...this.props} categoryList={item}></CategoryComponent>
         }
-    }
+    };
 
     _onRefresh=()=>{
-        this.initData()
-    }
+        this.initData();
+    };
 
     _onEndReached=()=>{
         let {pageNum,allCategoryListByPageName} = this.state;
         if(pageNum < allCategoryListByPageName.length-1){
-            pageNum++
+            pageNum++;
             this.state.pageNum = pageNum;
-            this.setState({pageNum})
+            this.setState({pageNum});
             this.getCategoryListData(allCategoryListByPageName[pageNum]);
         }
-    }
+    };
 
     _renderFooter=()=>{
         let {pageNum,allCategoryListByPageName} = this.state;
@@ -122,8 +121,7 @@ class  HomePage extends Component {
         }else{
             return null
         }
-
-    }
+    };
 
     render() {
         let {loading,dataSource} = this.state;

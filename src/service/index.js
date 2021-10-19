@@ -8,7 +8,7 @@ import md5 from "md5";
  */
 export const getUserDataService = async()=>{
     return HttpUtil.get(api.getUserData);
-}
+};
 
 /**
  * @author: wuwenqiang
@@ -17,7 +17,7 @@ export const getUserDataService = async()=>{
  */
 export const getCategoryListService = async (classify,category)=>{
     return HttpUtil.get(`${api.getCategoryList}?classify=${classify}&category=${category}`);
-}
+};
 
 /**
  * @author: wuwenqiang
@@ -26,7 +26,7 @@ export const getCategoryListService = async (classify,category)=>{
  */
 export const getAllCategoryListByPageNameService = async(pageName)=>{
     return HttpUtil.get(`${api.getAllCategoryListByPageName}?pageName=${pageName}`);
-}
+};
 
 
 /**
@@ -36,7 +36,7 @@ export const getAllCategoryListByPageNameService = async(pageName)=>{
  */
 export const getAllCategoryByClassify = async(classify)=>{
     return HttpUtil.get(`${api.getAllCategoryByClassify}?classify=${classify}`);
-}
+};
 
 
 /**
@@ -46,7 +46,7 @@ export const getAllCategoryByClassify = async(classify)=>{
  */
 export const getKeyWordService = async(classify)=>{
     return HttpUtil.get(`${api.getKeyWord}?classify=${classify}`);
-}
+};
 
 /**
  * @author: wuwenqiang
@@ -55,7 +55,7 @@ export const getKeyWordService = async(classify)=>{
  */
 export const getPlayRecordService = async()=>{
     return HttpUtil.get(api.getPlayRecord)
-}
+};
 
 /**
  * @author: wuwenqiang
@@ -64,7 +64,7 @@ export const getPlayRecordService = async()=>{
  */
 export const savePlayRecordService = async()=>{
     return HttpUtil.get(api.savePlayRecord);
-}
+};
 
 /**
  * @author: wuwenqiang
@@ -73,7 +73,7 @@ export const savePlayRecordService = async()=>{
  */
 export const getUserMsgService = async(userId)=>{
     return HttpUtil.get(`${api.getUserMsg}?userId=${userId}`);
-}
+};
 
 /**
  * @author: wuwenqiang
@@ -82,7 +82,7 @@ export const getUserMsgService = async(userId)=>{
  */
 export const searchService=({keyword="",pageName=1,pageSize=20})=>{
     return HttpUtil.get(`${api.search}?keyword=${keyword}&pageNum=${pageName}&pageSize=${pageSize}`);
-}
+};
 
 /**
  * @author: wuwenqiang
@@ -91,7 +91,7 @@ export const searchService=({keyword="",pageName=1,pageSize=20})=>{
  */
 export const saveViewRecordService=(movieItem)=>{
     return HttpUtil.post(api.saveViewRecord,movieItem)
-}
+};
 
 /**
  * @author: wuwenqiang
@@ -99,8 +99,8 @@ export const saveViewRecordService=(movieItem)=>{
  * @date: 2020-8-15 22:29
  */
 export const getStarsService=(movieId)=>{
-    return HttpUtil.get(`${api.getStars}?movieId=${movieId}`)
-}
+    return HttpUtil.get(`${api.getStars}/${movieId}`)
+};
 
 /**
  * @author: wuwenqiang
@@ -109,7 +109,7 @@ export const getStarsService=(movieId)=>{
  */
 export const getMovieUrlService = (movieId)=>{
     return HttpUtil.get(`${api.getMovieUrl}?movieId=${movieId}`)
-}
+};
 
 /**
  * @author: wuwenqiang
@@ -118,7 +118,7 @@ export const getMovieUrlService = (movieId)=>{
  */
 export const getYourLikesService = (labels)=>{
     return HttpUtil.get(`${api.getYourLikes}?labels=${labels}`);
-}
+};
 
 /**
  * @author: wuwenqiang
@@ -127,7 +127,7 @@ export const getYourLikesService = (labels)=>{
  */
 export const isFavoriteService = (movieId)=>{
     return HttpUtil.get(`${api.isFavorite}?movieId=${movieId}`)
-}
+};
 
 /**
  * @author: wuwenqiang
@@ -136,7 +136,7 @@ export const isFavoriteService = (movieId)=>{
  */
 export const saveFavoriteService = (movieItem)=>{
     return HttpUtil.post(api.saveFavorite,movieItem)
-}
+};
 
 /**
  * @author: wuwenqiang
@@ -145,7 +145,7 @@ export const saveFavoriteService = (movieItem)=>{
  */
 export const deleteFavoriteeService = (movieId)=>{
     return HttpUtil.delete(`${api.deleteFavorite}?movieId=${movieId}`);
-}
+};
 
 
 /**
@@ -155,7 +155,7 @@ export const deleteFavoriteeService = (movieId)=>{
  */
 export const getRecommendService = (classify)=>{
     return HttpUtil.get(`${api.getRecommend}?classify=${classify}`);
-}
+};
 
 
 /**
@@ -166,7 +166,7 @@ export const getRecommendService = (classify)=>{
 export const loginService = (userId,password)=>{
     password = md5(password);
     return HttpUtil.post(api.login,{userId,password});
-}
+};
 
 /**
  * @author: wuwenqiang
@@ -174,5 +174,5 @@ export const loginService = (userId,password)=>{
  * @date: 2021-04-04 22:29
  */
 export const updateUserService = (userData)=>{
-        return HttpUtil.put(api.updateUser,userData)
-}
+    return HttpUtil.put(api.updateUser,userData)
+};

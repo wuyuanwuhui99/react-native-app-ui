@@ -1,34 +1,41 @@
 import React, {Component} from 'react';
 import {StyleSheet, View,Text,Image,TouchableOpacity} from "react-native";
 export default class  ClassifyComponent extends Component {
+    constructor(props){
+        super(props);
+    }
+
+    goNewMoviePage=()=>{
+        this.props.navigation.push('NewMoviePage');
+    };
 
     render(){
         return (
             <View style={styles.classifyWrapper}>
-                <View style={styles.classifyItem}>
-                    <TouchableOpacity>
+                <TouchableOpacity style={styles.classifyItem}>
+                    <View style={styles.classifyBox}>
                         <Image style={styles.classifyImage} source={require("../static/image/icon-hot.png")}></Image>
                         <Text>热门</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.classifyItem}>
-                    <TouchableOpacity>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.classifyItem}>
+                    <View style={styles.classifyBox}>
                         <Image style={styles.classifyImage} source={require("../static/image/icon-play.png")}></Image>
                         <Text>预告</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.classifyItem}>
-                    <TouchableOpacity>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.classifyItem} onPress={this.goNewMoviePage}>
+                    <View style={styles.classifyBox}>
                         <Image style={styles.classifyImage} source={require("../static/image/icon-top.png")}></Image>
-                        <Text>榜单</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.classifyItem}>
-                    <TouchableOpacity>
+                        <Text>最新</Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.classifyItem}>
+                    <View style={styles.classifyBox}>
                         <Image style={styles.classifyImage} source={require("../static/image/icon-classify.png")}></Image>
                         <Text>分类</Text>
-                    </TouchableOpacity>
-                </View>
+                    </View>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -38,6 +45,12 @@ const styles = StyleSheet.create({
     classifyWrapper:{
         margin:20,
         flexDirection:"row"
+    },
+    classifyBox:{
+        display:"flex",
+        flexDirection:"column",
+        alignItems:"center",
+        justifyContent:"center"
     },
     classifyItem:{
         flex:1,

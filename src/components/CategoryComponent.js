@@ -11,12 +11,12 @@ export default class  CategoryComponent extends Component {
      //类型检测方法一
     static propTypes={
         categoryList:PropTypes.array,
-    }
+    };
 
     //设置默认属性方法一
     static defaultProps={
         categoryList:[],
-    }
+    };
 
 
     render(){
@@ -51,11 +51,11 @@ export default class  CategoryComponent extends Component {
                 </View>
             </TouchableOpacity>
         )
-    }
+    };
 
     goDetail=(item)=>{
         this.props.navigation.push('DetailPage',item)
-    }
+    };
 }
 
 const styles = StyleSheet.create({

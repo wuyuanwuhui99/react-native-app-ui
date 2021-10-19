@@ -14,7 +14,7 @@ import SearchPage from "../pages/SearchPage";
 import PlayerPage from "../pages/PlayerPage";
 import LoginPage from "../pages/LoginPage";
 import EditPage from "../pages/EditPage";
-
+import NewMoviePage from "../pages/NewMoviePage";
 const BottomTab = createAppContainer(
     createBottomTabNavigator(
       {
@@ -125,6 +125,12 @@ const BottomTab = createAppContainer(
         headerShown: false, //可以通过将header设为null来禁用StackNavigator的Navigation
       },
     },
+    NewMoviePage:{
+      screen: NewMoviePage,
+      navigationOptions: {
+        headerShown: false, //可以通过将header设为null来禁用StackNavigator的Navigation
+      },
+    }
   });
 
   export default AppRouter

@@ -46,7 +46,7 @@ class PlayerPage extends Component {
             if(movieUrl.length > 0) currentUrl = movieUrl[0][0].url
             this.setState({movieUrl,currentUrl})
         });
-    }
+    };
 
 
     //查询是否已经收藏
@@ -56,7 +56,7 @@ class PlayerPage extends Component {
                 this.setState({isFavoriteStatus:true});
             }
         })
-    }
+    };
 
 
     /**
@@ -70,7 +70,7 @@ class PlayerPage extends Component {
         }else{//如果没有收藏过，点击之后添加收藏
             this.saveFavorite()
         }
-    }
+    };
 
     //查询是否已经收藏
     deleteFavorite=()=>{
@@ -80,7 +80,7 @@ class PlayerPage extends Component {
                 this.setState({isFavoriteStatus:false});
             }
         })
-    }
+    };
 
     //查询是否已经收藏
     isFavorite=()=>{
@@ -88,15 +88,15 @@ class PlayerPage extends Component {
         isFavoriteService(movieId).then((res)=>{
             this.setState({isFavoriteStatus:res.data > 0 ? true :false})
         })
-    }
+    };
 
     tabMovie=({url})=>{
         this.setState({currentUrl:url});
-    }
+    };
 
     tabGroup =(index)=>{
         this.setState({currentPlayGroup:index});
-    }
+    };
 
     render(){
         let {yourLikesList,currentUrl,movieUrl,isFavoriteStatus,currentPlayGroup} = this.state;

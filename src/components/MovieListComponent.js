@@ -13,19 +13,19 @@ export default class  MovieListComponent extends Component {
         title:PropTypes.string,
         direction:PropTypes.string,
         movieList:PropTypes.array
-    }
+    };
 
     //设置默认属性方法一
     static defaultProps={
         title:"",
         direction: "horizontal",
         movieList:[]
-    }
+    };
 
     //点击跳转到详情
     goDetail=(item)=>{
         this.props.navigation.push('DetailPage',item)
-    }
+    };
 
     render(){
         let {movieList,title,direction} = this.props;
@@ -66,14 +66,14 @@ export default class  MovieListComponent extends Component {
     _renderItem=(item,index)=>{
         let {direction} = this.props;
         return (
-            <TouchableOpacity onPress={e=>this.goDetail(item)} key={"_renderItem"+index}>
-                <View key={"movieImg"+index} style={direction == 'horizontal' ? styles.movieItem : [styles.movieItemVertical,{marginTop: index>1? 20 : 0}]}>
+            <TouchableOpacity onPress={()=>this.goDetail(item)} key={"_renderItem"+index}>
+                <View key={"movieImg"+index} style={direction == 'horizontal' ? styles.movieItem : [styles.movieItemVertical,{marginTop: index>2? 20 : 0,marginRight:index%3==2?0:10}]}>
                     <Image resizeMode='cover' style={styles.movieImg} source={{uri:item.localImg ? HOST + item.localImg :item.img}}></Image>
                     <View style={styles.movieNameWrapper}><Text numberOfLines={1}>{item.movieName}</Text></View>
                 </View>
             </TouchableOpacity>
         )
-    }
+    };
 
     goSearch=()=>{
         this.props.navigation.push('SearchPage',{placeholder:this.state.keyword,classify:this.props.classify});
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
         alignItems:"center"
     },
     movieItemVertical:{
-        width:(width - 40)/2,
+        width:(width - 60)/3,
         justifyContent:"center",
         display:"flex",
         alignItems:"center",
@@ -145,7 +145,4 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         flexWrap: 'wrap'
     },
-    gridItem:{
-        // width:width/2 - 30
-    }
-})
+});
