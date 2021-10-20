@@ -176,3 +176,22 @@ export const loginService = (userId,password)=>{
 export const updateUserService = (userData)=>{
     return HttpUtil.put(api.updateUser,userData)
 };
+
+/**
+ * @author: wuwenqiang
+ * @description: 获取影片评论总数
+ * @date: 2021-10-20 20:43
+ */
+export const getCommentCountService = (movieId)=>{
+    return HttpUtil.get(`${api.getCommentCount}?movieId=${movieId}`)
+};
+
+/**
+ * @author: wuwenqiang
+ * @description: 获取评论列表
+ * @date: 2021-10-20 21:36
+ */
+export const getTopCommentListService = (movieId,pageSize,pageNum)=>{
+    return HttpUtil.get(`${api.getTopCommentList}?movieId=${movieId}&pageSize=${pageSize}&pageNum=${pageNum}`)
+};
+

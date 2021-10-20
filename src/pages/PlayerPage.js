@@ -5,11 +5,12 @@ import {HOST} from "../config";
 import { WebView } from 'react-native-webview';
 import {
     getMovieUrlService,
-    getYourLikesService,
     saveFavoriteService,
     isFavoriteService,
     deleteFavoriteeService,
-    savePlayRecordService
+    savePlayRecordService,
+    getCommentCountService,
+    getTopCommentListService
 } from "../service";
 import StarsComponent from "../components/StarsComponent";
 import RecommendComponent from "../components/RecommendComponent";
@@ -24,7 +25,10 @@ class PlayerPage extends Component {
             movieUrl:[],//二维数组，分组电影列表
             currentUrl:null,//当前播放的url
             isFavoriteStatus:false,//是否已经收藏
-            currentPlayGroup:0
+            currentPlayGroup:0,
+            commentCount:0,//评论数量
+            commentList:[],//评论列表
+            isShowComment:false,//是否显示评论列表
         }
     }
 
@@ -98,70 +102,117 @@ class PlayerPage extends Component {
         this.setState({currentPlayGroup:index});
     };
 
+    /**
+     * @author: wuwenqiang
+     * @description: 获取评论列表
+     * @date: 2021-10-20 22:02
+     */
+    getMoreCommentList=()=>{
+        let {pageNum,commentList} = this.state;
+        pageNum++;
+        this.setState({pageNum});
+        getTopCommentListService(this.props.navigation.state.params.movieId,this.state.pageSize,pageNum).then(res=>{
+            commentList.push(...res.data);
+            this.setState({commentList});
+        });
+    };
+
+    /**
+     * @author: wuwenqiang
+     * @description: 显示或隐藏评论
+     * @date: 2021-10-20 22:02
+     */
+    showComment=()=>{
+        const {isShowComment} = this.state;
+        if(!isShowComment){//如果是隐藏状态，点击后显示评论
+            const {movieId} = this.props.navigation.state.params;
+            this.setState({pageSize:20,pageNum:1});
+            const {pageSize,pageNum} = this.state;
+            getTopCommentListService(movieId,pageSize,pageNum).then(res=>{
+                this.setState({commentList:res.data});
+            });
+        }
+        this.setState({isShowComment:!isShowComment});
+    };
+
     render(){
-        let {yourLikesList,currentUrl,movieUrl,isFavoriteStatus,currentPlayGroup} = this.state;
+        let {currentUrl,movieUrl,isFavoriteStatus,currentPlayGroup,commentCount,isShowComment} = this.state;
         let {movieName,score,star,classify,label} = this.props.navigation.state.params;
         return(
-            <ScrollView>
-                <View style={styles.webView}>
-                    {currentUrl ? <WebView source={{uri:currentUrl}} style={styles.playWrapper}></WebView> : null}
-                </View>
-                <View style={styles.iconWrapper}>
-                    <Image style={styles.iconComment} source={require("../static/image/icon-comment.png")}></Image>
-                    <Text>0</Text>
-                    <View style={styles.rightIcon}>
-                        <Image source={require("../static/image/icon-share.png")} style={styles.iconComment}></Image>
-                        <TouchableOpacity onPress={this.handleFavorite}>
-                            <Image source={isFavoriteStatus ? require("../static/image/icon-collection-active.png") : require("../static/image/icon-collection.png")} style={styles.iconComment}></Image>
+            <View style={styles.wrapper}>
+                {
+                    isShowComment? (
+                        <View style={styles.commentWrapper}>
+                            <View style={styles.mask}></View>
+                            <View style={styles.commentListWrapper}>
+                                <Text style={styles.commentCount}>{commentCount}条评论</Text>
+                                <View></View>
+                            </View>
+                        </View>
+                    ):null
+                }
+                <ScrollView>
+                    <View style={styles.webView}>
+                        {currentUrl ? <WebView source={{uri:currentUrl}} style={styles.playWrapper}></WebView> : null}
+                    </View>
+                    <View style={styles.iconWrapper}>
+                        <TouchableOpacity onPress={this.showComment} style={styles.iconCommentWrapper}>
+                            <Image style={styles.iconComment} source={require("../static/image/icon-comment.png")}></Image>
+                            <Text>{commentCount}</Text>
                         </TouchableOpacity>
+                        <View style={styles.rightIcon}>
+                            <Image source={require("../static/image/icon-share.png")} style={styles.iconComment}></Image>
+                            <TouchableOpacity onPress={this.handleFavorite}>
+                                <Image source={isFavoriteStatus ? require("../static/image/icon-collection-active.png") : require("../static/image/icon-collection.png")} style={styles.iconComment}></Image>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                </View>
-                <View style={styles.titleWrapper}>
-                    <Text style={styles.title}>{movieName}</Text>
-                    <View style={styles.subTitleWrapper}>
-                        <Text style={styles.subTitle} numberOfLines={1}>{star}</Text>
-                        <StarsComponent score={score}></StarsComponent>
+                    <View style={styles.titleWrapper}>
+                        <Text style={styles.title}>{movieName}</Text>
+                        <View style={styles.subTitleWrapper}>
+                            <Text style={styles.subTitle} numberOfLines={1}>{star}</Text>
+                            <StarsComponent score={score}></StarsComponent>
+                        </View>
                     </View>
-                </View>
-                <View style={styles.playNumberWrapper}>
-                    {/*<Text style={styles.title}>剧集</Text>*/}
-                    <View  style={styles.playGroup}>
+                    <View style={styles.playNumberWrapper}>
+                        <View  style={styles.playGroup}>
+                            {
+                                movieUrl.map((items,aIndex)=>{
+                                    return (
+                                        <TouchableOpacity key={'playGroupItem'+aIndex} onPress={e=>this.tabGroup(aIndex)}>
+                                            <Text style={[styles.playGroupItem,currentPlayGroup == aIndex ? styles.playGroupActive: null]}>播放源{aIndex+1}</Text>
+                                        </TouchableOpacity>
+                                    )
+                                })
+                            }
+                            <View style={styles.emptyTab}></View>
+                        </View>
                         {
                             movieUrl.map((items,aIndex)=>{
                                 return (
-                                    <TouchableOpacity key={'playGroupItem'+aIndex} onPress={e=>this.tabGroup(aIndex)}>
-                                        <Text style={[styles.playGroupItem,currentPlayGroup == aIndex ? styles.playGroupActive: null]}>播放源{aIndex+1}</Text>
-                                    </TouchableOpacity>
+                                    currentPlayGroup == aIndex ?
+                                        <ScrollView horizontal={true} key={'ScrollView'+aIndex}>
+                                            {
+                                                items.map((item, index) => {
+                                                    return (
+                                                        <TouchableOpacity onPress={e => this.tabMovie(item)} key={'seriesText' + aIndex + index}>
+                                                            <View style={{...styles.seriesWrapper, borderColor: currentUrl == item.url ? "#ffbb15" : "#333"}}>
+                                                                <Text style={currentUrl == item.url ? styles.seriesTextActive : styles.seriesText}>{item.label}</Text>
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                    )
+                                                })
+                                            }
+                                        </ScrollView>
+                                     :null
                                 )
                             })
                         }
-                        <View style={styles.emptyTab}></View>
                     </View>
-                    {
-                        movieUrl.map((items,aIndex)=>{
-                            return (
-                                currentPlayGroup == aIndex ?
-                                    <ScrollView horizontal={true} key={'ScrollView'+aIndex}>
-                                        {
-                                            items.map((item, index) => {
-                                                return (
-                                                    <TouchableOpacity onPress={e => this.tabMovie(item)} key={'seriesText' + aIndex + index}>
-                                                        <View style={{...styles.seriesWrapper, borderColor: currentUrl == item.url ? "#ffbb15" : "#333"}}>
-                                                            <Text style={currentUrl == item.url ? styles.seriesTextActive : styles.seriesText}>{item.label}</Text>
-                                                        </View>
-                                                    </TouchableOpacity>
-                                                )
-                                            })
-                                        }
-                                    </ScrollView>
-                                 :null
-                            )
-                        })
-                    }
-                </View>
-                <YourLikesComponent {...this.props} label={label}></YourLikesComponent>
-                <RecommendComponent {...this.props} classify={classify}/>
-            </ScrollView>
+                    <YourLikesComponent {...this.props} label={label}></YourLikesComponent>
+                    <RecommendComponent {...this.props} classify={classify}/>
+                </ScrollView>
+            </View>
         )
     }
 
@@ -182,7 +233,39 @@ export default  connect((state)=>{
       }
 })(PlayerPage);
 
+//屏幕的宽度
+const {width,height} = Dimensions.get('window');
+
 const styles = StyleSheet.create({
+    wrapper:{
+        flex:1
+    },
+    commentWrapper:{
+        position:'absolute',
+        zIndex: 1,
+        width,
+        height,
+        display: 'flex'
+    },
+    mask:{
+        height:height*0.4,
+        backgroundColor: "rgba(0,0,0,0.2)"
+    },
+    iconCommentWrapper:{
+        display:"flex",
+        flexDirection:"row",
+        alignItems:"center"
+    },
+    commentListWrapper:{
+        flex:1,
+        backgroundColor:"#fff"
+    },
+    commentCount:{
+        textAlign:"center",
+        marginTop:10,
+        marginBottom:10,
+        color:"#bbb"
+    },
     webView:{
         height:Dimensions.get("window").width*9/16,
         backgroundColor:"#000"
@@ -208,9 +291,9 @@ const styles = StyleSheet.create({
         paddingRight:20
     },
     iconComment:{
-       width:30,
-       height:30,
-       marginRight:10
+        width:30,
+        height:30,
+        marginRight:10
     },
     rightIcon:{
         flexDirection:"row-reverse",
@@ -303,4 +386,4 @@ const styles = StyleSheet.create({
         borderRadius:10,
         marginBottom:10
     }
-})
+});

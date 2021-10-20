@@ -19,7 +19,9 @@ export default {
     isFavorite: `${HOST}/service/movie-getway/isFavorite`,//是否已经收藏
     getYourLikes: `${HOST}/service/movie/getYourLikes`,//猜你想看
     login: `${HOST}/service/movie/login`,//登录
-    updateUser : `${HOST}/service//movie-getway/updateUser`,//更新用户信息
+    updateUser : `${HOST}/service/movie-getway/updateUser`,//更新用户信息
+    getCommentCount:`${HOST}/service/movie/getCommentCount`,//获取评论总数
+    getTopCommentList:`${HOST}/service/movie/getTopCommentList`,//获取评论列表
 };
 
 
