@@ -23,6 +23,7 @@ export default {
     getCommentCount:`${HOST}/service/movie/getCommentCount`,//获取评论总数
     getTopCommentList:`${HOST}/service/movie/getTopCommentList`,//获取评论列表
     getReplyCommentList:`${HOST}/service/movie/getReplyCommentList`,//获取回复列表
+    insertComment:`${HOST}/service//movie-getway/insertComment`,//获取回复列表
 };
 
 

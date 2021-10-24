@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View,Text,Image,ScrollView,Dimensions,TouchableOpacity} from "react-native";
+import {StyleSheet, View,Text,Image,ScrollView,Dimensions,TouchableOpacity,TextInput} from "react-native";
 import {connect} from "react-redux";
 import {HOST} from "../config";
 import { WebView } from 'react-native-webview';
@@ -11,7 +11,8 @@ import {
     savePlayRecordService,
     getCommentCountService,
     getTopCommentListService,
-    getReplyCommentListService
+    getReplyCommentListService,
+    insertCommentService
 } from "../service";
 import StarsComponent from "../components/StarsComponent";
 import RecommendComponent from "../components/RecommendComponent";
@@ -31,7 +32,10 @@ class PlayerPage extends Component {
             commentList:[],//评论列表
             isShowComment:false,//是否显示评论列表
             pageSize:20,
-            pageNum:1
+            pageNum:1,
+            replyItem:null,
+            replyIndex: -1,
+            inputValue:""
         }
     }
 
@@ -151,65 +155,117 @@ class PlayerPage extends Component {
      * @description: 获取回复的评论
      * @date: 2021-10-21 23:12
      */
-    getReplyCommentList=(item)=>{
+    getReplyCommentList=(e,item)=>{
+        e.stopPropagation();
         item.replyPageNum++;
-        console.log(item.topId,10,item.replyPageNum)
         getReplyCommentListService(item.id,10,item.replyPageNum).then((res)=>{
-            console.log(res)
             item.replyList.push(...res.data);
             this.setState({commentList:this.state.commentList});
         })
+    };
 
+    /**
+     * @author: wuwenqiang
+     * @description: 回复
+     * @date: 2021-10-24 18:37
+     */
+    onReply=(e,replyItem,replyIndex)=>{
+        this.state.replyIndex = replyIndex
+        e.stopPropagation();
+        this.setState({replyItem})
+    };
+
+    /**
+     * @author: wuwenqiang
+     * @description: 发送评论
+     * @date: 2021-10-24 18:37
+     */
+    onSend=()=>{
+        const {inputValue,replyItem} = this.state;
+        if(!inputValue)return;
+        const params ={
+            content:inputValue,
+            movieId:this.props.navigation.state.params.movieId,
+            parentId:replyItem ? replyItem.id : undefined,
+            topId:replyItem ? replyItem.topId : undefined,
+            replyUserId:replyItem ? replyItem.userId : undefined
+        };
+        insertCommentService(params).then((res)=>{
+            let {commentList,replyIndex,commentCount} = this.state;
+            if(replyItem){
+                commentList[replyIndex].replyList.push(res.data)
+            }else{
+                res.data.replyList = [];
+                res.data.replyPageNum = 0;
+                commentList.push(res.data);
+            }
+            commentCount++;
+            this.setState({commentList,replyItem:null,inputValue:'',commentCount});
+        });
     };
 
     render(){
-        let {currentUrl,movieUrl,isFavoriteStatus,currentPlayGroup,commentCount,isShowComment,commentList} = this.state;
+        let {currentUrl,movieUrl,isFavoriteStatus,currentPlayGroup,commentCount,isShowComment,commentList,replyItem,inputValue} = this.state;
         let {movieName,score,star,classify,label} = this.props.navigation.state.params;
         return(
             <View style={styles.wrapper}>
                 {
                     isShowComment? (
                         <View style={styles.commentWrapper}>
-                            <View style={styles.mask}></View>
+                            <View style={styles.maskWrapper}>
+                                <TouchableOpacity style={styles.mask} onPress={this.showComment}></TouchableOpacity>
+                            </View>
                             <View style={styles.commentListWrapper}>
                                 <Text style={styles.commentCount}>{commentCount}条评论</Text>
-                                <ScrollView>
-                                    {
-                                        commentList.map((item)=>{
-                                            return  (
-                                                <View style={styles.commentItem}>
-                                                    <Image style={styles.commentAvater} source={{uri:item.avater}}></Image>
-                                                    <View style={styles.commentTextWrapper}>
-                                                        <Text style={styles.commentUser}>{item.username}</Text>
-                                                        <Text style={styles.commentText}>{item.content}</Text>
-                                                        <Text style={styles.commentTime}>{item.createTime}   回复</Text>
-                                                        {
-                                                            item.replyList.map((aItem)=>{
-                                                                return (
-                                                                    <View style={styles.replyWrapper}>
-                                                                        <Image style={styles.replyAvater} source={{uri:HOST+aItem.avater}}/>
-                                                                        <View style={styles.replyInfo}>
-                                                                            <Text style={styles.replyUserName}>{aItem.username}▶{aItem.replyUserName}</Text>
-                                                                            <Text style={styles.replyContent}>{aItem.content}</Text>
-                                                                            <Text style={styles.commentTime}>{item.createTime}  回复</Text>
-                                                                        </View>
-                                                                    </View>
-                                                                )
-                                                            })
-                                                        }
-                                                        {
-                                                            item.replyCount > 0 && item.replyCount - 10*item.replyPageNum > 0 ? (
-                                                                <TouchableOpacity onPress={()=>this.getReplyCommentList(item)}>
-                                                                    <Text style={[styles.commentTime,{marginTop: 10},]}>——展开{item.replyCount - 10*item.replyPageNum}条回复 ></Text>
-                                                                </TouchableOpacity>
-                                                            ) : null
-                                                        }
-                                                    </View>
-                                                </View>
-                                            )
-                                        })
-                                    }
-                                </ScrollView>
+                                <TouchableOpacity style={styles.scrollWrapper} onPress={e=>this.onReply(e,null,-1)}>
+                                    <ScrollView>
+                                        {
+                                            commentList.map((item,index)=>{
+                                                return  (
+                                                    <TouchableOpacity onPress={e=>this.onReply(e,item,index)}>
+                                                        <View style={[styles.commentItem,{marginTop:index>0?10:0}]}>
+                                                            <Image style={styles.commentAvater} source={{uri:HOST+item.avater}}></Image>
+                                                            <View style={styles.commentTextWrapper}>
+                                                                <Text style={styles.commentUser}>{item.username}</Text>
+                                                                <Text style={styles.commentText}>{item.content}</Text>
+                                                                <Text style={styles.commentTime}>{item.createTime}   回复</Text>
+                                                                {
+                                                                    item.replyList.map((aItem)=>{
+                                                                        return (
+                                                                            <TouchableOpacity onPress={e=>this.onReply(e,aItem,index)}>
+                                                                                <View style={styles.replyWrapper}>
+                                                                                    <Image style={styles.replyAvater} source={{uri:HOST+aItem.avater}}/>
+                                                                                    <View style={styles.replyInfo}>
+                                                                                        <Text style={styles.replyUserName}>{aItem.username}▶{aItem.replyUserName}</Text>
+                                                                                        <Text style={styles.replyContent}>{aItem.content}</Text>
+                                                                                        <Text style={styles.commentTime}>{item.createTime}  回复</Text>
+                                                                                    </View>
+                                                                                </View>
+                                                                            </TouchableOpacity>
+                                                                        )
+                                                                    })
+                                                                }
+                                                                {
+                                                                    item.replyCount > 0 && item.replyCount - 10*item.replyPageNum > 0 ? (
+                                                                        <TouchableOpacity onPress={e=>this.getReplyCommentList(e,item)}>
+                                                                            <Text style={[styles.commentTime,{marginTop: 10},]}>——展开{item.replyCount - 10*item.replyPageNum}条回复 ></Text>
+                                                                        </TouchableOpacity>
+                                                                    ) : null
+                                                                }
+                                                            </View>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                )
+                                            })
+                                        }
+                                    </ScrollView>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.replyInputWrapper}>
+                                <TextInput value={inputValue}  onChangeText={text=>this.setState({inputValue:text})} style={styles.replyInput} placeholder={replyItem?"回复"+replyItem.username:"有爱评论，说点好听的~"}/>
+                                <TouchableOpacity onPress={this.onSend}>
+                                    <Text style={styles.sendBtn}>发送</Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     ):null
@@ -310,9 +366,12 @@ const styles = StyleSheet.create({
         height,
         display: 'flex'
     },
-    mask:{
-        height:height*0.4,
+    maskWrapper:{
+        height:height*0.3,
         backgroundColor: "rgba(0,0,0,0.2)"
+    },
+    mask:{
+        flex:1
     },
     iconCommentWrapper:{
         display:"flex",
@@ -321,13 +380,18 @@ const styles = StyleSheet.create({
     },
     commentListWrapper:{
         flex:1,
-        backgroundColor:"#fff"
+        backgroundColor:"#fff",
+        display:"flex",
+        flexDirection:"column"
     },
     commentCount:{
         textAlign:"center",
         marginTop:10,
         marginBottom:10,
         color:"#bbb"
+    },
+    scrollWrapper:{
+        flex:1
     },
     webView:{
         height:Dimensions.get("window").width*9/16,
@@ -488,5 +552,34 @@ const styles = StyleSheet.create({
     replyContent:{
         color:"#333",
         fontSize:16
+    },
+    replyInputWrapper:{
+        display:"flex",
+        flexDirection:"row",
+        paddingLeft:10,
+        paddingRight:10,
+        paddingTop:10,
+        paddingBottom:30,
+        borderTopWidth: 1,
+        borderTopColor: "#bbb",
+        backgroundColor:"#fff",
+    },
+    replyInput:{
+        flex:1,
+        borderRadius:50,
+        backgroundColor:"#ddd",
+        height:40,
+        paddingLeft:10
+    },
+    sendBtn:{
+        backgroundColor:"#1890ff",
+        borderRadius:20,
+        paddingLeft:20,
+        paddingRight:20,
+        paddingTop:10,
+        paddingBottom:10,
+        marginLeft: 10,
+        color:"#fff",
+        height:40
     }
 });

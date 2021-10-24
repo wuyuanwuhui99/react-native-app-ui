@@ -204,3 +204,12 @@ export const getReplyCommentListService = (topId,pageSize,pageNum)=>{
     return HttpUtil.get(`${api.getReplyCommentList}?topId=${topId}&pageSize=${pageSize}&pageNum=${pageNum}`)
 };
 
+/**
+ * @author: wuwenqiang
+ * @description: 新增评论
+ * @date: 2021-10-24 18:24
+ */
+export const insertCommentService = (item)=>{
+    return HttpUtil.post(api.insertComment,item)
+};
+
