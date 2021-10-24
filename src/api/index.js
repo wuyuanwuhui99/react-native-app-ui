@@ -22,6 +22,7 @@ export default {
     updateUser : `${HOST}/service/movie-getway/updateUser`,//更新用户信息
     getCommentCount:`${HOST}/service/movie/getCommentCount`,//获取评论总数
     getTopCommentList:`${HOST}/service/movie/getTopCommentList`,//获取评论列表
+    getReplyCommentList:`${HOST}/service/movie/getReplyCommentList`,//获取回复列表
 };
 
 

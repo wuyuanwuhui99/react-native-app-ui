@@ -195,3 +195,12 @@ export const getTopCommentListService = (movieId,pageSize,pageNum)=>{
     return HttpUtil.get(`${api.getTopCommentList}?movieId=${movieId}&pageSize=${pageSize}&pageNum=${pageNum}`)
 };
 
+/**
+ * @author: wuwenqiang
+ * @description: 获取回复的评论
+ * @date: 2021-10-20 21:36
+ */
+export const getReplyCommentListService = (topId,pageSize,pageNum)=>{
+    return HttpUtil.get(`${api.getReplyCommentList}?topId=${topId}&pageSize=${pageSize}&pageNum=${pageNum}`)
+};
+

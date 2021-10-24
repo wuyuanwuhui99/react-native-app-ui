@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View,Text,Image,ScrollView,FlatList,Dimensions,TouchableOpacity} from "react-native";
+import {StyleSheet, View,Text,Image,ScrollView,Dimensions,TouchableOpacity} from "react-native";
 import {connect} from "react-redux";
 import {HOST} from "../config";
 import { WebView } from 'react-native-webview';
@@ -10,7 +10,8 @@ import {
     deleteFavoriteeService,
     savePlayRecordService,
     getCommentCountService,
-    getTopCommentListService
+    getTopCommentListService,
+    getReplyCommentListService
 } from "../service";
 import StarsComponent from "../components/StarsComponent";
 import RecommendComponent from "../components/RecommendComponent";
@@ -29,6 +30,8 @@ class PlayerPage extends Component {
             commentCount:0,//评论数量
             commentList:[],//评论列表
             isShowComment:false,//是否显示评论列表
+            pageSize:20,
+            pageNum:1
         }
     }
 
@@ -36,6 +39,9 @@ class PlayerPage extends Component {
         this.getMovieUrl();
         this.isFavorite();
         savePlayRecordService(this.props.navigation.state.params);
+        getCommentCountService(this.props.navigation.state.params.movieId).then(res=>{
+            this.setState({commentCount:res.data})
+        });
     }
 
     getMovieUrl=()=>{
@@ -47,7 +53,7 @@ class PlayerPage extends Component {
                 if(!movieUrl[playGroup-1]) movieUrl[playGroup-1] = [];
                 movieUrl[playGroup-1].push(item);
             });
-            if(movieUrl.length > 0) currentUrl = movieUrl[0][0].url
+            if(movieUrl.length > 0) currentUrl = movieUrl[0][0].url;
             this.setState({movieUrl,currentUrl})
         });
     };
@@ -129,14 +135,35 @@ class PlayerPage extends Component {
             this.setState({pageSize:20,pageNum:1});
             const {pageSize,pageNum} = this.state;
             getTopCommentListService(movieId,pageSize,pageNum).then(res=>{
-                this.setState({commentList:res.data});
+                const commentList = res.data.map(item=>{
+                    item.replyPageNum = 0;
+                    item.replyList = [];
+                    return item;
+                });
+                this.setState({commentList});
             });
         }
         this.setState({isShowComment:!isShowComment});
     };
 
+    /**
+     * @author: wuwenqiang
+     * @description: 获取回复的评论
+     * @date: 2021-10-21 23:12
+     */
+    getReplyCommentList=(item)=>{
+        item.replyPageNum++;
+        console.log(item.topId,10,item.replyPageNum)
+        getReplyCommentListService(item.id,10,item.replyPageNum).then((res)=>{
+            console.log(res)
+            item.replyList.push(...res.data);
+            this.setState({commentList:this.state.commentList});
+        })
+
+    };
+
     render(){
-        let {currentUrl,movieUrl,isFavoriteStatus,currentPlayGroup,commentCount,isShowComment} = this.state;
+        let {currentUrl,movieUrl,isFavoriteStatus,currentPlayGroup,commentCount,isShowComment,commentList} = this.state;
         let {movieName,score,star,classify,label} = this.props.navigation.state.params;
         return(
             <View style={styles.wrapper}>
@@ -146,7 +173,43 @@ class PlayerPage extends Component {
                             <View style={styles.mask}></View>
                             <View style={styles.commentListWrapper}>
                                 <Text style={styles.commentCount}>{commentCount}条评论</Text>
-                                <View></View>
+                                <ScrollView>
+                                    {
+                                        commentList.map((item)=>{
+                                            return  (
+                                                <View style={styles.commentItem}>
+                                                    <Image style={styles.commentAvater} source={{uri:item.avater}}></Image>
+                                                    <View style={styles.commentTextWrapper}>
+                                                        <Text style={styles.commentUser}>{item.username}</Text>
+                                                        <Text style={styles.commentText}>{item.content}</Text>
+                                                        <Text style={styles.commentTime}>{item.createTime}   回复</Text>
+                                                        {
+                                                            item.replyList.map((aItem)=>{
+                                                                return (
+                                                                    <View style={styles.replyWrapper}>
+                                                                        <Image style={styles.replyAvater} source={{uri:HOST+aItem.avater}}/>
+                                                                        <View style={styles.replyInfo}>
+                                                                            <Text style={styles.replyUserName}>{aItem.username}▶{aItem.replyUserName}</Text>
+                                                                            <Text style={styles.replyContent}>{aItem.content}</Text>
+                                                                            <Text style={styles.commentTime}>{item.createTime}  回复</Text>
+                                                                        </View>
+                                                                    </View>
+                                                                )
+                                                            })
+                                                        }
+                                                        {
+                                                            item.replyCount > 0 && item.replyCount - 10*item.replyPageNum > 0 ? (
+                                                                <TouchableOpacity onPress={()=>this.getReplyCommentList(item)}>
+                                                                    <Text style={[styles.commentTime,{marginTop: 10},]}>——展开{item.replyCount - 10*item.replyPageNum}条回复 ></Text>
+                                                                </TouchableOpacity>
+                                                            ) : null
+                                                        }
+                                                    </View>
+                                                </View>
+                                            )
+                                        })
+                                    }
+                                </ScrollView>
                             </View>
                         </View>
                     ):null
@@ -273,14 +336,6 @@ const styles = StyleSheet.create({
     playWrapper:{
         position:"relative"
     },
-    arrow:{
-        position:"absolute",
-        zIndex:1,
-        width:30,
-        height:30,
-        left:20,
-        top:20
-    },
     iconWrapper:{
         borderBottomWidth:1,
         borderBottomColor:"#ddd",
@@ -385,5 +440,53 @@ const styles = StyleSheet.create({
         height:200,
         borderRadius:10,
         marginBottom:10
+    },
+    commentItem:{
+        display:"flex",
+        flexDirection:"row",
+        marginLeft:10,
+        marginRight:10
+    },
+    commentAvater:{
+        borderRadius:50,
+        width:50,
+        height:50,
+        marginRight:10
+    },
+    commentTextWrapper:{
+        flex:1,
+    },
+    commentUser:{
+        fontSize: 16,
+        color:"#666"
+    },
+    commentText:{
+        color:"#333",
+        fontSize:16
+    },
+    commentTime:{
+        fontSize: 16,
+        color:"#666"
+    },
+    replyWrapper:{
+        display:"flex",
+        flexDirection:"row",
+        marginTop:10
+    },
+    replyInfo:{
+        flex:1
+    },
+    replyAvater:{
+        width:20,
+        height:20,
+        borderRadius:20,
+        marginRight:10
+    },
+    replyUserName:{
+        color:"#bbb"
+    },
+    replyContent:{
+        color:"#333",
+        fontSize:16
     }
 });
