@@ -5,6 +5,10 @@ import CarouselComponent from "../components/CarouselComponent";
 import CategoryComponent from "../components/CategoryComponent";
 import SearchBarComponent from "../components/SearchBarComponent";
 import AvaterComponent from "../components/AvaterComponent";
+import {backgroundColor} from '../theme/Color';
+import {containerPaddingSize, smallMarginSize} from '../theme/Size';
+import {boxDecoration} from '../theme/Style';
+
 export default class  MoviePage extends Component {
     constructor(props) {
         super(props);
@@ -18,7 +22,7 @@ export default class  MoviePage extends Component {
     }
 
     initData=()=>{
-        this.state.dataSource = [[]],//当前显示的小类，懒加载
+        this.state.dataSource = [[]];//当前显示的小类，懒加载
         //获取轮播数据
         getCategoryListService("电影","轮播").then((res)=>{
             let {dataSource} = this.state;
@@ -36,14 +40,14 @@ export default class  MoviePage extends Component {
                     dataSource[index+2] = res.data;
                 }).finally(()=>{
                     count++;
-                    if(count == temp.length){
+                    if(count === temp.length){
                         this.setState({dataSource});
                     }
                 })
-            })
+            });
             this.setState({allCategoryListByPageName});
         });
-    }
+    };
 
     componentDidMount(){
         this.initData();
@@ -62,43 +66,42 @@ export default class  MoviePage extends Component {
                 dataSource
             })
         })
-    }
+    };
 
     _renderItem=({item,index})=>{
-        if(index == 0){
-            return <CarouselComponent carouselData={item}></CarouselComponent>
+        if(index === 0){
+            return <CarouselComponent carouselData={item}/>;
         }else if(item && item.length>0){
-            return <CategoryComponent categoryList={item}></CategoryComponent>
+            return <CategoryComponent categoryList={item}/>;
         }else{
-            return null
+            return null;
         }
-    }
+    };
 
     _onRefresh=()=>{
-        this.initData()
-    }
+        this.initData();
+    };
 
     _onEndReached=()=>{
         let {pageNum,allCategoryListByPageName} = this.state;
         if(pageNum < allCategoryListByPageName.length-1){
-            pageNum++
+            pageNum++;
             this.state.pageNum = pageNum;
-            this.setState({pageNum})
+            this.setState({pageNum});
             this.getCategoryListData(allCategoryListByPageName[pageNum]);
         }
-    }
+    };
 
     _renderFooter=()=>{
         const {pageNum,allCategoryListByPageName} = this.state;
         if(pageNum < allCategoryListByPageName.length-1){
-            return  <View style={styles.footer}><Text>正在加载中</Text></View>
-        }else if(pageNum >= allCategoryListByPageName.length-1 && allCategoryListByPageName.length != 0){
-            return <View style={styles.footer}><Text>没有更多了</Text></View>
+            return  <View style={styles.footer}><Text>正在加载中</Text></View>;
+        }else if(pageNum >= allCategoryListByPageName.length-1 && allCategoryListByPageName.length !== 0){
+            return <View style={styles.footer}><Text>没有更多了</Text></View>;
         }else{
-            return null
+            return null;
         }
-
-    }
+    };
 
     render() {
         const {loading,dataSource} = this.state;
@@ -107,7 +110,7 @@ export default class  MoviePage extends Component {
                 <View style={styles.headerWrapper}>
                     <AvaterComponent {...this.props}/>
                     <View style={styles.searchWrapper}>
-                        <SearchBarComponent classify={"电影"}></SearchBarComponent>
+                        <SearchBarComponent classify={"电影"}/>
                     </View>
                 </View>
                 <FlatList
@@ -122,7 +125,7 @@ export default class  MoviePage extends Component {
                     keyExtractor={(item, index) => index.toString()}
                     //设置下拉加载更多的指示器的位置
                     progressViewOffset={50}
-                ></FlatList>
+                />
             </View>
         );
     }
@@ -131,42 +134,25 @@ export default class  MoviePage extends Component {
 const styles = StyleSheet.create({
     wrapper:{
         flexDirection:'column',
-        flex:1
+        flex:1,
+        ...backgroundColor
     },
     headerWrapper: {
         display:"flex",
         justifyContent:"center",
         flexDirection:'row',
-        margin:20,
+        ...boxDecoration
     },
     searchWrapper:{
-        height:50,
         flex:1,
-        marginLeft:10
-    },
-    carouselWrapper:{
-        height:250
+        marginLeft:smallMarginSize
     },
     scrollViewWrapper:{
         flex:1,
     },
-    imageStyle: {
-        // margin:10,
-        width: 50,
-        height: 50,
-        backgroundColor: '#C0C0C0',
-        borderRadius:50,
-        // 显示模式：缩略全显contain，拉升全显（会变形）stretch，裁剪后显示（默认）cover
-        resizeMode:'cover',
-    },
-
     footer:{
-        margin:20,
+        margin:containerPaddingSize,
         justifyContent:"center",
         alignItems:"center"
-    },
-    // 菊花图
-    loadingMore: {
-        marginVertical: 20
     },
 });

@@ -50,7 +50,7 @@ class  HomePage extends Component {
                     dataSource[index+2] = res.data;
                 }).finally(()=>{
                     count++;
-                    if(count == temp.length){
+                    if(count === temp.length){
                         loadCategoryList = true;
                         if(loadCarousel && loadCategoryList){
                             this.setState({dataSource});
@@ -92,12 +92,12 @@ class  HomePage extends Component {
 
     _renderItem=({item,index})=>{
         if (!item)return null;
-        if(index == 0){
-            return <CarouselComponent {...this.props} carouselData={item}></CarouselComponent>
-        }else if(item.name == "classify"){
-            return <ClassifyComponent {...this.props}></ClassifyComponent>
+        if(index === 0){
+            return <CarouselComponent {...this.props} carouselData={item}/>
+        }else if(item.name === "classify"){
+            return <ClassifyComponent {...this.props}/>
         }else{
-            return <CategoryComponent {...this.props} categoryList={item}></CategoryComponent>
+            return <CategoryComponent {...this.props} categoryList={item}/>
         }
     };
 
@@ -119,7 +119,7 @@ class  HomePage extends Component {
         let {pageNum,allCategoryListByPageName} = this.state;
         if(pageNum < allCategoryListByPageName.length-1){
             return <View style={styles.footer}><Text>正在加载中</Text></View>
-        }else if(pageNum >= allCategoryListByPageName.length-1 && allCategoryListByPageName.length != 0){
+        }else if(pageNum >= allCategoryListByPageName.length-1 && allCategoryListByPageName.length !== 0){
             return <View style={styles.footer}><Text>没有更多了</Text></View>
         }else{
             return null
@@ -133,7 +133,7 @@ class  HomePage extends Component {
                 <View style={styles.headerWrapper}>
                     <AvaterComponent style={{width:middleAvaterSize,height:middleAvaterSize,marginRight:smallMarginSize}} {...this.props}/>
                     <View style={styles.searchWrapper}>
-                        <SearchBarComponent {...this.props} classify={"电影"}></SearchBarComponent>
+                        <SearchBarComponent {...this.props} classify={"电影"}/>
                     </View>
                 </View>
                 <FlatList
@@ -148,7 +148,7 @@ class  HomePage extends Component {
                     keyExtractor={(item,index)=>index.toString()}
                     //设置下拉加载更多的指示器的位置
                     progressViewOffset={50}
-                ></FlatList>
+                />
             </View>
         );
     }
