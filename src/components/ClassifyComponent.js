@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 import {StyleSheet, View,Text,Image,TouchableOpacity} from "react-native";
+import {boxDecoration} from '../theme/Style';
+import {bigIconSize,smallMarginSize} from '../theme/Size';
+
 export default class  ClassifyComponent extends Component {
     constructor(props){
         super(props);
@@ -43,7 +46,7 @@ export default class  ClassifyComponent extends Component {
 
 const styles = StyleSheet.create({
     classifyWrapper:{
-        margin:20,
+        ...boxDecoration,
         flexDirection:"row"
     },
     classifyBox:{
@@ -58,9 +61,8 @@ const styles = StyleSheet.create({
         justifyContent:"center"
     },
     classifyImage:{
-        width:50,
-        height:50,
-        marginBottom:10
+        width:bigIconSize,
+        height:bigIconSize,
+        marginBottom:smallMarginSize
     }
-
-})
+});

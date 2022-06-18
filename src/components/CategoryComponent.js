@@ -2,7 +2,16 @@ import React, {Component} from 'react';
 import {StyleSheet,Image,View,Text,FlatList,TouchableOpacity} from "react-native";
 import {HOST} from "../config";
 import PropTypes from 'prop-types'
-
+import {boxDecoration} from '../theme/Style';
+import {
+    miniMarginSize,
+    smallMarginSize,
+    middleRadiusSize,
+    movieWidthSize,
+    movieHeightSize,
+    containerPaddingSize, smallFontSize,
+} from '../theme/Size';
+import {activeColor} from '../theme/Color';
 export default class  CategoryComponent extends Component {
     constructor(props){
         super(props);
@@ -22,7 +31,7 @@ export default class  CategoryComponent extends Component {
     render(){
         let {categoryList} = this.props;
         return (
-            <View>
+            <View style={styles.wrapper}>
                 <View style={styles.categoryHeader}>
                     <View style={styles.categoryLine}></View>
                     <Text style={styles.categoryTitle}>{categoryList[0] ? categoryList[0].category : null}</Text>
@@ -59,36 +68,36 @@ export default class  CategoryComponent extends Component {
 }
 
 const styles = StyleSheet.create({
+    wrapper:{
+        ...boxDecoration
+    },
     categoryHeader:{
         display:"flex",
         alignItems:"center",
         flexDirection:'row',
-        margin:20,
     },
     categoryLine:{
         width:4,
         height:18,
-        backgroundColor:"#1890ff"
+        ...activeColor
     },
     categoryTitle:{
-        fontSize:14,
-        marginLeft:5
+        fontSize:smallFontSize,
+        marginLeft:miniMarginSize
     },
     movieName:{
-        marginTop:10,
-        width:150
+        marginTop:smallMarginSize,
+        width:movieWidthSize
     },
     categoryView:{
-        marginRight:10
+        marginRight:middleRadiusSize
     },
     categoryImage:{
-        width:150,
-        height:200,
-        borderRadius:10
+        width:movieWidthSize,
+        height:movieHeightSize,
+        borderRadius:middleRadiusSize
     },
     categoryList:{
-        marginLeft:20,
-        marginRight:20,
-        marginBottom:20
+        marginTop:containerPaddingSize
     }
 });

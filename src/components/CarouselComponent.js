@@ -1,8 +1,11 @@
 import React, {Component,Fragment} from 'react';
-import {StyleSheet,Image,Dimensions,TouchableHighlight} from "react-native";
+import {StyleSheet,Image,TouchableHighlight} from "react-native";
 import {Carousel} from "@ant-design/react-native";
 import {HOST} from "../config";
 import PropTypes from 'prop-types'
+import {boxDecoration} from '../theme/Style';
+import {middleRadiusSize,containerPaddingSize} from '../theme/Size';
+import {Dimensions} from 'react-native';
 
 export default class  CarouselComponent extends Component {
     constructor(props){
@@ -12,12 +15,12 @@ export default class  CarouselComponent extends Component {
      //类型检测方法一
     static propTypes={
         carouselData:PropTypes.array//轮播的图片的json数组
-    }
+    };
 
     //设置默认属性方法一
     static defaultProps={
         carouselData:[]
-    }
+    };
 
 
     render(){
@@ -26,7 +29,7 @@ export default class  CarouselComponent extends Component {
             <Fragment>
             {
                 carouselData.length > 0 ?
-                <Carousel autoplay={true} infinite={true} style={styles.carouseImageStyle}>
+                <Carousel autoplay={true} infinite={true} style={styles.carouseImageWrapStyle}>
                     {
                         carouselData.map((item,index)=>{
                             return <TouchableHighlight key={'carouselData'+index} onPress={e=>this.goDetail(item)}>
@@ -46,10 +49,16 @@ export default class  CarouselComponent extends Component {
         this.props.navigation.push('DetailPage',item)
     }
 }
-
+const width = Dimensions.get('window').width - containerPaddingSize *2;
 const styles = StyleSheet.create({
+    carouseImageWrapStyle:{
+        ...boxDecoration,
+        backgroundColor:'transparent',
+        height: width * 7 / 16,
+    },
     carouseImageStyle:{
-        width:Dimensions.get('window').width,
-        height:220
+        width:width,
+        height:width * 7 / 16,
+        borderRadius:middleRadiusSize,
     }
 });

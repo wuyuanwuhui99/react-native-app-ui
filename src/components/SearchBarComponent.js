@@ -3,6 +3,8 @@ import {StyleSheet, View,Text,TouchableOpacity} from "react-native";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {getKeyWordService} from "../service"
 import PropTypes from 'prop-types'
+import {buttonHeightSize, containerPaddingSize, smallMarginSize, superRadiusSize} from '../theme/Size';
+import {backgroundColor} from '../theme/Color'
 export default class  CategoryComponent extends Component {
     constructor(props){
         super(props);
@@ -48,19 +50,19 @@ export default class  CategoryComponent extends Component {
 
 const styles = StyleSheet.create({
     searchBarWrapper:{
-        height:50,
-        borderRadius:50,
-        backgroundColor:"#ddd",
+        height:buttonHeightSize,
+        borderRadius:superRadiusSize,
+        ...backgroundColor,
         position:"relative",
-        justifyContent:"center"
+        justifyContent:"center",
     },
     searchText:{
         color:"gray",
-        marginLeft:20
+        marginLeft:containerPaddingSize
     },
     searchIcon:{
         color:"gray",
         position:"absolute",
-        right:10
+        right:smallMarginSize
     }
-})
+});

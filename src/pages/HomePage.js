@@ -9,6 +9,9 @@ import AvaterComponent from "../components/AvaterComponent";
 import {getUserData,getToken} from "../store/actions";
 import StorageUtil from "../utils/StorageUtil";
 import {connect} from 'react-redux';
+import {backgroundColor} from '../theme/Color';
+import {smallMarginSize, middleAvaterSize, containerPaddingSize} from '../theme/Size';
+import {boxDecoration} from '../theme/Style';
 
 class  HomePage extends Component {
     constructor(props) {
@@ -128,7 +131,7 @@ class  HomePage extends Component {
         return (
             <View style={styles.wrapper}>
                 <View style={styles.headerWrapper}>
-                    <AvaterComponent {...this.props}/>
+                    <AvaterComponent style={{width:middleAvaterSize,height:middleAvaterSize,marginRight:smallMarginSize}} {...this.props}/>
                     <View style={styles.searchWrapper}>
                         <SearchBarComponent {...this.props} classify={"电影"}></SearchBarComponent>
                     </View>
@@ -158,42 +161,24 @@ export default  connect((state)=>{
 const styles = StyleSheet.create({
     wrapper:{
         flexDirection:'column',
-        flex:1
+        flex:1,
+        ...backgroundColor
+    },
+    searchWrapper:{
+      flex:1
     },
     headerWrapper: {
         display:"flex",
         justifyContent:"center",
         flexDirection:'row',
-        margin:20,
-    },
-    searchWrapper:{
-        height:50,
-        flex:1,
-        marginLeft:10
-    },
-    carouselWrapper:{
-        height:250
+        ...boxDecoration,
     },
     scrollViewWrapper:{
         flex:1,
     },
-    imageStyle: {
-        // margin:10,
-        width: 50,
-        height: 50,
-        backgroundColor: '#C0C0C0',
-        borderRadius:50,
-        // 显示模式：缩略全显contain，拉升全显（会变形）stretch，裁剪后显示（默认）cover
-        resizeMode:'cover',
-    },
-
     footer:{
-        margin:20,
+        margin:containerPaddingSize,
         justifyContent:"center",
         alignItems:"center"
-    },
-    // 菊花图
-    loadingMore: {
-        marginVertical: 20
     },
 });

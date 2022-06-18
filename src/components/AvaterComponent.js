@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {Image, StyleSheet,TouchableOpacity} from 'react-native';
 import {HOST} from '../config';
 import PropTypes from 'prop-types';
+import {middleAvaterSize, superRadiusSize} from '../theme/Size';
 
 class  AvaterComponent extends Component {
     constructor(props){
@@ -12,12 +13,12 @@ class  AvaterComponent extends Component {
     //类型检测方法一
     static propTypes={
         style:PropTypes.object,
-    }
+    };
 
     //设置默认属性方法一
     static defaultProps={
         style:{},
-    }
+    };
 
     render(){
         let {avater} = this.props.userData;
@@ -41,10 +42,9 @@ export default  connect((state)=>{
 
 const styles = StyleSheet.create({
     imageStyle: {
-        width: 50,
-        height: 50,
-        backgroundColor: '#C0C0C0',
-        borderRadius:50,
+        width: middleAvaterSize,
+        height: middleAvaterSize,
+        borderRadius:superRadiusSize,
         // 显示模式：缩略全显contain，拉升全显（会变形）stretch，裁剪后显示（默认）cover
         resizeMode:'cover',
     },
