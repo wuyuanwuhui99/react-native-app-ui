@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import {StyleSheet, View,Image,Text,FlatList} from "react-native";
 import {getCategoryListService,getAllCategoryByClassify} from "../service";
-import CarouselComponent from "../components/CarouselComponent";
-import CategoryComponent from "../components/CategoryComponent";
-import SearchBarComponent from "../components/SearchBarComponent";
-import AvaterComponent from "../components/AvaterComponent";
+import MovieCarouselComponent from "../components/MovieCarouselComponent";
+import MovieCategoryComponent from "../components/MovieCategoryComponent";
+import SearchBarComponent from "../components/MovieSearchBarComponent";
+import AvaterComponent from "../components/MovieAvaterComponent";
 import {backgroundColor} from '../theme/Color';
 import {containerPaddingSize, smallMarginSize} from '../theme/Size';
 import {boxDecoration} from '../theme/Style';
 
-export default class  VideoPage extends Component {
+export default class  MovieVideoPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -70,9 +70,9 @@ export default class  VideoPage extends Component {
 
     _renderItem=({item,index})=>{
         if(index === 0){
-            return <CarouselComponent carouselData={item}/>
+            return <MovieCarouselComponent carouselData={item}/>
         }else if(item && item.length>0){
-            return <CategoryComponent categoryList={item}/>
+            return <MovieCategoryComponent categoryList={item}/>
         }else{
             return null;
         }

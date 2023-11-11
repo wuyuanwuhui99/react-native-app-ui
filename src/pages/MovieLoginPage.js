@@ -5,7 +5,7 @@ import {loginService} from "../service"
 import {getToken, getUserData} from '../store/actions';
 import StorageUtil from "../utils/StorageUtil";
 import {Toast,Provider,ActivityIndicator} from '@ant-design/react-native';
-class  LoginPage extends Component {
+class  MovieLoginPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -89,7 +89,7 @@ class  LoginPage extends Component {
 
 export default  connect((state)=>{
    return {}
-})(LoginPage);
+})(MovieLoginPage);
 
 const styles = StyleSheet.create({
     wrapper:{

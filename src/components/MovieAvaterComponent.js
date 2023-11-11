@@ -5,7 +5,7 @@ import {HOST} from '../config';
 import PropTypes from 'prop-types';
 import {middleAvaterSize, superRadiusSize} from '../theme/Size';
 
-class  AvaterComponent extends Component {
+class  MovieAvaterComponent extends Component {
     constructor(props){
         super(props);
     }
@@ -30,7 +30,7 @@ class  AvaterComponent extends Component {
     }
 
     goUserPage=()=>{
-        this.props.navigation.push('UserPage');
+        this.props.navigation.push('MovieUserPage');
     }
 }
 
@@ -38,7 +38,7 @@ class  AvaterComponent extends Component {
 export default  connect((state)=>{
     let {userData} = state;
     return {userData}
-})(AvaterComponent);
+})(MovieAvaterComponent);
 
 const styles = StyleSheet.create({
     imageStyle: {

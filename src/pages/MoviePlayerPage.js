@@ -14,11 +14,11 @@ import {
     getReplyCommentListService,
     insertCommentService
 } from "../service";
-import StarsComponent from "../components/StarsComponent";
-import RecommendComponent from "../components/RecommendComponent";
-import YourLikesComponent from "../components/YourLikesComponent";
+import MovieStarsComponent from "../components/MovieStarsComponent";
+import MovieRecommendComponent from "../components/MovieRecommendComponent";
+import MovieYourLikesComponent from "../components/MovieYourLikesComponent";
 
-class PlayerPage extends Component {
+class MoviePlayerPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -290,7 +290,7 @@ class PlayerPage extends Component {
                         <Text style={styles.title}>{movieName}</Text>
                         <View style={styles.subTitleWrapper}>
                             <Text style={styles.subTitle} numberOfLines={1}>{star}</Text>
-                            <StarsComponent score={score}></StarsComponent>
+                            <MovieStarsComponent score={score}></MovieStarsComponent>
                         </View>
                     </View>
                     <View style={styles.playNumberWrapper}>
@@ -328,8 +328,8 @@ class PlayerPage extends Component {
                             })
                         }
                     </View>
-                    <YourLikesComponent {...this.props} label={label}></YourLikesComponent>
-                    <RecommendComponent {...this.props} classify={classify}/>
+                    <MovieYourLikesComponent {...this.props} label={label}></MovieYourLikesComponent>
+                    <MovieRecommendComponent {...this.props} classify={classify}/>
                 </ScrollView>
             </View>
         )
@@ -350,7 +350,7 @@ export default  connect((state)=>{
     return {
         userData
       }
-})(PlayerPage);
+})(MoviePlayerPage);
 
 //屏幕的宽度
 const {width,height} = Dimensions.get('window');

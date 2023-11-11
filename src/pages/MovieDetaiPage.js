@@ -2,11 +2,11 @@ import React, {Component} from 'react';
 import {StyleSheet, View,Image,Text,TouchableOpacity,FlatList,ImageBackground,Dimensions,ScrollView} from "react-native";
 import {HOST} from "../config";
 import {saveViewRecordService,getStarsService} from "../service"
-import StarsComponent from "../components/StarsComponent";
-import RecommendComponent from "../components/RecommendComponent";
-import YourLikesComponent from "../components/YourLikesComponent";
+import MovieStarsComponent from "../components/MovieStarsComponent";
+import MovieRecommendComponent from "../components/MovieRecommendComponent";
+import MovieYourLikesComponent from "../components/MovieYourLikesComponent";
 
-export default class DetaiPage extends Component {
+export default class MovieDetaiPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -69,7 +69,7 @@ export default class DetaiPage extends Component {
                                 <Text numberOfLines={2} style={styles.name}>{name}</Text>
                                 <Text numberOfLines={1} style={styles.subName}>{star}</Text>
                             </View>
-                            <StarsComponent score={score}></StarsComponent>
+                            <MovieStarsComponent score={score}></MovieStarsComponent>
                         </View>
                     </View>
                 </View>
@@ -104,8 +104,8 @@ export default class DetaiPage extends Component {
                     </View>
                     :null
                 }
-                <YourLikesComponent  {...this.props} label={label}></YourLikesComponent>
-                <RecommendComponent  {...this.props} classify={classify}></RecommendComponent>
+                <MovieYourLikesComponent  {...this.props} label={label}></MovieYourLikesComponent>
+                <MovieRecommendComponent  {...this.props} classify={classify}></MovieRecommendComponent>
             </ScrollView>
         )
     }

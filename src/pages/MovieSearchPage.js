@@ -4,11 +4,11 @@ import {connect} from "react-redux";
 import {searchService} from "../service";
 import {HOST} from "../config";
 import StorageUtil from "../utils/StorageUtil";
-import StarsComponent from "../components/StarsComponent";
-import RecommendComponent from "../components/RecommendComponent";
+import MovieStarsComponent from "../components/MovieStarsComponent";
+import MovieRecommendComponent from "../components/MovieRecommendComponent";
 import Loading from "../common/Loading";
 
-class  MyPage extends Component {
+class  MovieSearchPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -95,7 +95,7 @@ class  MyPage extends Component {
                                 })
                             }
                         </View>
-                        <RecommendComponent {...this.props} direction={'horizontal'} classify={classify}/>
+                        <MovieRecommendComponent {...this.props} direction={'horizontal'} classify={classify}/>
                     </ScrollView>
                 }
                 <Loading></Loading>
@@ -114,7 +114,7 @@ class  MyPage extends Component {
                         {item.director ? <Text numberOfLines={1} style={styles.subName}>{'导演:'+item.director}</Text>: null}
                         {item.type ? <Text numberOfLines={1} style={styles.subName}>{'类型:'+item.type}</Text> : null}
                         {item.releaseTime ? <Text numberOfLines={1} style={styles.subName}>{'上映时间:'+item.releaseTime}</Text> : null}
-                        <StarsComponent score={item.score}/>
+                        <MovieStarsComponent score={item.score}/>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -186,7 +186,7 @@ export default  connect((state)=>{
     return {
         userData
       }
-})(MyPage);
+})(MovieSearchPage);
 
 const styles = StyleSheet.create({
     wrapper:{

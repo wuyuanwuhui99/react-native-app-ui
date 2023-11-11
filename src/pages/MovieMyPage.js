@@ -4,8 +4,8 @@ import {HOST} from "../config";
 import {getPlayRecordService,getUserMsgService} from "../service"
 import {connect} from "react-redux";
 import arrow from "../static/image/icon-arrow.png";
-import AvaterComponent from "../components/AvaterComponent";
-class  MyPage extends Component {
+import AvaterComponent from "../components/MovieAvaterComponent";
+class  MovieSearchPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -124,7 +124,7 @@ export default  connect((state)=>{
     return {
         userData
       }
-})(MyPage);
+})(MovieSearchPage);
 
 const styles = StyleSheet.create({
     wrapper:{

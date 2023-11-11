@@ -4,24 +4,24 @@ import {createAppContainer} from 'react-navigation';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {Platform} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import HomePage from '../pages/HomePage';
+import MovieHomePage from '../pages/MovieHomePage';
 import MoviePage from '../pages/MoviePage';
-import VideoPage from '../pages/VideoPage';
-import MyPage from '../pages/MyPage';
-import DetailPage from "../pages/DetaiPage";
-import UserPage from "../pages/UserPage";
+import MovieVideoPage from '../pages/MovieVideoPage';
+import MovieSearchPage from '../pages/MovieSearchPage';
+import DetailPage from "../pages/MovieDetaiPage";
+import MovieUserPage from "../pages/MovieUserPage";
 import SearchPage from "../pages/SearchPage";
-import PlayerPage from "../pages/PlayerPage";
-import LoginPage from "../pages/LoginPage";
-import EditPage from "../pages/EditPage";
+import MoviePlayerPage from "../pages/MoviePlayerPage";
+import MovieLoginPage from "../pages/MovieLoginPage";
+import MovieEditPage from "../pages/MovieEditPage";
 import NewMoviePage from "../pages/NewMoviePage";
 const BottomTab = createAppContainer(
     createBottomTabNavigator(
       {
         /*Page1路由*/
-        HomePage: {
+        MovieHomePage: {
           /*Page1页面*/
-          screen: HomePage,
+          screen: MovieHomePage,
           /*屏幕导航选项,可以定制导航器显示屏幕的方式（头部标题，选项卡标签等）*/
           navigationOptions: {
             /*导航标签名*/
@@ -46,8 +46,8 @@ const BottomTab = createAppContainer(
             ),
           },
         },
-        VideoPage: {
-          screen: VideoPage,
+        MovieVideoPage: {
+          screen: MovieVideoPage,
           navigationOptions: {
             tabBarLabel: '电视剧',
             tabBarIcon: ({tintColor, focused}) => (
@@ -59,8 +59,8 @@ const BottomTab = createAppContainer(
             ),
           },
         },
-        MyPage: {
-          screen: MyPage,
+        MovieSearchPage: {
+          screen: MovieSearchPage,
           navigationOptions: {
             tabBarLabel: '我的',
             tabBarIcon: ({tintColor, focused}) => (
@@ -89,8 +89,8 @@ const BottomTab = createAppContainer(
         headerShown: false, //可以通过将header设为null来禁用StackNavigator的Navigation
       },
     },
-    UserPage:{
-      screen: UserPage,
+    MovieUserPage:{
+      screen: MovieUserPage,
       navigationOptions: {
         headerShown: false, //可以通过将header设为null来禁用StackNavigator的Navigation
       },
@@ -108,19 +108,19 @@ const BottomTab = createAppContainer(
       },
     },
     PlayPage:{
-      screen: PlayerPage,
+      screen: MoviePlayerPage,
       navigationOptions: {
         headerShown: false, //可以通过将header设为null来禁用StackNavigator的Navigation
       },
     },
-    LoginPage:{
-      screen: LoginPage,
+    MovieLoginPage:{
+      screen: MovieLoginPage,
       navigationOptions: {
         headerShown: false, //可以通过将header设为null来禁用StackNavigator的Navigation
       },
     },
-    EditPage:{
-      screen: EditPage,
+    MovieEditPage:{
+      screen: MovieEditPage,
       navigationOptions: {
         headerShown: false, //可以通过将header设为null来禁用StackNavigator的Navigation
       },

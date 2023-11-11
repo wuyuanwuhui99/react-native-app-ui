@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet,View,ScrollView} from "react-native";
-import RecommendComponent from '../components/RecommendComponent';
+import MovieRecommendComponent from '../components/MovieRecommendComponent';
 
 export default class  NewMoviePage extends Component {
     constructor(props) {
@@ -11,8 +11,8 @@ export default class  NewMoviePage extends Component {
         return (
             <ScrollView>
                 <View>
-                    <RecommendComponent classify={'电影'} direction={'vertical'} title={'电影'}></RecommendComponent>
-                    <RecommendComponent classify={'电视剧'} direction={'vertical'} title={'电视剧'}></RecommendComponent>
+                    <MovieRecommendComponent classify={'电影'} direction={'vertical'} title={'电影'}></MovieRecommendComponent>
+                    <MovieRecommendComponent classify={'电视剧'} direction={'vertical'} title={'电视剧'}></MovieRecommendComponent>
                 </View>
             </ScrollView>
         );

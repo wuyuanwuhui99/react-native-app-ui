@@ -40,6 +40,8 @@
 ![app首页](./新版预览12.png)
 
 =============================界面预览（如果无法预览，请查看项目根目录png文件）==========================
+启动命令：react-native run-android --no-jetifier
+
 使用的插件
 ui组件库：@ant-design/react-native: 4.0.5
 

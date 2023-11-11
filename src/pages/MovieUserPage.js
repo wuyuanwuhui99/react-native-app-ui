@@ -5,7 +5,7 @@ import {HOST} from '../config';
 import {getUserData} from '../store/actions';
 import StorageUtil from "../utils/StorageUtil";
 import {Modal,Provider} from "@ant-design/react-native";
-class  UserPage extends Component {
+class  MovieUserPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -41,7 +41,7 @@ class  UserPage extends Component {
     doLogout=()=>{
         this.props.dispatch(getUserData({}));
         StorageUtil.delete("token");
-        this.props.navigation.push('LoginPage');
+        this.props.navigation.push('MovieLoginPage');
     }
 
     /**
@@ -55,7 +55,7 @@ class  UserPage extends Component {
      * @param isAllowEmpty: 是否允许为空
      */
     goEditPage=(title,type,value,field,isAllowEmpty)=>{
-        this.props.navigation.push('EditPage',{title,type,value,field,isAllowEmpty});
+        this.props.navigation.push('MovieEditPage',{title,type,value,field,isAllowEmpty});
     }
 
     render() {
@@ -123,7 +123,7 @@ export default  connect((state)=>{
     return {
         userData
     }
-})(UserPage);
+})(MovieUserPage);
 
 const styles = StyleSheet.create({
     row:{

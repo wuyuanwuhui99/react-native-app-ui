@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, FlatList,} from 'react-native';
 import {getUserDataService,getCategoryListService,getAllCategoryListByPageNameService} from "../service";
-import CarouselComponent from "../components/CarouselComponent";
-import CategoryComponent from "../components/CategoryComponent";
-import SearchBarComponent from "../components/SearchBarComponent";
-import ClassifyComponent from "../components/ClassifyComponent";
-import AvaterComponent from "../components/AvaterComponent";
+import MovieCarouselComponent from "../components/MovieCarouselComponent";
+import MovieCategoryComponent from "../components/MovieCategoryComponent";
+import SearchBarComponent from "../components/MovieSearchBarComponent";
+import MovieClassifyComponent from "../components/MovieClassifyComponent";
+import AvaterComponent from "../components/MovieAvaterComponent";
 import {getUserData,getToken} from "../store/actions";
 import StorageUtil from "../utils/StorageUtil";
 import {connect} from 'react-redux';
@@ -13,7 +13,7 @@ import {backgroundColor} from '../theme/Color';
 import {smallMarginSize, middleAvaterSize, containerPaddingSize} from '../theme/Size';
 import {boxDecoration} from '../theme/Style';
 
-class  HomePage extends Component {
+class  MovieHomePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -93,11 +93,11 @@ class  HomePage extends Component {
     _renderItem=({item,index})=>{
         if (!item)return null;
         if(index === 0){
-            return <CarouselComponent {...this.props} carouselData={item}/>
+            return <MovieCarouselComponent {...this.props} carouselData={item}/>
         }else if(item.name === "classify"){
-            return <ClassifyComponent {...this.props}/>
+            return <MovieClassifyComponent {...this.props}/>
         }else{
-            return <CategoryComponent {...this.props} categoryList={item}/>
+            return <MovieCategoryComponent {...this.props} categoryList={item}/>
         }
     };
 
@@ -156,7 +156,7 @@ class  HomePage extends Component {
 
 export default  connect((state)=>{
     return {}
-})(HomePage);
+})(MovieHomePage);
 
 const styles = StyleSheet.create({
     wrapper:{

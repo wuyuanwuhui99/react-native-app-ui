@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import {getUserData} from '../store/actions';
 import DatePicker from "react-native-datepicker";
 
-class  EditPage extends Component {
+class  MovieEditPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -128,7 +128,7 @@ export default  connect((state)=>{
     return {
         userData
     }
-})(EditPage);
+})(MovieEditPage);
 
 const styles = StyleSheet.create({
     radioBody:{

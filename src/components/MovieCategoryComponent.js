@@ -12,7 +12,7 @@ import {
     containerPaddingSize, smallFontSize,
 } from '../theme/Size';
 import {activeColor} from '../theme/Color';
-export default class  CategoryComponent extends Component {
+export default class  MovieCategoryComponent extends Component {
     constructor(props){
         super(props);
     }

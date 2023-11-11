@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
 import PropTypes from 'prop-types';
 
-export default class  StarsComponent extends Component {
+export default class  MovieStarsComponent extends Component {
     constructor(props){
         super(props);
         this.state = {

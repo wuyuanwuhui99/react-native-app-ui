@@ -5,7 +5,7 @@ import {getKeyWordService} from "../service"
 import PropTypes from 'prop-types'
 import {buttonHeightSize, containerPaddingSize, smallMarginSize, superRadiusSize} from '../theme/Size';
 import {backgroundColor} from '../theme/Color'
-export default class  CategoryComponent extends Component {
+export default class  MovieSearchBarComponent extends Component {
     constructor(props){
         super(props);
         this.state = {

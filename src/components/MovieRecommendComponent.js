@@ -3,7 +3,7 @@ import { getRecommendService} from '../service';
 import PropTypes from 'prop-types'
 import MovieListComponent from "./MovieListComponent";
 
-export default class  RecommendComponent extends Component {
+export default class  MovieRecommendComponent extends Component {
     constructor(props){
         super(props);
         this.state = {
