@@ -4,7 +4,7 @@ import {Provider} from "react-redux";
 import store from "./src/store";
 //https://oblador.github.io/react-native-vector-icons/ 图标网址
 import AppRouter from "./src/router";
-
+import 'react-native-gesture-handler'
 const AppCreateNavigator = createAppContainer(
   createSwitchNavigator(
     {

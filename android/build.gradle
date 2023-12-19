@@ -10,23 +10,23 @@ buildscript {
         ndkVersion = "20.1.5948944"
     }
     repositories {
-        maven { url 'https://maven.aliyun.com/repository/public' }
-        maven { url 'https://maven.aliyun.com/repository/google'}
-        maven { url 'https://maven.aliyun.com/repository/jcenter' }
-        maven { url 'https://repo.huaweicloud.com/repository/maven' }
-        mavenCentral()
         google()
         jcenter()
     }
     dependencies {
         classpath("com.android.tools.build:gradle:4.1.0")
-        // classpath ("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
 
 allprojects {
+    configurations.all {
+        resolutionStrategy {
+             // Remove this override in 0.65+, as a proper fix is included in react-native itself.
+             force "com.facebook.react:react-native:" + REACT_NATIVE_VERSION
+         }
+     }
     repositories {
         mavenLocal()
         maven {
@@ -37,6 +37,7 @@ allprojects {
             // Android JSC is installed from npm
             url("$rootDir/../node_modules/jsc-android/dist")
         }
+
         maven { url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://maven.aliyun.com/repository/google' }
         maven { url 'https://maven.aliyun.com/repository/jcenter' }
@@ -45,11 +46,4 @@ allprojects {
         jcenter()
         maven { url 'https://www.jitpack.io' }
     }
-
-    configurations.all {
-                resolutionStrategy {
-                    // Remove this override in 0.66, as a proper fix is included in react-native itself.
-                    force "com.facebook.react:react-native:"+REACT_NATIVE_VERSION
-                }
-            }
 }
