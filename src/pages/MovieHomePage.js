@@ -5,13 +5,13 @@ import MovieCarouselComponent from "../components/MovieCarouselComponent";
 import MovieCategoryComponent from "../components/MovieCategoryComponent";
 import SearchBarComponent from "../components/MovieSearchBarComponent";
 import MovieClassifyComponent from "../components/MovieClassifyComponent";
-import AvaterComponent from "../components/MovieAvaterComponent";
+import MovieAvaterComponent from "../components/MovieAvaterComponent";
 import {getUserData,getToken} from "../store/actions";
 import StorageUtil from "../utils/StorageUtil";
 import {connect} from 'react-redux';
-import {backgroundColor} from '../theme/Color';
-import {smallMarginSize, middleAvaterSize, containerPaddingSize} from '../theme/Size';
-import {boxDecoration} from '../theme/Style';
+import * as color from '../theme/Color';
+import * as size from '../theme/Size';
+import * as style from '../theme/Style';
 
 class  MovieHomePage extends Component {
     constructor(props) {
@@ -32,7 +32,7 @@ class  MovieHomePage extends Component {
         //获取轮播数据
         getCategoryListService("电影","轮播").then((res)=>{
             let {dataSource} = this.state;
-            dataSource[0] = res.data;
+            dataSource[0] = res.data.slice(0,5);
         }).finally(()=>{
             loadCarousel = true;
             if(loadCarousel && loadCategoryList){
@@ -131,7 +131,7 @@ class  MovieHomePage extends Component {
         return (
             <View style={styles.wrapper}>
                 <View style={styles.headerWrapper}>
-                    <AvaterComponent style={{width:middleAvaterSize,height:middleAvaterSize,marginRight:smallMarginSize}} {...this.props}/>
+                    <MovieAvaterComponent style={{width:size.middleAvaterSize,height:size.middleAvaterSize,marginRight:size.smallMarginSize}} {...this.props}/>
                     <View style={styles.searchWrapper}>
                         <SearchBarComponent {...this.props} classify={"电影"}/>
                     </View>
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     wrapper:{
         flexDirection:'column',
         flex:1,
-        ...backgroundColor
+        ...style.pageStyle
     },
     searchWrapper:{
       flex:1
@@ -171,13 +171,13 @@ const styles = StyleSheet.create({
         display:"flex",
         justifyContent:"center",
         flexDirection:'row',
-        ...boxDecoration,
+        ...style.boxDecoration,
     },
     scrollViewWrapper:{
         flex:1,
     },
     footer:{
-        margin:containerPaddingSize,
+        margin:size.containerPaddingSize,
         justifyContent:"center",
         alignItems:"center"
     },

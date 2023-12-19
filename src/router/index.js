@@ -10,7 +10,6 @@ import MovieVideoPage from '../pages/MovieVideoPage';
 import MovieSearchPage from '../pages/MovieSearchPage';
 import DetailPage from "../pages/MovieDetaiPage";
 import MovieUserPage from "../pages/MovieUserPage";
-// import SearchPage from "../pages/SearchPage";
 import MoviePlayerPage from "../pages/MoviePlayerPage";
 import MovieLoginPage from "../pages/MovieLoginPage";
 import MovieEditPage from "../pages/MovieEditPage";

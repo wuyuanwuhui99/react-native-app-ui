@@ -1,207 +1,127 @@
 import React, {Component} from 'react';
-import {StyleSheet, View,Image,Text,TouchableOpacity,FlatList,ImageBackground,Dimensions,ScrollView} from "react-native";
+import {
+    StyleSheet,
+    View,
+    Image,
+    Text,
+    TouchableOpacity,
+    FlatList,
+    ImageBackground,
+    Dimensions,
+    ScrollView
+} from "react-native";
 import {HOST} from "../config";
-import {saveViewRecordService,getStarsService} from "../service"
+import {saveViewRecordService, getStarsService} from "../service"
 import MovieStarsComponent from "../components/MovieStarsComponent";
 import MovieRecommendComponent from "../components/MovieRecommendComponent";
 import MovieYourLikesComponent from "../components/MovieYourLikesComponent";
+import * as style from '../theme/Style';
+import * as size from '../theme/Size';
+import * as color from '../theme/Color';
 
 export default class MovieDetaiPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            performerList:[],
-            stars:[]
+            performerList: [],
+            stars: []
         }
     }
 
-    componentWillMount(){
+    componentWillMount() {
         const params = this.props.navigation.state.params;
-        const {movieId} = params
-        if(movieId){
-            getStarsService(movieId).then((res)=>{
-                this.setState({stars:res.data})
+        const {movieId} = params;
+        if (movieId) {
+            getStarsService(movieId).then((res) => {
+                this.setState({stars: res.data})
             })
-        };
+        }
+        ;
         saveViewRecordService(params);//浏览记录
     }
 
-    _renderItem=(item,index)=>{
+    _renderItem = (item, index) => {
         return (
-            <TouchableOpacity key={"TouchableOpacity" + index}>
-                <View  style={styles.categoryView}>
-                    <Image style={styles.categoryImage} source={{uri:item.img}}></Image>
+            <View key={"TouchableOpacity" + index}>
+                <View style={styles.categoryView}>
+                    <Image style={styles.categoryImage} source={{uri: item.img}}></Image>
                     <Text numberOfLines={1} style={styles.movieName}>{item.star}</Text>
                     <Text numberOfLines={1} style={styles.subName}>{item.role}</Text>
                 </View>
-            </TouchableOpacity>
+            </View>
         )
     }
 
-    goPlay(params){
-        this.props.navigation.push('PlayPage',params)
+    goPlay(params) {
+        this.props.navigation.push('PlayPage', params)
     }
 
 
     render() {
-        const {localImg,img,name,score,plot,star,classify,label} = this.props.navigation.state.params;
+        const {localImg, img, name, score, plot, star, classify, label, movieName, description} = this.props.navigation.state.params;
         const {stars} = this.state;
         return (
-            <ScrollView>
-                <View style={styles.imageBackground}>
-                    <TouchableOpacity onPress={e=>this.goPlay(this.props.navigation.state.params)}>
-                        <ImageBackground
-                            style={styles.imageBackground}
-                            source={{uri:localImg? HOST + localImg:img}}
-                        >
-                        <Image style={styles.playIcon} source={require("../static/image/icon-detail-play.png")}></Image>
-                    </ImageBackground>
-                    </TouchableOpacity>
-
-                </View>
-                <View style={styles.movieInfo}>
-                    <View style={styles.portrait}>
-                        <Image style={styles.movieImage} source={{uri:localImg?HOST+localImg:img}}></Image>
+            <ScrollView style={styles.wrapper}>
+                <View style={styles.boxDecoration}>
+                    <View style={styles.movieImgWrapper}>
+                        <Image style={styles.movieImg} source={{uri: localImg ? HOST + localImg : img}}/>
+                        <Image style={styles.playIcon} source={require("../static/image/icon-detail-play.png")}/>
                     </View>
-                    <View style={styles.titleWrapper}>
-                        <View style={styles.nameWrapper}>
-                            <View style={styles.nameBox}>
-                                <Text numberOfLines={2} style={styles.name}>{name}</Text>
-                                <Text numberOfLines={1} style={styles.subName}>{star}</Text>
-                            </View>
-                            <MovieStarsComponent score={score}></MovieStarsComponent>
-                        </View>
+                    <View style={styles.movieInfoWrapper}>
+                        <Text style={styles.headerMovieName}>{movieName}</Text>
+                        {description ? <Text style={styles.subTitle}>{description.replace(/\n|\s/g, '')}</Text> : null}
+                        <Text style={styles.subTitle}>{star}</Text>
+                        {score ? <MovieStarsComponent score={score}></MovieStarsComponent> : null}
                     </View>
                 </View>
-                {
-                    plot ?
-                    <View style={styles.slotWrapper}>
-                        <View style={styles.categoryWrapper}>
-                            <View style={styles.line}></View>
-                            <Text style={styles.categoryText}>剧情</Text>
-                        </View>
-                        <Text style={styles.slotContent}> &emsp;&emsp;{plot}</Text>
-                    </View>
-                    :null
-                }
-                {
-                    stars.length > 0 ?
-                        <View style={styles.groupWrapper}>
-                        <View style={styles.categoryWrapper}>
-                            <View style={styles.line}></View>
-                            <Text style={styles.categoryText}>演员</Text>
-                        </View>
-                        <View>
-                            <FlatList
-                                horizontal={true}
-                                data ={stars}
-                                keyExtractor={(item, index) => index.toString()}
-                                renderItem = {
-                                    ({item,index}) => this._renderItem(item,index)
-                                }
-                            ></FlatList>
-                        </View>
-                    </View>
-                    :null
-                }
-                <MovieYourLikesComponent  {...this.props} label={label}></MovieYourLikesComponent>
-                <MovieRecommendComponent  {...this.props} classify={classify}></MovieRecommendComponent>
             </ScrollView>
+
         )
     }
 }
 
 const styles = StyleSheet.create({
-    imageBackground:{
-        width:Dimensions.get("window").width,
-        height:250,
-        justifyContent:"center",
-        alignItems:"center"
+    wrapper: {
+        flex: 1,
+        ...style.pageStyle,
     },
-    playIcon:{
-        width:40,
-        height:40
+    boxDecoration: {
+        ...style.boxDecoration,
+        display: 'flex',
+        flexDirection: 'row',
     },
-    movieInfo:{
-        flexDirection:"row",
-        height:150
+    movieImgWrapper: {
+        height: size.movieHeightSize,
+        width: size.movieWidthSize,
+        position: 'relative',
+        borderRadius: size.middleRadiusSize,
+        overflow: 'hidden',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    portrait:{
-        width:178,
-        position:"relative",
+    movieImg: {
+        height: size.movieHeightSize,
+        width: size.movieWidthSize,
+        position: 'absolute',
     },
-    movieImage:{
-        width:150,
-        height:200,
-        position:"absolute",
-        left:25,
-        top:-50,
-        borderRadius:20,
-        borderWidth:3,
-        borderColor:"#fff",
-        borderStyle:"solid"
+    playIcon: {
+        width: size.bigIconSize,
+        height: size.bigIconSize
     },
-    titleWrapper:{
-        flex:1
+    movieInfoWrapper: {
+        marginLeft: size.pageSize,
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent:'flex-start'
     },
-    nameWrapper:{
-        flexDirection:"column",
-        padding:20
+    headerMovieName:{
+        fontSize: size.bigFontSize,
+        fontWeight: 'bold'
     },
-    nameBox:{
-        marginRight:20,
-    },
-    name:{
-        fontSize:20,
-    },
-    subName:{
-        paddingTop:5,
-        color:"#bbb"
-    },
-    slotWrapper:{
-        paddingLeft:20,
-        paddingRight: 20,
-        paddingTop:20
-    },
-    categoryText:{
-        fontSize:16,
-    },
-    slotContent:{
-        color:"#aaa"
-    },
-    groupWrapper:{
-        paddingLeft:20,
-        paddingRight:20,
-        paddingTop:20
-    },
-    tabGroup:{
-        flexDirection:"row"
-    },
-    categoryWrapper:{
-        flexDirection:"row",
-        alignItems:"center",
-        marginBottom:10
-    },
-    line:{
-        width:3,
-        height:16,
-        marginRight:10,
-        backgroundColor:"#1890ff"
-    },
-    categoryView:{
-        marginRight:15,
-        justifyContent:"center",
-        alignItems:"center"
-    },
-    categoryImage:{
-        width:150,
-        height:200,
-        borderRadius:10
-    },
-    categoryList:{
-        marginLeft:20,
-        marginRight:20,
-        marginBottom:20
-    },
-
+    subTitle:{
+        marginTop:size.smallMarginSize,
+        color:color.disableColor
+    }
 })
