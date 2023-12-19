@@ -4,16 +4,16 @@ import {createAppContainer} from 'react-navigation';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {Platform} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import MovieHomePage from '../pages/MovieHomePage';
-import MoviePage from '../pages/MoviePage';
-import MovieVideoPage from '../pages/MovieVideoPage';
-import MovieSearchPage from '../pages/MovieSearchPage';
-import DetailPage from "../pages/MovieDetaiPage";
-import MovieUserPage from "../pages/MovieUserPage";
-import MoviePlayerPage from "../pages/MoviePlayerPage";
-import MovieLoginPage from "../pages/MovieLoginPage";
-import MovieEditPage from "../pages/MovieEditPage";
-import NewMoviePage from "../pages/NewMoviePage";
+import MovieHomePage from '../movie/pages/MovieHomePage';
+import MoviePage from '../movie/pages/MoviePage';
+import MovieVideoPage from '../movie/pages/MovieVideoPage';
+import MovieSearchPage from '../movie/pages/MovieSearchPage';
+import DetailPage from "../movie/pages/MovieDetaiPage";
+import MovieUserPage from "../movie/pages/MovieUserPage";
+import MoviePlayerPage from "..//movie/pages/MoviePlayerPage";
+import MovieLoginPage from "../movie/pages/MovieLoginPage";
+import MovieEditPage from "../movie/pages/MovieEditPage";
+import NewMoviePage from "../movie/pages/NewMoviePage";
 const BottomTab = createAppContainer(
     createBottomTabNavigator(
       {
