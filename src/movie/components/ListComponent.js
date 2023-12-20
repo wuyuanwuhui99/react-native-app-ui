@@ -2,8 +2,12 @@ import React, {Component} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, FlatList, Image,Dimensions} from 'react-native';
 import PropTypes from 'prop-types'
 import {HOST} from '../../config';
+import * as style from '../../theme/Style';
+import * as size from '../../theme/Size';
+import * as color from '../../theme/Color';
+import TitleComponent from './TitleComponent';
 
-export default class  MovieListComponent extends Component {
+export default class  ListComponent extends Component {
     constructor(props){
         super(props);
     }
@@ -33,23 +37,20 @@ export default class  MovieListComponent extends Component {
             movieList.length > 0
                 ? <View style={styles.titleWrapper}>
                     {title ?
-                        <View style={styles.categoryHeader}>
-                            <View style={styles.categoryLine}/>
-                            {title ? <Text style={styles.categoryTitle}>{title}</Text> : null}
-                        </View>
+                        <TitleComponent title={title}/>
                         : null
                     }
                     {
                         direction == "horizontal" ?
                             <FlatList
+                                style={styles.movieList}
                                 horizontal={true}
                                 data ={movieList}
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem = {
                                     ({item,index}) => this._renderItem(item,index)
                                 }
-                            >
-                            </FlatList>
+                            />
                             : <View style={styles.gridWrapper}>
                                 {
                                     movieList.map((item,index)=>{
@@ -67,7 +68,7 @@ export default class  MovieListComponent extends Component {
         let {direction} = this.props;
         return (
             <TouchableOpacity onPress={()=>this.goDetail(item)} key={"_renderItem"+index}>
-                <View key={"movieImg"+index} style={direction == 'horizontal' ? styles.movieItem : [styles.movieItemVertical,{marginTop: index>2? 20 : 0,marginRight:index%3==2?0:10}]}>
+                <View key={"movieImg"+index} style={direction === 'horizontal' ? styles.movieItem : [styles.movieItemVertical,{marginTop: index>2? 20 : 0,marginRight:index%3==2?0:10}]}>
                     <Image resizeMode='cover' style={styles.movieImg} source={{uri:item.localImg ? HOST + item.localImg :item.img}}/>
                     <View style={styles.movieNameWrapper}><Text numberOfLines={1}>{item.movieName}</Text></View>
                 </View>
@@ -108,41 +109,36 @@ const styles = StyleSheet.create({
         overflow:"hidden"
     },
     movieImg:{
-        width:150,
-        height:200,
-        borderRadius:10,
-        marginBottom:10
+        width:size.movieWidthSize,
+        height:size.movieHeightSize,
+        borderRadius:size.middleRadiusSize,
+        marginBottom:size.smallMarginSize
     },
     movieNameWrapper:{
-        width:150,
+        width:size.movieWidthSize,
         overflow:"hidden",
         alignItems:"center"
     },
     movieItemVertical:{
-        width:(width - 60)/3,
+        width:(width - size.containerPaddingSize * 2)/3,
         justifyContent:"center",
         display:"flex",
         alignItems:"center",
         overflow:"hidden"
     },
     movieItemWrapper:{
-        width: (width - 40)/2,
+        width: (width - size.containerPaddingSize * 2)/2,
     },
     titleWrapper:{
-        paddingLeft:20,
-        paddingRight:20,
-        paddingTop:20
+        ...style.boxDecoration
     },
-    title:{
-        fontSize:20,
-        marginBottom:10,
-        borderLeftWidth:3,
-        borderLeftColor:"#1890ff",
-        paddingLeft:10
+    movieList:{
+        marginTop: size.containerPaddingSize
     },
     gridWrapper:{
         display: "flex",
         flexDirection:"row",
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        ...style.boxDecoration
     },
 });

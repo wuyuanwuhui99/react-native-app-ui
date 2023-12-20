@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import { getRecommendService} from '../service';
 import PropTypes from 'prop-types'
-import MovieListComponent from "./MovieListComponent";
+import ListComponent from "./ListComponent";
 
-export default class  MovieRecommendComponent extends Component {
+export default class  RecommendComponent extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -43,6 +43,6 @@ export default class  MovieRecommendComponent extends Component {
 
     render(){
         let {recommendList} = this.state;
-        return <MovieListComponent {...this.props} movieList={recommendList}/>
+        return <ListComponent {...this.props} movieList={recommendList}/>
     }
 }

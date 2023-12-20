@@ -4,8 +4,8 @@ import {connect} from "react-redux";
 import {searchService} from "../service";
 import {HOST} from "../../config";
 import StorageUtil from "../../utils/StorageUtil";
-import MovieStarsComponent from "../components/MovieStarsComponent";
-import MovieRecommendComponent from "../components/MovieRecommendComponent";
+import StarsComponent from "../components/StarsComponent";
+import RecommendComponent from "../components/RecommendComponent";
 import Loading from "../../common/Loading";
 
 class  MovieSearchPage extends Component {
@@ -95,7 +95,7 @@ class  MovieSearchPage extends Component {
                                 })
                             }
                         </View>
-                        <MovieRecommendComponent {...this.props} direction={'horizontal'} classify={classify}/>
+                        <RecommendComponent {...this.props} direction={'horizontal'} classify={classify}/>
                     </ScrollView>
                 }
                 <Loading></Loading>
@@ -114,7 +114,7 @@ class  MovieSearchPage extends Component {
                         {item.director ? <Text numberOfLines={1} style={styles.subName}>{'导演:'+item.director}</Text>: null}
                         {item.type ? <Text numberOfLines={1} style={styles.subName}>{'类型:'+item.type}</Text> : null}
                         {item.releaseTime ? <Text numberOfLines={1} style={styles.subName}>{'上映时间:'+item.releaseTime}</Text> : null}
-                        <MovieStarsComponent score={item.score}/>
+                        <StarsComponent score={item.score}/>
                     </View>
                 </View>
             </TouchableOpacity>

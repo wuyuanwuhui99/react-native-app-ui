@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, FlatList,} from 'react-native';
 import {getUserDataService,getCategoryListService,getAllCategoryListByPageNameService} from "../service";
-import MovieCarouselComponent from "../components/MovieCarouselComponent";
-import MovieCategoryComponent from "../components/MovieCategoryComponent";
-import SearchBarComponent from "../components/MovieSearchBarComponent";
-import MovieClassifyComponent from "../components/MovieClassifyComponent";
-import MovieAvaterComponent from "../components/MovieAvaterComponent";
+import CarouselComponent from "../components/CarouselComponent";
+import CategoryComponent from "../components/CategoryComponent";
+import SearchBarComponent from "../components/SearchBarComponent";
+import ClassifyComponent from "../components/ClassifyComponent";
+import AvaterComponent from "../components/AvaterComponent";
 import {getUserData,getToken} from "../../store/actions";
 import StorageUtil from "../../utils/StorageUtil";
 import {connect} from 'react-redux';
@@ -92,11 +92,11 @@ class  MovieHomePage extends Component {
     _renderItem=({item,index})=>{
         if (!item)return null;
         if(index === 0){
-            return <MovieCarouselComponent {...this.props} carouselData={item}/>
+            return <CarouselComponent {...this.props} carouselData={item}/>
         }else if(item.name === "classify"){
-            return <MovieClassifyComponent {...this.props}/>
+            return <ClassifyComponent {...this.props}/>
         }else{
-            return <MovieCategoryComponent {...this.props} categoryList={item}/>
+            return <CategoryComponent {...this.props} categoryList={item}/>
         }
     };
 
@@ -130,7 +130,7 @@ class  MovieHomePage extends Component {
         return (
             <View style={styles.wrapper}>
                 <View style={styles.headerWrapper}>
-                    <MovieAvaterComponent style={{width:size.middleAvaterSize,height:size.middleAvaterSize,marginRight:size.smallMarginSize}} {...this.props}/>
+                    <AvaterComponent style={{width:size.middleAvaterSize,height:size.middleAvaterSize,marginRight:size.smallMarginSize}} {...this.props}/>
                     <View style={styles.searchWrapper}>
                         <SearchBarComponent {...this.props} classify={"电影"}/>
                     </View>

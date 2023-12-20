@@ -7,7 +7,7 @@ import {boxDecoration} from '../../theme/Style';
 import {middleRadiusSize,containerPaddingSize} from '../../theme/Size';
 import {Dimensions} from 'react-native';
 
-export default class  MovieCarouselComponent extends Component {
+export default class  CarouselComponent extends Component {
     constructor(props){
         super(props);
     }

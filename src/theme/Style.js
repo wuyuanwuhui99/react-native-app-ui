@@ -3,17 +3,17 @@ import * as color from './Color';
 import { Dimensions } from 'react-native'
 
 export const boxDecoration = {
-    ...color.whiteColor,
+    backgroundColor:color.whiteColor,
     borderRadius: size.middleRadiusSize,
     padding: size.containerPaddingSize,
     marginTop: size.containerPaddingSize,
     width: Dimensions.get('window').width - size.containerPaddingSize*2,
 };
 export const pageStyle = {
-    paddingTop: 0,
+    marginTop: 0,
     paddingLeft: size.containerPaddingSize,
     paddingRight: size.containerPaddingSize,
-    paddingBottom: size.containerPaddingSize,
+    marginBottom: size.containerPaddingSize,
     backgroundColor: color.backgroundColor,
     width: Dimensions.get('window').width,
     height:Dimensions.get('window').height

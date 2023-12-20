@@ -2,17 +2,10 @@ import React, {Component} from 'react';
 import {StyleSheet,Image,View,Text,FlatList,TouchableOpacity} from "react-native";
 import {HOST} from "../../config";
 import PropTypes from 'prop-types'
-import {boxDecoration} from '../../theme/Style';
-import {
-    miniMarginSize,
-    smallMarginSize,
-    middleRadiusSize,
-    movieWidthSize,
-    movieHeightSize,
-    containerPaddingSize, smallFontSize,
-} from '../../theme/Size';
-import {activeColor} from '../../theme/Color';
-export default class  MovieCategoryComponent extends Component {
+import * as style from '../../theme/Style';
+import * as size from '../../theme/Size';
+import TitleComponent from './TitleComponent';
+export default class  CategoryComponent extends Component {
     constructor(props){
         super(props);
     }
@@ -32,10 +25,7 @@ export default class  MovieCategoryComponent extends Component {
         let {categoryList} = this.props;
         return (
             <View style={styles.wrapper}>
-                <View style={styles.categoryHeader}>
-                    <View style={styles.categoryLine}></View>
-                    <Text style={styles.categoryTitle}>{categoryList[0] ? categoryList[0].category : null}</Text>
-                </View>
+                <TitleComponent title={categoryList[0] ? categoryList[0].category : null}/>
                 <View style={styles.categoryList}>
                     <FlatList
                         horizontal={true}
@@ -55,7 +45,7 @@ export default class  MovieCategoryComponent extends Component {
         return (
             <TouchableOpacity key={item.category + index} onPress={e=>this.goDetail(item)}>
                 <View  style={styles.categoryView}>
-                    <Image style={styles.categoryImage} source={{uri:item.local_img ? HOST+item.local_img : item.img}}></Image>
+                    <Image style={styles.categoryImage} source={{uri:item.local_img ? HOST+item.local_img : item.img}}/>
                     <Text numberOfLines={1} style={styles.movieName}>{item.movieName}</Text>
                 </View>
             </TouchableOpacity>
@@ -69,35 +59,21 @@ export default class  MovieCategoryComponent extends Component {
 
 const styles = StyleSheet.create({
     wrapper:{
-        ...boxDecoration
-    },
-    categoryHeader:{
-        display:"flex",
-        alignItems:"center",
-        flexDirection:'row',
-    },
-    categoryLine:{
-        width:4,
-        height:18,
-        ...activeColor
-    },
-    categoryTitle:{
-        fontSize:smallFontSize,
-        marginLeft:miniMarginSize
+        ...style.boxDecoration
     },
     movieName:{
-        marginTop:smallMarginSize,
-        width:movieWidthSize
+        marginTop:size.smallMarginSize,
+        width:size.movieWidthSize
     },
     categoryView:{
-        marginRight:middleRadiusSize
+        marginRight:size.middleRadiusSize
     },
     categoryImage:{
-        width:movieWidthSize,
-        height:movieHeightSize,
-        borderRadius:middleRadiusSize
+        width:size.movieWidthSize,
+        height:size.movieHeightSize,
+        borderRadius:size.middleRadiusSize
     },
     categoryList:{
-        marginTop:containerPaddingSize
+        marginTop:size.containerPaddingSize
     }
 });

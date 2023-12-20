@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {StyleSheet, View,Image,Text,FlatList} from "react-native";
 import {getCategoryListService,getAllCategoryByClassify} from "../service";
-import MovieCarouselComponent from "../components/MovieCarouselComponent";
-import MovieCategoryComponent from "../components/MovieCategoryComponent";
-import SearchBarComponent from "../components/MovieSearchBarComponent";
-import AvaterComponent from "../components/MovieAvaterComponent";
-import {backgroundColor} from '../../theme/Color';
-import {containerPaddingSize, smallMarginSize} from '../../theme/Size';
-import {boxDecoration} from '../../theme/Style';
+import CarouselComponent from "../components/CarouselComponent";
+import CategoryComponent from "../components/CategoryComponent";
+import SearchBarComponent from "../components/SearchBarComponent";
+import AvaterComponent from "../components/AvaterComponent";
+import * as color from '../../theme/Color';
+import * as size from '../../theme/Size';
+import * as style from '../../theme/Style';
 
 export default class  MovieVideoPage extends Component {
     constructor(props) {
@@ -70,9 +70,9 @@ export default class  MovieVideoPage extends Component {
 
     _renderItem=({item,index})=>{
         if(index === 0){
-            return <MovieCarouselComponent carouselData={item}/>
+            return <CarouselComponent carouselData={item}/>
         }else if(item && item.length>0){
-            return <MovieCategoryComponent categoryList={item}/>
+            return <CategoryComponent categoryList={item}/>
         }else{
             return null;
         }
@@ -135,23 +135,23 @@ const styles = StyleSheet.create({
     wrapper:{
         flexDirection:'column',
         flex:1,
-        ...backgroundColor
+        backgroundColor:color.backgroundColor
     },
     headerWrapper: {
         display:"flex",
         justifyContent:"center",
         flexDirection:'row',
-        ...boxDecoration
+        ...style.boxDecoration
     },
     searchWrapper:{
         flex:1,
-        marginLeft:smallMarginSize
+        marginLeft:size.smallMarginSize
     },
     scrollViewWrapper:{
         flex:1,
     },
     footer:{
-        margin:containerPaddingSize,
+        margin:size.containerPaddingSize,
         justifyContent:"center",
         alignItems:"center"
     },

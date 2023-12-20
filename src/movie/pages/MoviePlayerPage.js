@@ -14,9 +14,9 @@ import {
     getReplyCommentListService,
     insertCommentService
 } from "../service";
-import MovieStarsComponent from "../components/MovieStarsComponent";
-import MovieRecommendComponent from "../components/MovieRecommendComponent";
-import MovieYourLikesComponent from "../components/MovieYourLikesComponent";
+import StarsComponent from "../components/StarsComponent";
+import RecommendComponent from "../components/RecommendComponent";
+import YourLikesComponent from "../components/YourLikesComponent";
 
 class MoviePlayerPage extends Component {
     constructor(props) {
@@ -290,7 +290,7 @@ class MoviePlayerPage extends Component {
                         <Text style={styles.title}>{movieName}</Text>
                         <View style={styles.subTitleWrapper}>
                             <Text style={styles.subTitle} numberOfLines={1}>{star}</Text>
-                            <MovieStarsComponent score={score}/>
+                            <StarsComponent score={score}/>
                         </View>
                     </View>
                     <View style={styles.playNumberWrapper}>
@@ -328,8 +328,8 @@ class MoviePlayerPage extends Component {
                             })
                         }
                     </View>
-                    <MovieYourLikesComponent {...this.props} label={label}/>
-                    <MovieRecommendComponent {...this.props} classify={classify}/>
+                    <YourLikesComponent {...this.props} label={label}/>
+                    <RecommendComponent {...this.props} classify={classify}/>
                 </ScrollView>
             </View>
         )

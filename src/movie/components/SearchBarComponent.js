@@ -3,9 +3,9 @@ import {StyleSheet, View,Text,TouchableOpacity} from "react-native";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {getKeyWordService} from "../service"
 import PropTypes from 'prop-types'
-import {buttonHeightSize, containerPaddingSize, smallMarginSize, superRadiusSize} from '../../theme/Size';
-import {backgroundColor} from '../../theme/Color'
-export default class  MovieSearchBarComponent extends Component {
+import * as size from '../../theme/Size';
+import * as color from '../../theme/Color'
+export default class  SearchBarComponent extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -50,19 +50,19 @@ export default class  MovieSearchBarComponent extends Component {
 
 const styles = StyleSheet.create({
     searchBarWrapper:{
-        height:buttonHeightSize,
-        borderRadius:superRadiusSize,
-        ...backgroundColor,
+        height:size.buttonHeightSize,
+        borderRadius:size.superRadiusSize,
+        backgroundColor:color.backgroundColor,
         position:"relative",
         justifyContent:"center",
     },
     searchText:{
         color:"gray",
-        marginLeft:containerPaddingSize
+        marginLeft:size.containerPaddingSize
     },
     searchIcon:{
         color:"gray",
         position:"absolute",
-        right:smallMarginSize
+        right:size.smallMarginSize
     }
 });

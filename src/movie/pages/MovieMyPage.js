@@ -4,7 +4,7 @@ import {HOST} from "../../config";
 import {getPlayRecordService,getUserMsgService} from "../service"
 import {connect} from "react-redux";
 import arrow from "../../static/image/icon-arrow.png";
-import AvaterComponent from "../components/MovieAvaterComponent";
+import AvaterComponent from "../components/AvaterComponent";
 class  MovieSearchPage extends Component {
     constructor(props) {
         super(props);

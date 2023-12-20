@@ -12,12 +12,13 @@ import {
 } from "react-native";
 import {HOST} from "../../config";
 import {saveViewRecordService, getStarsService} from "../service"
-import MovieStarsComponent from "../components/MovieStarsComponent";
-import MovieRecommendComponent from "../components/MovieRecommendComponent";
-import MovieYourLikesComponent from "../components/MovieYourLikesComponent";
+import StarsComponent from "../components/StarsComponent";
+import RecommendComponent from "../components/RecommendComponent";
+import YourLikesComponent from "../components/YourLikesComponent";
 import * as style from '../../theme/Style';
 import * as size from '../../theme/Size';
 import * as color from '../../theme/Color';
+import TitleComponent from '../components/TitleComponent';
 
 export default class MovieDetaiPage extends Component {
     constructor(props) {
@@ -32,29 +33,26 @@ export default class MovieDetaiPage extends Component {
         const params = this.props.navigation.state.params;
         const {movieId} = params;
         if (movieId) {
-            getStarsService(movieId).then((res) => {
+            getStarsService(16575).then((res) => {
                 this.setState({stars: res.data})
             })
         }
-        ;
         saveViewRecordService(params);//浏览记录
     }
 
     _renderItem = (item, index) => {
         return (
-            <View key={"TouchableOpacity" + index}>
-                <View style={styles.categoryView}>
-                    <Image style={styles.categoryImage} source={{uri: item.img}}></Image>
-                    <Text numberOfLines={1} style={styles.movieName}>{item.star}</Text>
-                    <Text numberOfLines={1} style={styles.subName}>{item.role}</Text>
-                </View>
+            <View key={"TouchableOpacity" + index} style={styles.categoryView}>
+                <Image style={styles.categoryImage} source={{uri: HOST + item.localImg}}/>
+                <Text numberOfLines={1} style={styles.movieName}>{item.star}</Text>
+                <Text numberOfLines={1} style={styles.subName}>{item.role}</Text>
             </View>
         )
-    }
+    };
 
     goPlay(params) {
         this.props.navigation.push('PlayPage', params)
-    }
+    };
 
 
     render() {
@@ -71,11 +69,36 @@ export default class MovieDetaiPage extends Component {
                         <Text style={styles.headerMovieName}>{movieName}</Text>
                         {description ? <Text style={styles.subTitle}>{description.replace(/\n|\s/g, '')}</Text> : null}
                         <Text style={styles.subTitle}>{star}</Text>
-                        {score ? <MovieStarsComponent score={score}/> : null}
+                        {score ? <StarsComponent score={score}/> : null}
                     </View>
                 </View>
-            </ScrollView>
+                {
+                    plot ?
+                        <View style={styles.moduleWrapper}>
+                            <TitleComponent title={'剧情'}/>
+                            <Text style={styles.plot}>{plot}</Text>
+                        </View> : null
 
+                }
+                {
+                    stars.length > 0 ?
+                        <View style={styles.moduleWrapper}>
+                            <TitleComponent title={'演员'}/>
+                            <FlatList
+                                style={styles.starList}
+                                horizontal={true}
+                                data ={stars}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem = {
+                                    ({item,index}) => this._renderItem(item,index)
+                                }
+                            />
+                        </View>
+                        :null
+                }
+                <YourLikesComponent  {...this.props} label={label}/>
+                <RecommendComponent  {...this.props} classify={classify}/>
+            </ScrollView>
         )
     }
 }
@@ -122,6 +145,33 @@ const styles = StyleSheet.create({
     },
     subTitle:{
         marginTop:size.smallMarginSize,
-        color:color.disableColor
+        color:color.subTitleColor
+    },
+    moduleWrapper:{
+        ...style.boxDecoration,
+        display:'flex',
+        flexDirection:'column'
+    },
+    plot:{
+        paddingTop:size.smallMarginSize,
+        color:color.subTitleColor
+    },
+    categoryView:{
+        marginRight:size.containerPaddingSize,
+        justifyContent:"center",
+        alignItems:"center"
+    },
+    categoryImage:{
+        width:size.movieWidthSize,
+        height:size.movieHeightSize,
+        borderRadius:size.middleRadiusSize
+    },
+    categoryList:{
+        marginLeft:20,
+        marginRight:20,
+        marginBottom:20
+    },
+    starList:{
+        marginTop: size.containerPaddingSize
     }
-})
+});

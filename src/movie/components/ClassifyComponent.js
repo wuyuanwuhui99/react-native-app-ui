@@ -3,7 +3,7 @@ import {StyleSheet, View,Text,Image,TouchableOpacity} from "react-native";
 import {boxDecoration} from '../../theme/Style';
 import {bigIconSize,smallMarginSize} from '../../theme/Size';
 
-export default class  MovieClassifyComponent extends Component {
+export default class  ClassifyComponent extends Component {
     constructor(props){
         super(props);
     }

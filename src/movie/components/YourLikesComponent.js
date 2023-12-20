@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {getYourLikesService} from '../service';
 import PropTypes from 'prop-types'
-import MovieListComponent from "./MovieListComponent";
+import ListComponent from "./ListComponent";
 
-export default class  MovieYourLikesComponent extends Component {
+export default class  YourLikesComponent extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -42,6 +42,6 @@ export default class  MovieYourLikesComponent extends Component {
 
     render(){
         let {movieList} = this.state;
-        return <MovieListComponent {...this.props} direction={"horizontal"} title={"猜你想看"} movieList={movieList}/>
+        return <ListComponent {...this.props} direction={"horizontal"} title={"猜你想看"} movieList={movieList}/>
     }
 }

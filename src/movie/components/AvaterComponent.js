@@ -5,7 +5,7 @@ import {HOST} from '../../config';
 import PropTypes from 'prop-types';
 import {middleAvaterSize, superRadiusSize} from '../../theme/Size';
 
-class  MovieAvaterComponent extends Component {
+class  AvaterComponent extends Component {
     constructor(props){
         super(props);
     }
@@ -38,7 +38,7 @@ class  MovieAvaterComponent extends Component {
 export default  connect((state)=>{
     let {userData} = state;
     return {userData}
-})(MovieAvaterComponent);
+})(AvaterComponent);
 
 const styles = StyleSheet.create({
     imageStyle: {
