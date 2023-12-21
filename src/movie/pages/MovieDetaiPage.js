@@ -6,9 +6,7 @@ import {
     Text,
     TouchableOpacity,
     FlatList,
-    ImageBackground,
-    Dimensions,
-    ScrollView
+    ScrollView, TouchableHighlight
 } from "react-native";
 import {HOST} from "../../config";
 import {saveViewRecordService, getStarsService} from "../service"
@@ -31,8 +29,8 @@ export default class MovieDetaiPage extends Component {
 
     componentWillMount() {
         const params = this.props.navigation.state.params;
-        const {movieId} = params;
-        if (movieId) {
+        const {id} = params;
+        if (id) {
             getStarsService(16575).then((res) => {
                 this.setState({stars: res.data})
             })
@@ -51,20 +49,22 @@ export default class MovieDetaiPage extends Component {
     };
 
     goPlay(params) {
-        this.props.navigation.push('PlayPage', params)
+        this.props.navigation.push('MoviePlayPage', params)
     };
 
 
     render() {
-        const {localImg, img, name, score, plot, star, classify, label, movieName, description} = this.props.navigation.state.params;
+        const {localImg, img, score, plot, star, classify, label, movieName, description} = this.props.navigation.state.params;
         const {stars} = this.state;
         return (
             <ScrollView style={styles.wrapper}>
                 <View style={styles.boxDecoration}>
-                    <View style={styles.movieImgWrapper}>
-                        <Image style={styles.movieImg} source={{uri: localImg ? HOST + localImg : img}}/>
-                        <Image style={styles.playIcon} source={require("../../static/image/icon-detail-play.png")}/>
-                    </View>
+                    <TouchableHighlight onPress={e=>this.goPlay(this.props.navigation.state.params)}>
+                        <View style={styles.movieImgWrapper}>
+                            <Image style={styles.movieImg} source={{uri: localImg ? HOST + localImg : img}}/>
+                            <Image style={styles.playIcon} source={require("../../static/image/icon-detail-play.png")}/>
+                        </View>
+                    </TouchableHighlight>
                     <View style={styles.movieInfoWrapper}>
                         <Text style={styles.headerMovieName}>{movieName}</Text>
                         {description ? <Text style={styles.subTitle}>{description.replace(/\n|\s/g, '')}</Text> : null}

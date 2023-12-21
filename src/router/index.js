@@ -14,6 +14,7 @@ import MoviePlayerPage from "..//movie/pages/MoviePlayerPage";
 import MovieLoginPage from "../movie/pages/MovieLoginPage";
 import MovieEditPage from "../movie/pages/MovieEditPage";
 import NewMoviePage from "../movie/pages/NewMoviePage";
+import * as color from '../theme/Color';
 const BottomTab = createAppContainer(
     createBottomTabNavigator(
       {
@@ -75,7 +76,7 @@ const BottomTab = createAppContainer(
       {
         tabBarOptions: {
           /*设置活动选项卡标签的颜色*/
-          activeTintColor: Platform.OS === 'ios' ? '#ffbb15' : '#ffbb15',
+          activeTintColor:color.selectColor,
         },
       },
     ),
@@ -106,7 +107,7 @@ const BottomTab = createAppContainer(
     //     headerShown: false, //可以通过将header设为null来禁用StackNavigator的Navigation
     //   },
     // },
-    PlayPage:{
+    MoviePlayPage:{
       screen: MoviePlayerPage,
       navigationOptions: {
         headerShown: false, //可以通过将header设为null来禁用StackNavigator的Navigation

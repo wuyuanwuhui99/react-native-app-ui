@@ -62,8 +62,8 @@ export const getPlayRecordService = async()=>{
  * @description: 保存播放记录
  * @date: 2020-8-15 22:29
  */
-export const savePlayRecordService = async()=>{
-    return HttpUtil.get(api.savePlayRecord);
+export const savePlayRecordService = async(params)=>{
+    return HttpUtil.post(api.savePlayRecord,params);
 };
 
 /**
@@ -98,8 +98,8 @@ export const saveViewRecordService=(movieItem)=>{
  * @description: 获取演员列表
  * @date: 2020-8-15 22:29
  */
-export const getStarsService=(movieId)=>{
-    return HttpUtil.get(`${api.getStars}/${movieId}`)
+export const getStarsService=(id)=>{
+    return HttpUtil.get(`${api.getStars}/${id}`)
 };
 
 /**
@@ -107,8 +107,8 @@ export const getStarsService=(movieId)=>{
  * @description: 获取电影播放地址
  * @date: 2020-8-15 22:29
  */
-export const getMovieUrlService = (movieId)=>{
-    return HttpUtil.get(`${api.getMovieUrl}?movieId=${movieId}`)
+export const getMovieUrlService = (id)=>{
+    return HttpUtil.get(`${api.getMovieUrl}?id=${id}`)
 };
 
 /**

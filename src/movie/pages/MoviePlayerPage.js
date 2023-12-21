@@ -17,6 +17,9 @@ import {
 import StarsComponent from "../components/StarsComponent";
 import RecommendComponent from "../components/RecommendComponent";
 import YourLikesComponent from "../components/YourLikesComponent";
+import * as style from '../../theme/Style';
+import * as size from '../../theme/Size';
+import * as color from '../../theme/Color';
 
 class MoviePlayerPage extends Component {
     constructor(props) {
@@ -24,7 +27,7 @@ class MoviePlayerPage extends Component {
         this.state = {
             yourLikesList:[],//猜你喜欢的电影
             recommendList:[],//推荐的电影
-            movieUrl:[],//二维数组，分组电影列表
+            movieUrlGroup:[],//二维数组，分组电影列表
             currentUrl:null,//当前播放的url
             isFavoriteStatus:false,//是否已经收藏
             currentPlayGroup:0,
@@ -42,23 +45,30 @@ class MoviePlayerPage extends Component {
     componentWillMount() {
         this.getMovieUrl();
         this.isFavorite();
-        savePlayRecordService(this.props.navigation.state.params);
-        getCommentCountService(this.props.navigation.state.params.movieId).then(res=>{
+        const {params} = this.props.navigation.state;
+        savePlayRecordService(params);
+        getCommentCountService(params.movieId).then(res=>{
             this.setState({commentCount:res.data})
         });
     }
 
     getMovieUrl=()=>{
-        let {movieId} = this.props.navigation.state.params;
-        getMovieUrlService(movieId).then((res)=>{
-            let movieUrl = [],currentUrl=null;
-            res.data.forEach((item)=>{//分组
-                let {playGroup} = item;
-                if(!movieUrl[playGroup-1]) movieUrl[playGroup-1] = [];
-                movieUrl[playGroup-1].push(item);
+        let {id} = this.props.navigation.state.params;
+        id = 72667;// 测试数据
+        getMovieUrlService(id).then((res)=>{
+            let movieUrlGroup = [],currentUrl=null;
+            res.data.forEach((dItem)=>{//分组
+                const groupIdnex = movieUrlGroup.findIndex((mItem)=>{
+                    return mItem[0].playGroup === dItem.playGroup
+                });
+                if(groupIdnex === -1){
+                    movieUrlGroup.push([dItem])
+                }else{
+                    movieUrlGroup[groupIdnex].push(dItem)
+                }
             });
-            if(movieUrl.length > 0) currentUrl = movieUrl[0][0].url;
-            this.setState({movieUrl,currentUrl})
+            if(movieUrlGroup.length > 0) currentUrl = movieUrlGroup[0][0].url;
+            this.setState({movieUrlGroup,currentUrl})
         });
     };
 
@@ -66,7 +76,7 @@ class MoviePlayerPage extends Component {
     //查询是否已经收藏
     saveFavorite=()=>{
         saveFavoriteService(this.props.navigation.state.params).then((res)=>{
-            if(res.data == 1){
+            if(res.data === 1){
                 this.setState({isFavoriteStatus:true});
             }
         })
@@ -100,7 +110,7 @@ class MoviePlayerPage extends Component {
     isFavorite=()=>{
         let {movieId} = this.props.navigation.state.params;
         isFavoriteService(movieId).then((res)=>{
-            this.setState({isFavoriteStatus:res.data > 0 ? true :false})
+            this.setState({isFavoriteStatus:res.data > 0})
         })
     };
 
@@ -204,8 +214,50 @@ class MoviePlayerPage extends Component {
         });
     };
 
+    /**
+     * @author: wuwenqiang
+     * @description: 渲染播放按钮网格，每行5个
+     * @date: 2023-12-21 23:12
+     */
+    _renderUrlTable(urls,index){
+        const count = Math.ceil(urls.length / 5);// 每行放5个按钮
+        const table = [];
+        for(let i  = 0; i < count; i++){
+            table.push(
+                <View style={styles.urlRow}>
+                    {this._renderUrlRow(urls,index,i)}
+                </View>
+            )
+
+        }
+        return table
+    }
+
+    /**
+     * @author: wuwenqiang
+     * @description: 渲染播放按钮行，每行5个
+     * @date: 2023-12-21 23:12
+     */
+    _renderUrlRow(urls,index,i){
+        const {currentUrl} = this.state;
+        const rows = [];
+        for(let j = 0; j < 5; j++){
+            if(i * 5 + j < urls.length){
+                const item = urls[i * 5 + j];
+                rows.push(
+                    <TouchableOpacity onPress={e => this.tabMovie(item)} key={'seriesText' + index + (i * 5 + j)} style={{...styles.urlTd,marginRight:j === 4 ? 0 : size.smallMarginSize,borderColor: currentUrl === item.url ? color.selectColor : color.mainTitleColor}}>
+                        <Text style={currentUrl === item.url ? styles.seriesTextActive : styles.seriesText}>{item.label}</Text>
+                    </TouchableOpacity>
+                )
+            }else{
+                rows.push(<View style={styles.urlTdEmpty}/>)
+            }
+        }
+        return rows
+    }
+
     render(){
-        let {currentUrl,movieUrl,isFavoriteStatus,currentPlayGroup,commentCount,isShowComment,commentList,replyItem,inputValue} = this.state;
+        let {currentUrl,movieUrlGroup,isFavoriteStatus,currentPlayGroup,commentCount,isShowComment,commentList,replyItem,inputValue} = this.state;
         let {movieName,score,star,classify,label} = this.props.navigation.state.params;
         return(
             <View style={styles.wrapper}>
@@ -274,62 +326,53 @@ class MoviePlayerPage extends Component {
                     <View style={styles.webView}>
                         {currentUrl ? <WebView source={{uri:currentUrl}} style={styles.playWrapper}/> : null}
                     </View>
-                    <View style={styles.iconWrapper}>
-                        <TouchableOpacity onPress={this.showComment} style={styles.iconCommentWrapper}>
-                            <Image style={styles.iconComment} source={require("../../static/image/icon-comment.png")}/>
-                            <Text>{commentCount}</Text>
-                        </TouchableOpacity>
-                        <View style={styles.rightIcon}>
-                            <Image source={require("../../static/image/icon-share.png")} style={styles.iconComment}/>
-                            <TouchableOpacity onPress={this.handleFavorite}>
-                                <Image source={isFavoriteStatus ? require("../../static/image/icon-collection-active.png") : require("../../static/image/icon-collection.png")} style={styles.iconComment}/>
+                    <View style={styles.pageStyle}>
+                        <View style={styles.iconWrapper}>
+                            <TouchableOpacity onPress={this.showComment} style={styles.iconCommentWrapper}>
+                                <Image style={styles.iconComment} source={require("../../static/image/icon-comment.png")}/>
+                                <Text>{commentCount}</Text>
                             </TouchableOpacity>
+                            <View style={styles.rightIcon}>
+                                <Image source={require("../../static/image/icon-share.png")} style={styles.iconComment}/>
+                                <TouchableOpacity onPress={this.handleFavorite}>
+                                    <Image source={isFavoriteStatus ? require("../../static/image/icon-collection-active.png") : require("../../static/image/icon-collection.png")} style={styles.iconComment}/>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                    </View>
-                    <View style={styles.titleWrapper}>
-                        <Text style={styles.title}>{movieName}</Text>
-                        <View style={styles.subTitleWrapper}>
+                        <View style={styles.titleWrapper}>
+                            <Text style={styles.title}>{movieName}</Text>
                             <Text style={styles.subTitle} numberOfLines={1}>{star}</Text>
                             <StarsComponent score={score}/>
                         </View>
-                    </View>
-                    <View style={styles.playNumberWrapper}>
-                        <View  style={styles.playGroup}>
-                            {
-                                movieUrl.map((items,aIndex)=>{
-                                    return (
-                                        <TouchableOpacity key={'playGroupItem'+aIndex} onPress={e=>this.tabGroup(aIndex)}>
-                                            <Text style={[styles.playGroupItem,currentPlayGroup == aIndex ? styles.playGroupActive: null]}>播放源{aIndex+1}</Text>
-                                        </TouchableOpacity>
-                                    )
-                                })
-                            }
-                            <View style={styles.emptyTab}/>
+                        <View style={styles.playGroupWrapper}>
+                            <ScrollView horizontal={true} style={styles.playGroup}>
+                                {
+                                    movieUrlGroup.map((items,aIndex)=>{
+                                        return (
+                                            <TouchableOpacity key={'playGroupItem'+aIndex} onPress={e=>this.tabGroup(aIndex)}>
+                                                <Text style={[styles.playGroupItem,currentPlayGroup == aIndex ? styles.playGroupActive: null]}>{(isNaN(Number(items[0].playGroup)) ? '' :  '线路') + items[0].playGroup} </Text>
+                                            </TouchableOpacity>
+                                        )
+                                    })
+                                }
+                                <View style={styles.emptyTab}/>
+                            </ScrollView>
+                            <View>
+                                {
+                                    movieUrlGroup.map((items,aIndex)=>{
+                                        return (
+                                            currentPlayGroup === aIndex ?
+                                                this._renderUrlTable(items,aIndex)
+                                                :null
+                                        )
+                                    })
+                                }
+                            </View>
+
                         </View>
-                        {
-                            movieUrl.map((items,aIndex)=>{
-                                return (
-                                    currentPlayGroup == aIndex ?
-                                        <ScrollView horizontal={true} key={'ScrollView'+aIndex}>
-                                            {
-                                                items.map((item, index) => {
-                                                    return (
-                                                        <TouchableOpacity onPress={e => this.tabMovie(item)} key={'seriesText' + aIndex + index}>
-                                                            <View style={{...styles.seriesWrapper, borderColor: currentUrl == item.url ? "#ffbb15" : "#333"}}>
-                                                                <Text style={currentUrl == item.url ? styles.seriesTextActive : styles.seriesText}>{item.label}</Text>
-                                                            </View>
-                                                        </TouchableOpacity>
-                                                    )
-                                                })
-                                            }
-                                        </ScrollView>
-                                     :null
-                                )
-                            })
-                        }
+                        <YourLikesComponent {...this.props} label={label}/>
+                        <RecommendComponent {...this.props} classify={classify}/>
                     </View>
-                    <YourLikesComponent {...this.props} label={label}/>
-                    <RecommendComponent {...this.props} classify={classify}/>
                 </ScrollView>
             </View>
         )
@@ -397,34 +440,30 @@ const styles = StyleSheet.create({
         height:Dimensions.get("window").width*9/16,
         backgroundColor:"#000"
     },
+    pageStyle:{
+        ...style.pageStyle
+    },
     playWrapper:{
         position:"relative"
     },
     iconWrapper:{
-        borderBottomWidth:1,
-        borderBottomColor:"#ddd",
-        height:80,
-        flexDirection:"row",
-        alignItems:"center",
-        paddingLeft:20,
-        paddingRight:20
+        ...style.boxDecoration,
+        display:'flex',
+        flexDirection:'row'
     },
     iconComment:{
-        width:30,
-        height:30,
-        marginRight:10
+        width:size.middleIconSize,
+        height:size.middleIconSize,
+        marginRight:size.smallMarginSize
     },
     rightIcon:{
         flexDirection:"row-reverse",
         flex:1
     },
     titleWrapper:{
-        borderBottomWidth:1,
-        borderBottomColor:"#ddd",
-        padding:20,
+        ...style.boxDecoration
     },
     playGroup:{
-        marginBottom: 10,
         display:"flex",
         flexDirection:"row",
     },
@@ -437,6 +476,33 @@ const styles = StyleSheet.create({
         borderLeftColor:"#ddd",
         borderRightColor:"#ddd",
         borderBottomColor:"#FFFFFF"
+    },
+    urlRow:{
+        display:'flex',
+        flexDirection:'row',
+        marginTop: size.containerPaddingSize
+    },
+    urlTd:{
+        flex:1,
+        borderColor:color.subTitleColor,
+        borderWidth:1,
+        borderStyle:'solid',
+        marginRight:size.smallMarginSize,
+        paddingTop: size.smallMarginSize,
+        paddingBottom: size.smallMarginSize,
+        display: 'flex',
+        alignItems:'center',
+        borderRadius:size.minBtnRadiusSize
+    },
+    urlTdEmpty:{
+        flex:1,
+        marginRight:size.smallMarginSize,
+        paddingTop: size.smallMarginSize,
+        paddingRight: size.smallMarginSize,
+        opacity: 0
+    },
+    lastUrlTd:{
+        marginRight: 0,
     },
     emptyTab:{
         borderBottomWidth:1,
@@ -453,31 +519,17 @@ const styles = StyleSheet.create({
         marginBottom:10,
         fontWeight:"bold"
     },
-    subTitleWrapper:{
-        flexDirection:"column"
-    },
-    score:{
-        fontWeight:"bold",
-        color:"red",
-        marginRight:10
-    },
     subTitle:{
-        flex:1,
-        color:"#bbb",
+        color:color.subTitleColor,
     },
-    playNumberWrapper:{
-        borderBottomWidth:1,
-        borderBottomColor:"#ddd",
-        padding:20,
+    playGroupWrapper:{
+        ...style.boxDecoration
     },
     seriesWrapper:{
-        width:80,
-        height:80,
-        borderRadius:50,
+        padding:size.containerPaddingSize,
         justifyContent:"center",
         alignItems:"center",
         borderWidth:1,
-        marginRight:20
     },
     seriesWrapperNormal:{
         borderColor:"#bbb",

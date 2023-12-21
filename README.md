@@ -3,27 +3,9 @@
 
 开发者：吴怨吴悔
 
+项目启动时间：2021-05
+
 =============================界面预览（如果无法预览图片，请查看项目根目录png文件）==========================
-![app整体预览](./%E7%94%B5%E5%BD%B1app%E6%95%B4%E4%BD%93%E9%A2%84%E8%A7%88.jpg)
-![app首页](./movie1.png)
-![app首页](./movie2.png)
-![app首页](./movie3.png)
-![app首页](./movie4.png)
-![app首页](./movie5.png)
-![app首页](./movie6.png)
-![app首页](./movie7.png)
-![app首页](./movie8.png)
-![app首页](./movie9.png)
-![app首页](./movie10.png)
-![app首页](./movie11.png)
-![app首页](./movie12.png)
-![app首页](./movie13.png)
-![app首页](./movie14.png)
-![app首页](./movie15.png)
-![app首页](./movie16.png)
-
-
-=============================新版==========================
 
 ![app首页](./新版电影APP整体预览图.jpg)
 ![app首页](./新版预览1.png)
@@ -43,6 +25,11 @@
 启动命令：react-native run-android --no-jetifier
 
 使用的插件
+
+react：17.0.1
+
+react-native：0.64.0
+
 ui组件库：@ant-design/react-native: 4.0.5
 
 缓存：@react-native-community/async-storage: 1.12.1
@@ -77,13 +64,17 @@ redux浏览器工具：reredux-devtools-extension: 2.13.8
 
 redux状态管理器：redux-thunk: 2.3.0
 
-
-
 flutter版本参见: https://github.com/wuyuanwuhui99/flutter-movie-app-ui
 
 在线音乐和电影后端接口项目和sql语句：https://github.com/wuyuanwuhui99/springboot-app-service
 
-flutter在线电影项目：https://github.com/wuyuanwuhui99/flutter-movie-app-ui
+harmony鸿蒙版本参见: https://github.com/wuyuanwuhui99/Harmony_movie_app_ui
+
+java安卓原生版本参见：https://github.com/wuyuanwuhui99/android-java-movie-app-ui
+
+微信小程序版本参见：https://github.com/wuyuanwuhui99/android-java-movie-app-ui
+
+uniapp版本参见：https://github.com/wuyuanwuhui99/uniapp-vite-vue3-ts-movie-app-ui
 
 vue在线音乐项目：https://github.com/wuyuanwuhui99/vue-music-app-ui
 
