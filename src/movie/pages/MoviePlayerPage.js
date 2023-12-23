@@ -1,5 +1,16 @@
 import React, {Component} from 'react';
-import {StyleSheet, View,Text,Image,ScrollView,Dimensions,TouchableOpacity,TextInput} from "react-native";
+import {
+    StyleSheet,
+    View,
+    Text,
+    Image,
+    ScrollView,
+    Dimensions,
+    TouchableOpacity,
+    TextInput,
+    Modal,
+    Alert
+} from "react-native";
 import {connect} from "react-redux";
 import {HOST} from "../../config";
 import { WebView } from 'react-native-webview';
@@ -47,7 +58,8 @@ class MoviePlayerPage extends Component {
         this.isFavorite();
         const {params} = this.props.navigation.state;
         savePlayRecordService(params);
-        getCommentCountService(params.movieId).then(res=>{
+        // 15778为测试数据
+        getCommentCountService(15778/*params.id*/).then(res=>{
             this.setState({commentCount:res.data})
         });
     }
@@ -131,7 +143,7 @@ class MoviePlayerPage extends Component {
         let {pageNum,commentList} = this.state;
         pageNum++;
         this.setState({pageNum});
-        getTopCommentListService(this.props.navigation.state.params.movieId,this.state.pageSize,pageNum).then(res=>{
+        getTopCommentListService(14692/*this.props.navigation.state.params.id*/,this.state.pageSize,pageNum).then(res=>{
             commentList.push(...res.data);
             this.setState({commentList});
         });
@@ -145,10 +157,10 @@ class MoviePlayerPage extends Component {
     showComment=()=>{
         const {isShowComment} = this.state;
         if(!isShowComment){//如果是隐藏状态，点击后显示评论
-            const {movieId} = this.props.navigation.state.params;
+            const {id} = this.props.navigation.state.params;
             this.setState({pageSize:20,pageNum:1});
             const {pageSize,pageNum} = this.state;
-            getTopCommentListService(movieId,pageSize,pageNum).then(res=>{
+            getTopCommentListService(14692/*id*/,pageSize,pageNum).then(res=>{
                 const commentList = res.data.map(item=>{
                     item.replyPageNum = 0;
                     item.replyList = [];
@@ -180,7 +192,7 @@ class MoviePlayerPage extends Component {
      * @date: 2021-10-24 18:37
      */
     onReply=(e,replyItem,replyIndex)=>{
-        this.state.replyIndex = replyIndex
+        this.state.replyIndex = replyIndex;
         e.stopPropagation();
         this.setState({replyItem})
     };
@@ -195,7 +207,7 @@ class MoviePlayerPage extends Component {
         if(!inputValue)return;
         const params ={
             content:inputValue,
-            movieId:this.props.navigation.state.params.movieId,
+            movieId:this.props.navigation.state.params.id,
             parentId:replyItem ? replyItem.id : undefined,
             topId:replyItem ? replyItem.topId : undefined,
             replyUserId:replyItem ? replyItem.userId : undefined
@@ -256,72 +268,82 @@ class MoviePlayerPage extends Component {
         return rows
     }
 
+    handleCancel(){
+        this.setState({
+            isShowComment:false
+        })
+    }
+
     render(){
         let {currentUrl,movieUrlGroup,isFavoriteStatus,currentPlayGroup,commentCount,isShowComment,commentList,replyItem,inputValue} = this.state;
         let {movieName,score,star,classify,label} = this.props.navigation.state.params;
         return(
             <View style={styles.wrapper}>
-                {
-                    isShowComment? (
-                        <View style={styles.commentWrapper}>
-                            <View style={styles.maskWrapper}>
-                                <TouchableOpacity style={styles.mask} onPress={this.showComment}/>
-                            </View>
-                            <View style={styles.commentListWrapper}>
-                                <Text style={styles.commentCount}>{commentCount}条评论</Text>
-                                <TouchableOpacity style={styles.scrollWrapper} onPress={e=>this.onReply(e,null,-1)}>
-                                    <ScrollView>
-                                        {
-                                            commentList.map((item,index)=>{
-                                                return  (
-                                                    <TouchableOpacity onPress={e=>this.onReply(e,item,index)}>
-                                                        <View style={[styles.commentItem,{marginTop:index>0?10:0}]}>
-                                                            <Image style={styles.commentAvater} source={{uri:HOST+item.avater}}/>
-                                                            <View style={styles.commentTextWrapper}>
-                                                                <Text style={styles.commentUser}>{item.username}</Text>
-                                                                <Text style={styles.commentText}>{item.content}</Text>
-                                                                <Text style={styles.commentTime}>{item.createTime}   回复</Text>
-                                                                {
-                                                                    item.replyList.map((aItem)=>{
-                                                                        return (
-                                                                            <TouchableOpacity onPress={e=>this.onReply(e,aItem,index)}>
-                                                                                <View style={styles.replyWrapper}>
-                                                                                    <Image style={styles.replyAvater} source={{uri:HOST+aItem.avater}}/>
-                                                                                    <View style={styles.replyInfo}>
-                                                                                        <Text style={styles.replyUserName}>{aItem.username}▶{aItem.replyUserName}</Text>
-                                                                                        <Text style={styles.replyContent}>{aItem.content}</Text>
-                                                                                        <Text style={styles.commentTime}>{item.createTime}  回复</Text>
-                                                                                    </View>
-                                                                                </View>
-                                                                            </TouchableOpacity>
-                                                                        )
-                                                                    })
-                                                                }
-                                                                {
-                                                                    item.replyCount > 0 && item.replyCount - 10*item.replyPageNum > 0 ? (
-                                                                        <TouchableOpacity onPress={e=>this.getReplyCommentList(e,item)}>
-                                                                            <Text style={[styles.commentTime,{marginTop: 10},]}>——展开{item.replyCount - 10*item.replyPageNum}条回复 ></Text>
-                                                                        </TouchableOpacity>
-                                                                    ) : null
-                                                                }
-                                                            </View>
-                                                        </View>
-                                                    </TouchableOpacity>
-                                                )
-                                            })
-                                        }
-                                    </ScrollView>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.replyInputWrapper}>
-                                <TextInput value={inputValue}  onChangeText={text=>this.setState({inputValue:text})} style={styles.replyInput} placeholder={replyItem?"回复"+replyItem.username:"有爱评论，说点好听的~"}/>
-                                <TouchableOpacity onPress={this.onSend}>
-                                    <Text style={styles.sendBtn}>发送</Text>
-                                </TouchableOpacity>
-                            </View>
+                <Modal animationType="slide"
+                       transparent={true}
+                       visible={isShowComment}
+                       onRequestClose={() => {
+                           this.handleCancel();
+                       }}
+                >
+                    <View style={styles.commentWrapper}>
+                        <View style={styles.maskWrapper}>
+                            <TouchableOpacity style={styles.mask} onPress={this.showComment}/>
                         </View>
-                    ):null
-                }
+                        <View style={styles.commentListWrapper}>
+                            <Text style={styles.commentCount}>{commentCount}条评论</Text>
+                            <TouchableOpacity style={styles.scrollWrapper} onPress={e=>this.onReply(e,null,-1)}>
+                                <ScrollView>
+                                    {
+                                        commentList.map((item,index)=>{
+                                            return  (
+                                                <TouchableOpacity onPress={e=>this.onReply(e,item,index)}>
+                                                    <View style={[styles.commentItem,{marginTop:index>0?10:0}]}>
+                                                        <Image style={styles.commentAvater} source={{uri:HOST+item.avater}}/>
+                                                        <View style={styles.commentTextWrapper}>
+                                                            <Text style={styles.commentUser}>{item.username}</Text>
+                                                            <Text style={styles.commentText}>{item.content}</Text>
+                                                            <Text style={styles.commentTime}>{item.createTime}   回复</Text>
+                                                            {
+                                                                item.replyList.map((aItem)=>{
+                                                                    return (
+                                                                        <TouchableOpacity onPress={e=>this.onReply(e,aItem,index)}>
+                                                                            <View style={styles.replyWrapper}>
+                                                                                <Image style={styles.replyAvater} source={{uri:HOST+aItem.avater}}/>
+                                                                                <View style={styles.replyInfo}>
+                                                                                    <Text style={styles.replyUserName}>{aItem.username}▶{aItem.replyUserName}</Text>
+                                                                                    <Text style={styles.replyContent}>{aItem.content}</Text>
+                                                                                    <Text style={styles.commentTime}>{item.createTime}  回复</Text>
+                                                                                </View>
+                                                                            </View>
+                                                                        </TouchableOpacity>
+                                                                    )
+                                                                })
+                                                            }
+                                                            {
+                                                                item.replyCount > 0 && item.replyCount - 10*item.replyPageNum > 0 ? (
+                                                                    <TouchableOpacity onPress={e=>this.getReplyCommentList(e,item)}>
+                                                                        <Text style={[styles.commentTime,{marginTop: 10},]}>——展开{item.replyCount - 10*item.replyPageNum}条回复 ></Text>
+                                                                    </TouchableOpacity>
+                                                                ) : null
+                                                            }
+                                                        </View>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            )
+                                        })
+                                    }
+                                </ScrollView>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.replyInputWrapper}>
+                            <TextInput value={inputValue}  onChangeText={text=>this.setState({inputValue:text})} style={styles.replyInput} placeholder={replyItem?"回复"+replyItem.username:"有爱评论，说点好听的~"}/>
+                            <TouchableOpacity onPress={this.onSend}>
+                                <Text style={styles.sendBtn}>发送</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
                 <ScrollView>
                     <View style={styles.webView}>
                         {currentUrl ? <WebView source={{uri:currentUrl}} style={styles.playWrapper}/> : null}
@@ -423,7 +445,7 @@ const styles = StyleSheet.create({
     },
     commentListWrapper:{
         flex:1,
-        backgroundColor:"#fff",
+        backgroundColor:color.whiteColor,
         display:"flex",
         flexDirection:"column"
     },
@@ -438,7 +460,7 @@ const styles = StyleSheet.create({
     },
     webView:{
         height:Dimensions.get("window").width*9/16,
-        backgroundColor:"#000"
+        backgroundColor:color.blackColor
     },
     pageStyle:{
         ...style.pageStyle
@@ -472,10 +494,10 @@ const styles = StyleSheet.create({
         borderBottomWidth:1,
         borderLeftWidth:1,
         borderRightWidth:1,
-        borderTopColor:"#ddd",
-        borderLeftColor:"#ddd",
-        borderRightColor:"#ddd",
-        borderBottomColor:"#FFFFFF"
+        borderTopColor:color.disableColor,
+        borderLeftColor:color.disableColor,
+        borderRightColor:color.disableColor,
+        borderBottomColor:color.whiteColor
     },
     urlRow:{
         display:'flex',
@@ -506,17 +528,17 @@ const styles = StyleSheet.create({
     },
     emptyTab:{
         borderBottomWidth:1,
-        borderBottomColor: "#ddd",
+        borderBottomColor: color.disableColor,
         flex:1
     },
     playGroupItem:{
         padding:10,
         borderBottomWidth:1,
-        borderBottomColor:"#ddd"
+        borderBottomColor:color.disableColor
     },
     title:{
-        fontSize:20,
-        marginBottom:10,
+        fontSize:size.bigFontSize,
+        marginBottom:size.smallMarginSize,
         fontWeight:"bold"
     },
     subTitle:{
@@ -531,107 +553,101 @@ const styles = StyleSheet.create({
         alignItems:"center",
         borderWidth:1,
     },
-    seriesWrapperNormal:{
-        borderColor:"#bbb",
-    },
-    seriesWrapperActive:{
-        borderColor:"#333",
-    },
     seriesText:{
-        color:"#333",
+        color:color.mainTitleColor,
     },
     seriesTextActive:{
-        color:"#ffbb15",
+        color:color.selectColor,
     },
     rowWrapper:{
         flexDirection:"row",
         justifyContent:"center"
     },
     recommondItem:{
-        width:150,
-        marginRight:20
+        width:size.movieWidthSize,
+        marginRight:size.columnPaddingSize
     },
     recommondImg:{
-        width:150,
-        height:200,
-        borderRadius:10,
-        marginBottom:10
+        width:size.movieWidthSize,
+        height:size.movieHeightSize,
+        borderRadius:size.smallMarginSize,
+        marginBottom:size.smallMarginSize
     },
     commentItem:{
         display:"flex",
         flexDirection:"row",
-        marginLeft:10,
-        marginRight:10
+        marginLeft:size.smallMarginSize,
+        marginRight:size.smallMarginSize
     },
     commentAvater:{
-        borderRadius:50,
-        width:50,
-        height:50,
-        marginRight:10
+        borderRadius:size.superRadiusSize,
+        width:size.superRadiusSize,
+        height:size.superRadiusSize,
+        marginRight:size.smallMarginSize
     },
     commentTextWrapper:{
         flex:1,
     },
     commentUser:{
-        fontSize: 16,
-        color:"#666"
+        fontSize: size.middleFontSize,
+        color:color.mainTitleColor
     },
     commentText:{
-        color:"#333",
-        fontSize:16
+        color:color.mainTextColor,
+        fontSize:size.middleFontSize,
     },
     commentTime:{
-        fontSize: 16,
-        color:"#666"
+        fontSize: size.middleFontSize,
+        color:color.mainTitleColor
     },
     replyWrapper:{
         display:"flex",
         flexDirection:"row",
-        marginTop:10
+        marginTop:size.smallMarginSize
     },
     replyInfo:{
         flex:1
     },
     replyAvater:{
-        width:20,
-        height:20,
-        borderRadius:20,
-        marginRight:10
+        width:size.smallIconSize,
+        height:size.smallIconSize,
+        borderRadius:size.smallIconSize,
+        marginRight:size.smallMarginSize
     },
     replyUserName:{
-        color:"#bbb"
+        color:color.usernameColor
     },
     replyContent:{
-        color:"#333",
-        fontSize:16
+        color:color.mainTitleColor,
+        fontSize:size.middleFontSize
     },
     replyInputWrapper:{
         display:"flex",
         flexDirection:"row",
-        paddingLeft:10,
-        paddingRight:10,
-        paddingTop:10,
-        paddingBottom:30,
-        borderTopWidth: 1,
-        borderTopColor: "#bbb",
-        backgroundColor:"#fff",
+        paddingLeft:size.smallMarginSize,
+        paddingRight:size.smallMarginSize,
+        paddingTop:size.smallMarginSize,
+        paddingBottom:size.smallMarginSize * 3,
+        borderTopWidth: size.borderWidthSize,
+        borderTopColor: color.borderColor,
+        backgroundColor:color.whiteColor,
     },
     replyInput:{
         flex:1,
-        borderRadius:50,
-        backgroundColor:"#ddd",
-        height:40,
-        paddingLeft:10
+        borderRadius:size.buttonHeightSize,
+        backgroundColor:color.disableColor,
+        height:size.buttonHeightSize,
+        paddingLeft:size.smallMarginSize
     },
     sendBtn:{
-        backgroundColor:"#1890ff",
-        borderRadius:20,
-        paddingLeft:20,
-        paddingRight:20,
-        paddingTop:10,
-        paddingBottom:10,
-        marginLeft: 10,
-        color:"#fff",
-        height:40
+        backgroundColor:color.activeColor,
+        borderRadius:size.bigRadiusSize,
+        paddingLeft:size.bigRadiusSize,
+        paddingRight:size.bigRadiusSize,
+        paddingTop:size.smallMarginSize,
+        paddingBottom:size.smallMarginSize,
+        marginLeft: size.smallMarginSize,
+        color:color.whiteColor,
+        height:size.buttonHeightSize
     }
 });

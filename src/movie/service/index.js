@@ -182,8 +182,8 @@ export const updateUserService = (userData)=>{
  * @description: 获取影片评论总数
  * @date: 2021-10-20 20:43
  */
-export const getCommentCountService = (movieId)=>{
-    return HttpUtil.get(`${api.getCommentCount}?movieId=${movieId}`)
+export const getCommentCountService = (id)=>{
+    return HttpUtil.get(`${api.getCommentCount}?relationId=${id}&type=movie&pageSize=20&pageNum=1`)
 };
 
 /**
@@ -191,8 +191,8 @@ export const getCommentCountService = (movieId)=>{
  * @description: 获取评论列表
  * @date: 2021-10-20 21:36
  */
-export const getTopCommentListService = (movieId,pageSize,pageNum)=>{
-    return HttpUtil.get(`${api.getTopCommentList}?movieId=${movieId}&pageSize=${pageSize}&pageNum=${pageNum}`)
+export const getTopCommentListService = (id,pageSize,pageNum)=>{
+    return HttpUtil.get(`${api.getTopCommentList}?relationId=${id}&type=movie&pageSize=${pageSize}&pageNum=${pageNum}`)
 };
 
 /**

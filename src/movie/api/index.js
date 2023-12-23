@@ -20,10 +20,10 @@ export default {
     getYourLikes: `${HOST}/service/movie/getYourLikes`,//猜你想看
     login: `${HOST}/service/movie/login`,//登录
     updateUser : `${HOST}/service/movie-getway/updateUser`,//更新用户信息
-    getCommentCount:`${HOST}/service/movie/getCommentCount`,//获取评论总数
-    getTopCommentList:`${HOST}/service/movie/getTopCommentList`,//获取评论列表
-    getReplyCommentList:`${HOST}/service/movie/getReplyCommentList`,//获取回复列表
-    insertComment:`${HOST}/service//movie-getway/insertComment`,//获取回复列表
+    getCommentCount:`${HOST}/service/social/getCommentCount`,//获取评论总数
+    getTopCommentList:`${HOST}/service/social/getTopCommentList`,//获取评论列表
+    getReplyCommentList:`${HOST}/service/social/getReplyCommentList`,//获取回复列表
+    insertComment:`${HOST}/service//social-getway/insertComment`,//获取回复列表
 };
 
 
