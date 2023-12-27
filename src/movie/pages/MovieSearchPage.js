@@ -30,7 +30,7 @@ class  MovieSearchPage extends Component {
 
     clearInput =()=>{
         this.setState({keyword:null,searching:false})
-    }
+    };
 
     render(){
         let {placeholder,classify} = this.props.navigation.state.params;
@@ -49,7 +49,7 @@ class  MovieSearchPage extends Component {
                         {
                             keyword ?
                                 <TouchableOpacity onPress={this.clearInput}>
-                                    <Image style={styles.clearIcon} source={require("../../static/image/icon-clear.png")}/>
+                                    <Image style={styles.clearIcon} source={require("../../static/image/icon_clear.png")}/>
                                 </TouchableOpacity> : null
                         }
 

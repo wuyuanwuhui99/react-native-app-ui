@@ -13,7 +13,6 @@ export const pageStyle = {
     marginTop: 0,
     paddingLeft: size.containerPaddingSize,
     paddingRight: size.containerPaddingSize,
-    marginBottom: size.containerPaddingSize,
     backgroundColor: color.backgroundColor,
     width: Dimensions.get('window').width,
     height:Dimensions.get('window').height

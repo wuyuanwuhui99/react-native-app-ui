@@ -17,25 +17,25 @@ export default class  ClassifyComponent extends Component {
             <View style={styles.classifyWrapper}>
                 <TouchableOpacity style={styles.classifyItem}>
                     <View style={styles.classifyBox}>
-                        <Image style={styles.classifyImage} source={require("../../static/image/icon-hot.png")}/>
+                        <Image style={styles.classifyImage} source={require("../../static/image/icon_hot.png")}/>
                         <Text>热门</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.classifyItem}>
                     <View style={styles.classifyBox}>
-                        <Image style={styles.classifyImage} source={require("../../static/image/icon-play.png")}/>
+                        <Image style={styles.classifyImage} source={require("../../static/image/icon_play.png")}/>
                         <Text>预告</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.classifyItem} onPress={this.goNewMoviePage}>
                     <View style={styles.classifyBox}>
-                        <Image style={styles.classifyImage} source={require("../../static/image/icon-top.png")}/>
+                        <Image style={styles.classifyImage} source={require("../../static/image/icon_top.png")}/>
                         <Text>最新</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.classifyItem}>
                     <View style={styles.classifyBox}>
-                        <Image style={styles.classifyImage} source={require("../../static/image/icon-classify.png")}/>
+                        <Image style={styles.classifyImage} source={require("../../static/image/icon_classify.png")}/>
                         <Text>分类</Text>
                     </View>
                 </TouchableOpacity>

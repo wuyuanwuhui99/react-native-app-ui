@@ -107,8 +107,8 @@ export const getStarsService=(id)=>{
  * @description: 获取电影播放地址
  * @date: 2020-8-15 22:29
  */
-export const getMovieUrlService = (id)=>{
-    return HttpUtil.get(`${api.getMovieUrl}?id=${id}`)
+export const getMovieUrlService = (movieId)=>{
+    return HttpUtil.get(`${api.getMovieUrl}?movieId=${movieId}`)
 };
 
 /**
@@ -118,6 +118,15 @@ export const getMovieUrlService = (id)=>{
  */
 export const getYourLikesService = (labels)=>{
     return HttpUtil.get(`${api.getYourLikes}?labels=${labels}`);
+};
+
+/**
+ * @description: 获取用户收藏的电影
+ * @date: 2023-12-27 22:21
+ * @author wuwenqiang
+ */
+export const getMyFavoriteMovieListService = (pageNum,pageSize) => {
+    return HttpUtil.get(`${api.getFavorite}?pageNum=${pageNum}&pageSize=${pageSize}`)
 };
 
 /**
@@ -157,6 +166,15 @@ export const getRecommendService = (classify)=>{
     return HttpUtil.get(`${api.getRecommend}?classify=${classify}`);
 };
 
+
+/**
+ * @description: 获取用户浏览过的电影
+ * @date: 2023-12-27 23:41
+ * @author wuwenqiang
+ */
+export const getMyViewsMovieListService = (pageNum,pageSize) => {
+    return HttpUtil.get(`${api.getViewRecord}?pageNum=${pageNum}&pageSize=${pageSize}`)
+}
 
 /**
  * @author: wuwenqiang

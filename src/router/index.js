@@ -2,10 +2,10 @@ import React from 'react';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createAppContainer} from 'react-navigation';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
-import {Platform} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MovieHomePage from '../movie/pages/MovieHomePage';
 import MoviePage from '../movie/pages/MoviePage';
+import MovieMyPage from '../movie/pages/MovieMyPage';
 import MovieVideoPage from '../movie/pages/MovieVideoPage';
 import MovieSearchPage from '../movie/pages/MovieSearchPage';
 import DetailPage from "../movie/pages/MovieDetaiPage";
@@ -59,8 +59,8 @@ const BottomTab = createAppContainer(
             ),
           },
         },
-        MovieSearchPage: {
-          screen: MovieSearchPage,
+        MovieMyPage: {
+          screen: MovieMyPage,
           navigationOptions: {
             tabBarLabel: '我的',
             tabBarIcon: ({tintColor, focused}) => (
@@ -91,6 +91,12 @@ const BottomTab = createAppContainer(
     },
     MovieUserPage:{
       screen: MovieUserPage,
+      navigationOptions: {
+        headerShown: false, //可以通过将header设为null来禁用StackNavigator的Navigation
+      },
+    },
+    MovieSearchPage:{
+      screen: MovieSearchPage,
       navigationOptions: {
         headerShown: false, //可以通过将header设为null来禁用StackNavigator的Navigation
       },

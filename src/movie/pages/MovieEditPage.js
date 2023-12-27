@@ -51,13 +51,13 @@ class  MovieEditPage extends Component {
                         <TouchableOpacity onPress={()=>this.setState({value:"男"})}>
                             <View style={[styles.radio,styles.radioLine]}>
                                 <Text style={styles.radioText}>男</Text>
-                                {value == "男" ? <Image style={styles.yesIcon} source={require("../../static/image/icon-yes.png")}/>:null}
+                                {value == "男" ? <Image style={styles.yesIcon} source={require("../../static/image/icon_yes.png")}/>:null}
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={()=>this.setState({value:"女"})}>
                             <View style={styles.radio}>
                                 <Text style={styles.radioText}>女</Text>
-                                {value == "女" ? <Image style={styles.yesIcon} source={require("../../static/image/icon-yes.png")}/>:null}
+                                {value == "女" ? <Image style={styles.yesIcon} source={require("../../static/image/icon_yes.png")}/>:null}
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -109,7 +109,7 @@ class  MovieEditPage extends Component {
             <View>
                 <View style={styles.headers}>
                     <TouchableOpacity onPress={this.goBack}>
-                        <Image source={require("../../static/image/icon-back.png")} style={styles.backIcon}/>
+                        <Image source={require("../../static/image/icon_back.png")} style={styles.backIcon}/>
                     </TouchableOpacity>
                     <Text style={styles.title}>{title}</Text>
                     <Button type="primary" disabled={!isAllowEmpty && !value || primaryValue == value} onPress={this.onSave} >保存</Button>

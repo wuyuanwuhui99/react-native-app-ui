@@ -3,7 +3,7 @@
 
 开发者：吴怨吴悔
 
-项目启动时间：2021-05
+项目启动时间：2020-08
 
 =============================界面预览（如果无法预览图片，请查看项目根目录png文件）==========================
 
@@ -26,19 +26,15 @@
 
 使用的插件
 
-react：17.0.1
-
-react-native：0.64.0
-
 ui组件库：@ant-design/react-native: 4.0.5
 
 缓存：@react-native-community/async-storage: 1.12.1
 
 页面滚动：@react-native-community/viewpager": 4.1.6"
 
-react：react: 16.13.1
+react：17.0.1
 
-react-native：react-native: 0.63.2
+react-native：0.64.0
 
 手势操作：react-native-gesture-handler: 1.8.0
 

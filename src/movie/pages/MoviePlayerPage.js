@@ -351,13 +351,13 @@ class MoviePlayerPage extends Component {
                     <View style={styles.pageStyle}>
                         <View style={styles.iconWrapper}>
                             <TouchableOpacity onPress={this.showComment} style={styles.iconCommentWrapper}>
-                                <Image style={styles.iconComment} source={require("../../static/image/icon-comment.png")}/>
+                                <Image style={styles.iconComment} source={require("../../static/image/icon_comment.png")}/>
                                 <Text>{commentCount}</Text>
                             </TouchableOpacity>
                             <View style={styles.rightIcon}>
-                                <Image source={require("../../static/image/icon-share.png")} style={styles.iconComment}/>
+                                <Image source={require("../../static/image/icon_share.png")} style={styles.iconComment}/>
                                 <TouchableOpacity onPress={this.handleFavorite}>
-                                    <Image source={isFavoriteStatus ? require("../../static/image/icon-collection-active.png") : require("../../static/image/icon-collection.png")} style={styles.iconComment}/>
+                                    <Image source={isFavoriteStatus ? require("../../static/image/icon_collection_active.png") : require("../../static/image/icon_collection.png")} style={styles.iconComment}/>
                                 </TouchableOpacity>
                             </View>
                         </View>

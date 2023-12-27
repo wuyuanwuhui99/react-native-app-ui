@@ -28,14 +28,14 @@ export default class  StarsComponent extends Component {
         let result = []
         let index = 0;
         for(let i = 0; i < integer; i++){//实心星星
-            result.push(<Image  key={'start'+index++} style={styles.star} source={require("../../static/image/icon-full-star.png")}/>)
+            result.push(<Image  key={'start'+index++} style={styles.star} source={require("../../static/image/icon_full_star.png")}/>)
         }
         if(Math.round(count) - Math.floor(count*10/5)/2 == 0.5){//半个星星
-            result.push(<Image  key={'start'+index++} style={styles.star} source={require("../../static/image/icon-half-star.png")}/>)
+            result.push(<Image  key={'start'+index++} style={styles.star} source={require("../../static/image/icon_half_star.png")}/>)
         }
         let leftover = 5-result.length
         for(let i = 0; i < leftover; i++){//空心星星
-            result.push(<Image key={'start'+index++} style={styles.star} source={require("../../static/image/icon-empty-star.png")}/>)
+            result.push(<Image key={'start'+index++} style={styles.star} source={require("../../static/image/icon_empty_star.png")}/>)
         }
         return (
             <View style={styles.starBox}>

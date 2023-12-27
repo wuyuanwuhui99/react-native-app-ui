@@ -62,7 +62,7 @@ export default class MovieDetaiPage extends Component {
                     <TouchableHighlight onPress={e=>this.goPlay(this.props.navigation.state.params)}>
                         <View style={styles.movieImgWrapper}>
                             <Image style={styles.movieImg} source={{uri: localImg ? HOST + localImg : img}}/>
-                            <Image style={styles.playIcon} source={require("../../static/image/icon-detail-play.png")}/>
+                            <Image style={styles.playIcon} source={require("../../static/image/icon_detail_play.png")}/>
                         </View>
                     </TouchableHighlight>
                     <View style={styles.movieInfoWrapper}>

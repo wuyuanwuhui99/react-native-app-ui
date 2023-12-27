@@ -1,7 +1,7 @@
 import store from '../store';
 import {getToken} from '../store/actions';
 import StorageUtil from "../utils/StorageUtil";
-import {SUCCESS} from "../config"
+import {SUCCESS,HOST} from "../config";
 export default class HttpUtil {
 
     /**
@@ -11,14 +11,14 @@ export default class HttpUtil {
      */
     static get(url) {
         return new Promise((resolve, reject) => {
-            fetch(url,{
+            fetch(HOST + url,{
                 headers:{
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     "Authorization":store.getState().token
                 }
             }) .then(response => response.json()).then((result) => {
-                if(result.status == SUCCESS){
+                if(result.status === SUCCESS){
                     if (result.token) {
                         store.dispatch(getToken(result.token));
                         StorageUtil.set("token",result.token)
@@ -38,9 +38,8 @@ export default class HttpUtil {
      * @returns {Promise}
      */
     static post(url, params) {
-        console.log(store.getState().token)
         return new Promise((resolve, reject) => {
-            fetch(url, {
+            fetch(HOST + url, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -49,7 +48,7 @@ export default class HttpUtil {
                 },
                 body: JSON.stringify(params),
             }).then(response => response.json()).then((result) => {
-                if(result.status == SUCCESS){
+                if(result.status === SUCCESS){
                     if (result.token) {
                         store.dispatch(getToken(result.token));
                         StorageUtil.set("token",result.token)
@@ -71,7 +70,7 @@ export default class HttpUtil {
      */
     static put(url, params) {
         return new Promise((resolve, reject) => {
-            fetch(url, {
+            fetch(HOST + url, {
                 method: 'PUT',
                 headers: {
                     'Accept': 'application/json',
@@ -80,7 +79,7 @@ export default class HttpUtil {
                 },
                 body: JSON.stringify(params),
             }).then(response => response.json()).then((result) => {
-                if(result.status == SUCCESS){
+                if(result.status === SUCCESS){
                     if (result.token) {
                         store.dispatch(getToken(result.token));
                         StorageUtil.set("token",result.token)
@@ -101,7 +100,7 @@ export default class HttpUtil {
      */
     static delete(url, params) {
         return new Promise((resolve, reject) => {
-            fetch(url, {
+            fetch(HOST + url, {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
@@ -110,7 +109,7 @@ export default class HttpUtil {
                 },
                 body: JSON.stringify(params),
             }).then(response => response.json()).then((result) => {
-                if(result.status == SUCCESS){
+                if(result.status === SUCCESS){
                     if (result.token) {
                         store.dispatch(getToken(result.token));
                         StorageUtil.set("token",result.token)

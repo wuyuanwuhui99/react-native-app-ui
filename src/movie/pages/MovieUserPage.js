@@ -67,13 +67,13 @@ class  MovieUserPage extends Component {
                     <View style={styles.row}>
                         <Text style={styles.title}>头像</Text>
                         <Image roundAsCircle={true} style={styles.avater} source={{uri:HOST+avater}}/>
-                        <Image style={styles.arrow} source={require("../../static/image/icon-arrow.png")}/>
+                        <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
                     </View>
                     <TouchableOpacity onPress={()=>{this.goEditPage("昵称","input",username,"username",false)}}>
                         <View style={styles.row}>
                             <Text style={styles.title}>昵称</Text>
                             <Text>{username}</Text>
-                            <Image style={styles.arrow} source={require("../../static/image/icon-arrow.png")}/>
+                            <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
                         </View>
                     </TouchableOpacity>
 
@@ -81,7 +81,7 @@ class  MovieUserPage extends Component {
                         <View style={styles.row}>
                             <Text style={styles.title}>性别</Text>
                             <Text>{sex}</Text>
-                            <Image style={styles.arrow} source={require("../../static/image/icon-arrow.png")}/>
+                            <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
                         </View>
                     </TouchableOpacity>
 
@@ -89,7 +89,7 @@ class  MovieUserPage extends Component {
                         <View style={styles.row}>
                             <Text style={styles.title}>电话</Text>
                             <Text>{telephone}</Text>
-                            <Image style={styles.arrow} source={require("../../static/image/icon-arrow.png")}/>
+                            <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
                         </View>
                     </TouchableOpacity>
 
@@ -97,7 +97,7 @@ class  MovieUserPage extends Component {
                         <View style={styles.row}>
                             <Text style={styles.title}>邮箱</Text>
                             <Text>{email}</Text>
-                            <Image style={styles.arrow} source={require("../../static/image/icon-arrow.png")}/>
+                            <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
                         </View>
                     </TouchableOpacity>
 
@@ -105,7 +105,7 @@ class  MovieUserPage extends Component {
                         <View style={styles.row}>
                             <Text style={styles.title}>出生日期</Text>
                             <Text>{birthday}</Text>
-                            <Image style={styles.arrow} source={require("../../static/image/icon-arrow.png")}/>
+                            <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
                         </View>
                     </TouchableOpacity>
 

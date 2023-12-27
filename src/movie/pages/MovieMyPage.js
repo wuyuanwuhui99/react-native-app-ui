@@ -1,15 +1,30 @@
 import React, {Component} from 'react';
 import {StyleSheet, View,Text,Image,ScrollView,FlatList,TouchableOpacity} from "react-native";
 import {HOST} from "../../config";
-import {getPlayRecordService,getUserMsgService} from "../service"
+import {
+    getPlayRecordService,
+    getUserMsgService,
+    getMyFavoriteMovieListService,
+    getMyViewsMovieListService
+} from "../service"
 import {connect} from "react-redux";
-import arrow from "../../static/image/icon-arrow.png";
+import arrow from "../../static/image/icon_arrow.png";
 import AvaterComponent from "../components/AvaterComponent";
-class  MovieSearchPage extends Component {
+import * as size from '../../theme/Size';
+import * as style from '../../theme/Style';
+import * as color from '../../theme/Color';
+
+class  MovieMyPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            historyList:[],
+            historyList:[],// 历史观看留
+            favoriteList:[],// 我的收藏
+            viewList:[],// 我浏览过的电影
+            showHistoryList:true,// 展示历史观看记录
+            showFavoriteList:false,// 展示我的收藏
+            showViewList:false,// 展示我浏览记录
+            loading:false,
             userMsg:{}
         }
     }
@@ -27,23 +42,98 @@ class  MovieSearchPage extends Component {
         return (
             <TouchableOpacity key={"TouchableOpacity" + index}>
                 <View  style={styles.categoryView}>
-                    <Image style={styles.categoryImage} source={{uri:item.local_img ? HOST+item.local_img : item.img}}></Image>
+                    <Image style={styles.categoryImage} source={{uri:HOST + item.localImg}}/>
                     <Text numberOfLines={1} style={styles.movieName}>{item.movieName}</Text>
                 </View>
             </TouchableOpacity>
         )
-    }
+    };
+
+    /**
+     * @description: 显示或隐藏观看记录
+     * @date: 2023-12-27 22:38
+     * @author wuwenqiang
+     */
+    onShowHistoryList=()=>{
+        if(this.state.loading)return;
+        let {showHistoryList} = this.state;
+        showHistoryList = !showHistoryList;
+        if(showHistoryList){
+            this.state.loading = true;
+            getPlayRecordService().then((res)=>{
+                this.setState({historyList:res.data});
+            }).finally(()=>{
+                this.state.loading = false
+            });
+        }
+        this.setState({
+            showHistoryList
+        })
+    };
+
+    /**
+     * @description: 显示或隐藏我的收藏
+     * @date: 2023-12-27 22:21
+     * @author wuwenqiang
+     */
+    onShowFavoriteList=()=>{
+        if(this.state.loading)return;
+        let {showFavoriteList} = this.state;
+        showFavoriteList = !showFavoriteList;
+        if(showFavoriteList){
+            this.state.loading = true;
+            getMyFavoriteMovieListService(1,20).then(res=>{
+                this.setState({
+                    favoriteList:res.data
+                })
+            }).finally(()=>{
+                this.state.loading = false
+            });
+        }
+        this.setState({
+            showFavoriteList
+        })
+    };
+
+    /**
+     * @description: 显示或隐藏浏览记录
+     * @date: 2023-12-27 22:38
+     * @author wuwenqiang
+     */
+    onShowViewList=()=>{
+        if(this.state.loading)return;
+        let {showViewList} = this.state;
+        showViewList = !showViewList;
+        if(showViewList){
+            this.state.loading = true;
+            getMyViewsMovieListService().then((res)=>{
+                this.setState({viewList:res.data});
+            }).finally(()=>{
+                this.state.loading = false
+            });
+        }
+        this.setState({
+            showViewList
+        })
+    };
 
     render() {
-        let {historyList,userMsg} = this.state;
+        let {historyList,userMsg,favoriteList,viewList,showHistoryList,showFavoriteList,showViewList} = this.state;
         let {userData={}} = this.props;
-        let {username} = userData
-        let {userAge=0,viewRecordCount=0,playRecordCount=0,favoriteCount=0} = userMsg
+        let {username,sign} = userData;
+        let {userAge=0,viewRecordCount=0,playRecordCount=0,favoriteCount=0} = userMsg;
         return(
-            <View style={styles.wrapper}>
+            <ScrollView style={styles.scrollView}>
                 <View style={styles.avaterWrapper}>
                     <AvaterComponent style={styles.avaterImage} {...this.props}/>
-                    <Text style={styles.username}>{username}</Text>
+                    <View style={styles.nameWrapper}>
+                        <Text style={styles.username}>{username}</Text>
+                        <Text style={styles.sign}>{sign}</Text>
+                    </View>
+                    <Image style={styles.edit} source={require("../../static/image/icon_edit.png")}/>
+                </View>
+
+                <View style={styles.avaterWrapper}>
                     <View style={styles.myLabelWrapper}>
                         <View style={styles.myLabel}>
                             <Text style={styles.myLabelValue}>{userAge}</Text>
@@ -63,58 +153,87 @@ class  MovieSearchPage extends Component {
                         </View>
                     </View>
                 </View>
-                <ScrollView style={styles.scrollView}>
-                    <View style={styles.historyWrapper}>
-                        <View style={styles.headerWrapper}>
-                            <Image style={styles.historyIcon} source={require("../static/image/icon-history.png")}></Image>
-                            <Text>观看记录</Text>
-                        </View>
-                        {
-                            historyList.length == 0 ?
-                                <View style={styles.noData}><Text>暂无观看记录</Text></View>
-                                :<FlatList
-                                    horizontal={true}
-                                    data ={historyList}
-                                    keyExtractor={(item, index) => index.toString()}
-                                    renderItem = {
-                                        ({item,index}) => this._renderItem(item,index)
-                                    }
-                                ></FlatList>
-                        }
 
-                    </View>
-                    <View style={styles.panelWrapper}>
-                        <View style={styles.panelBox}>
-                            <Image style={styles.panelIcon} source={require("../static/image/icon-collection.png")}></Image>
-                            <Text>我的收藏</Text>
-                            <Image style={styles.arrowIcon} source={arrow}></Image>
-                        </View>
-                        <View style={styles.panelBox}>
-                            <Image style={styles.panelIcon} source={require("../static/image/icon-record.png")}></Image>
-                            <Text>我浏览过的电影</Text>
-                            <Image style={styles.arrowIcon} source={arrow}></Image>
-                        </View>
-                        <View style={styles.panelBox}>
-                            <Image style={styles.panelIcon} source={require("../static/image/icon-talk.png")}></Image>
-                            <Text>电影圈</Text>
-                            <Image style={styles.arrowIcon} source={arrow}></Image>
-                        </View>
-                    </View>
+                <View style={styles.panelWrapper}>
+                    <TouchableOpacity style={styles.pannelHeader} onPress={this.onShowHistoryList}>
+                        <Image style={styles.panelIcon} source={require("../../static/image/icon_history.png")}/>
+                        <Text style={styles.pannelTitle}>观看记录</Text>
+                        <Image style={{...styles.arrowIcon,transform:showHistoryList ? [{rotate:'90deg'}] : [{rotate:'0deg'}]}} source={arrow}/>
+                    </TouchableOpacity>
 
-                    <View style={styles.panelWrapper}>
-                        <View style={styles.panelBox}>
-                            <Image style={styles.panelIcon} source={require("../static/image/icon-music.png")}></Image>
-                            <Text>音乐</Text>
-                            <Image style={styles.arrowIcon} source={arrow}></Image>
-                        </View>
-                        <View style={styles.panelBox}>
-                            <Image style={styles.panelIcon} source={require("../static/image/icon-app.png")}></Image>
-                            <Text>小程序</Text>
-                            <Image style={styles.arrowIcon} source={arrow}></Image>
-                        </View>
+                    {
+                        historyList.length > 0 && showHistoryList?
+                            <FlatList
+                                style={styles.marginTop}
+                                horizontal={true}
+                                data ={historyList}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem = {
+                                    ({item,index}) => this._renderItem(item,index)
+                                }
+                            />: null
+                    }
+
+                </View>
+
+                <View style={styles.panelWrapper}>
+                    <TouchableOpacity style={styles.pannelHeader} onPress={this.onShowFavoriteList}>
+                        <Image style={styles.panelIcon} source={require("../../static/image/icon_collection.png")}/>
+                        <Text style={styles.pannelTitle}>我的收藏</Text>
+                        <Image style={{...styles.arrowIcon,transform:showFavoriteList ? [{rotate:'90deg'}] : [{rotate:'0deg'}]}} source={arrow}/>
+                    </TouchableOpacity>
+                    {
+                        showFavoriteList && favoriteList.length > 0 ?
+                            <FlatList
+                                style={styles.marginTop}
+                                horizontal={true}
+                                data ={favoriteList}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem = {
+                                    ({item,index}) => this._renderItem(item,index)
+                                }
+                            />: null
+                    }
+                </View>
+
+                <View style={styles.panelWrapper}>
+                    <TouchableOpacity style={styles.pannelHeader} onPress={this.onShowViewList}>
+                        <Image style={styles.panelIcon} source={require("../../static/image/icon_record.png")}/>
+                        <Text style={styles.pannelTitle}>我浏览过的电影</Text>
+                        <Image style={{...styles.arrowIcon,transform:showViewList ? [{rotate:'90deg'}] : [{rotate:'0deg'}]}} source={arrow}/>
+                    </TouchableOpacity>
+                    {
+                        showViewList && viewList.length > 0 ?
+                            <FlatList
+                                style={styles.marginTop}
+                                horizontal={true}
+                                data ={viewList}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem = {
+                                    ({item,index}) => this._renderItem(item,index)
+                                }
+                            />: null
+                    }
+                </View>
+
+                <View style={{...styles.panelWrapper,...styles.lastPannelWrapper}}>
+                    <View style={styles.panelBox}>
+                        <Image style={styles.panelIcon} source={require("../..//static/image/icon_talk.png")}/>
+                        <Text style={styles.pannelTitle}>电影圈</Text>
+                        <Image style={styles.arrowIcon} source={arrow}/>
                     </View>
-                </ScrollView>
-            </View>
+                    <View style={styles.panelBox}>
+                        <Image style={styles.panelIcon} source={require("../../static/image/icon_music.png")}/>
+                        <Text style={styles.pannelTitle}>音乐</Text>
+                        <Image style={styles.arrowIcon} source={arrow}/>
+                    </View>
+                    <View style={{...styles.panelBox,...styles.lastPanelBox}}>
+                        <Image style={styles.panelIcon} source={require("../../static/image/icon_app.png")}/>
+                        <Text style={styles.pannelTitle}>小程序</Text>
+                        <Image style={styles.arrowIcon} source={arrow}/>
+                    </View>
+                </View>
+            </ScrollView>
         );
     }
 }
@@ -124,12 +243,9 @@ export default  connect((state)=>{
     return {
         userData
       }
-})(MovieSearchPage);
+})(MovieMyPage);
 
 const styles = StyleSheet.create({
-    wrapper:{
-        flex:1
-    },
     noData:{
         height:100,
         display:"flex",
@@ -137,53 +253,59 @@ const styles = StyleSheet.create({
         alignItems:"center"
     },
     avaterWrapper:{
-        justifyContent:"center",
-        alignItems:"center",
-        backgroundColor:"#fff"
+        ...style.boxDecoration,
+        display: 'flex',
+        flexDirection:'row',
+        alignItems:'center'
     },
     avaterImage:{
-        width:120,
-        height:120,
-        marginTop:20,
-        marginBottom:20,
-        borderRadius:120,
-        borderStyle:"solid",
-        borderColor:"#eee",
-        borderWidth:5
+        width:size.bigAvaterSize,
+        height:size.bigAvaterSize,
+        borderRadius:size.bigAvaterSize,
+    },
+    marginTop:{
+        marginTop:size.containerPaddingSize
+    },
+    nameWrapper:{
+        flex:1,
+        display:'flex',
+        flexDirection: 'column',
+        marginLeft: size.containerPaddingSize
     },
     username:{
-        marginBottom:20,
-        fontSize:18
+        marginBottom:size.containerPaddingSize,
+        fontSize:size.bigFontSize,
+        fontWeight:'bold'
+    },
+    sign:{
+      fontSize:size.middleFontSize,
+      color: color.subTitleColor
+    },
+    edit:{
+      width: size.bigIconSize,
+      height: size.bigIconSize,
     },
     myLabelWrapper:{
         flexDirection:"row",
-        marginBottom:20
     },
     myLabel:{
         flex:1,
         justifyContent:"center",
         alignItems:"center",
-        borderRightWidth:1,
-        borderRightColor:"#ddd"
     },
     myLabelValue:{
-        fontSize:25,
-        marginBottom:10
+        fontSize:size.bigFontSize,
+        marginBottom:size.smallMarginSize,
+        fontWeight: 'bold'
     },
     myLabelTitle:{
-        color:"#bbb"
+        color:color.subTitleColor
     },
     scrollView:{
-        flex:1,
-        backgroundColor:"#eee",
+        ...style.pageStyle,
     },
     historyWrapper:{
-        margin:20
-    },
-    headerWrapper:{
-        flexDirection:"row",
-        alignItems:"center",
-        marginBottom:10
+        ...style.boxDecoration
     },
     historyIcon:{
         width:25,
@@ -191,15 +313,18 @@ const styles = StyleSheet.create({
         marginRight:10
     },
     categoryView:{
-        marginRight:10
+        marginRight:size.smallMarginSize,
+        display:'flex',
+        flexDirection:'column',
+        alignItems:'center'
     },
     categoryImage:{
-        width:150,
-        height:200,
-        borderRadius:10
+        width:size.movieWidthSize,
+        height:size.movieHeightSize,
+        borderRadius:size.middleRadiusSize
     },
     movieName:{
-        marginTop:10
+        marginTop:size.smallMarginSize
     },
     categoryList:{
         marginLeft:20,
@@ -207,26 +332,42 @@ const styles = StyleSheet.create({
         marginBottom:20
     },
     panelWrapper:{
-        backgroundColor:"#fff",
-        marginBottom:20
+        ...style.boxDecoration,
+        paddingTop:0
+    },
+    pannelHeader:{
+        display: 'flex',
+        flexDirection:'row',
+        alignItems:'center',
+        paddingTop:size.containerPaddingSize
+    },
+    lastPannelWrapper:{
+        marginBottom:size.containerPaddingSize
     },
     panelBox:{
         flexDirection:"row",
         position:"relative",
         alignItems:"center",
-        padding:20,
+        paddingTop:size.containerPaddingSize,
+        paddingBottom: size.containerPaddingSize,
         borderBottomWidth:1,
         borderBottomColor:"#ddd"
     },
+    lastPanelBox:{
+        paddingBottom:0,
+        borderBottomWidth:0,
+    },
     arrowIcon:{
-        width:20,
-        height:20,
-        position:"absolute",
-        right:20
+        width:size.smallIconSize,
+        height:size.smallIconSize,
     },
     panelIcon:{
         width:25,
         height:25,
         marginRight:10
+    },
+    pannelTitle:{
+        flex:1,
+        fontSize:size.middleFontSize
     }
 });
