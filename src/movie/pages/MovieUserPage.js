@@ -4,10 +4,11 @@ import {connect} from "react-redux";
 import {HOST} from '../../config';
 import {getUserData} from '../../store/actions';
 import StorageUtil from "../../utils/StorageUtil";
-import {Provider,Button} from "@ant-design/react-native";
+import {Provider,DatePicker} from "@ant-design/react-native";
 import * as style from '../../theme/Style';
 import * as size from '../../theme/Size';
 import * as color from '../../theme/Color';
+import {zerofull} from '../../utils/common';
 
 class  MovieUserPage extends Component {
     constructor(props) {
@@ -18,7 +19,8 @@ class  MovieUserPage extends Component {
             dataSource:[[]],//当前显示的小类，懒加载
             pageNum:1,//分类的数量
             loading:false,
-            visibleSexDialog:false
+            visibleSexDialog:false,
+            visibleDatePicker:false
         }
     }
 
@@ -63,7 +65,7 @@ class  MovieUserPage extends Component {
         this.props.navigation.push('MovieEditPage',{title,type,value,field,isAllowEmpty});
     };
 
-    setVisible = (visibleSexDialog)=>{
+    setVisibleSexDialog = (visibleSexDialog)=>{
         this.setState({visibleSexDialog});
     };
 
@@ -79,24 +81,35 @@ class  MovieUserPage extends Component {
         this.setState({visibleSexDialog:false});
     };
 
+    /**
+     * @author: wuwenqiang
+     * @description: 日期选择
+     * @date: 2024-1-1 18:31
+     */
+    useCheckDate=(date)=>{
+        let myUserData = JSON.parse(JSON.stringify(this.props.userData));
+        myUserData.birthday = `${date.getFullYear()}-${zerofull(date.getMonth() + 1)}-${zerofull(date.getDate())}`;
+        this.props.dispatch(getUserData(myUserData));//更新用户信息
+        this.setState({visibleDatePicker:false});
+    };
+
     render() {
-        let {userData={}} = this.props;
-        let {avater,username,sex,telephone,email,birthday} = userData;
-        let {visibleSexDialog} = this.state;
+        let {avater,username,sex,telephone,email,birthday} = this.props.userData;
+        let {visibleSexDialog,visibleDatePicker} = this.state;
         return (
             <Provider>
                 <Modal
                     animationType="slide"
                     transparent={true}
                     onRequestClose={() => {
-                        this.setVisible(false)
+                        this.setVisibleSexDialog(false)
                     }}
                     visible={visibleSexDialog}
                     style={styles.modalWrapper}
                 >
-                    <TouchableOpacity onPress={(e)=>this.setVisible(false)} style={styles.modalMask}/>
+                    <TouchableOpacity onPress={(e)=>this.setVisibleSexDialog(false)} style={styles.modalMask}/>
                     <View style={styles.contentWrapper}>
-                        <TouchableOpacity style={styles.mask} onPress={(e)=>this.setVisible(false)}/>
+                        <TouchableOpacity style={styles.mask} onPress={(e)=>this.setVisibleSexDialog(false)}/>
                         <View style={styles.modalContent}>
                             <View style={styles.actionWrap}>
                                 <TouchableOpacity onPress={(e)=>this.useCheckSex('男')} style={{...styles.option,...styles.divider}}>
@@ -106,12 +119,21 @@ class  MovieUserPage extends Component {
                                     <Text>女</Text>
                                 </TouchableOpacity>
                             </View>
-                            <TouchableOpacity style={styles.cancelBtn} onPress={(e)=> this.setVisible(false)}><Text>取消</Text></TouchableOpacity>
+                            <TouchableOpacity style={styles.cancelBtn} onPress={(e)=> this.setVisibleSexDialog(false)}><Text>取消</Text></TouchableOpacity>
                         </View>
                     </View>
-
-
                 </Modal>
+                <DatePicker
+                    visible={visibleDatePicker}
+                    mode="date"
+                    minDate = {new Date('1970-01-01')}
+                    maxDate = {new Date()}
+                    value={new Date(birthday)}
+                    format="YYYY-MM-DD"
+                    confirmBtnText="确定"
+                    cancelBtnText="取消"
+                    onChange={value=>this.useCheckDate(value)}
+                />
                 <View style={styles.pageStyle}>
                     <View style={styles.boxDecoration}>
                         <View style={styles.row}>
@@ -143,7 +165,7 @@ class  MovieUserPage extends Component {
                             <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={{...styles.row,...styles.lastRow}} onPress={()=>{this.goEditPage("出生日期","date",birthday,"birthday",true)}}>
+                        <TouchableOpacity style={{...styles.row,...styles.lastRow}} onPress={()=>{this.setState({visibleDatePicker:true})}}>
                             <Text style={styles.title}>出生日期</Text>
                             <Text>{birthday}</Text>
                             <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
@@ -174,7 +196,7 @@ const styles = StyleSheet.create({
     },
     modalMask:{
         flex: 1,
-        backgroundColor: '#000',
+        backgroundColor: color.blackColor,
         opacity: 0.2,
         position: 'absolute',
         width: '100%',
@@ -226,6 +248,12 @@ const styles = StyleSheet.create({
     boxDecoration:{
         ...style.boxDecoration,
         paddingTop: 0
+    },
+    dateInput:{
+        borderWidth:0,
+        paddingLeft:0,
+        marginLeft: 0,
+        alignItems:"flex-end",
     },
     row:{
         flexDirection:'row',

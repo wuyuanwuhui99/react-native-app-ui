@@ -100,7 +100,7 @@ class  MovieEditPage extends Component {
         }).finally(()=>{
             this.setState({loading:false});
         });
-    }
+    };
 
     render() {
         const {title,isAllowEmpty,value:primaryValue} = this.props.navigation.state.params;
