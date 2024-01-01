@@ -174,7 +174,7 @@ export const getRecommendService = (classify)=>{
  */
 export const getMyViewsMovieListService = (pageNum,pageSize) => {
     return HttpUtil.get(`${api.getViewRecord}?pageNum=${pageNum}&pageSize=${pageSize}`)
-}
+};
 
 /**
  * @author: wuwenqiang

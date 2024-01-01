@@ -9,3 +9,4 @@ export const borderColor = '#ddd';
 export const activeColor = '#1890ff';
 export const disableColor = '#ddd';
 export const selectColor = '#ffbb15';
+export const warnColor = '#f7453b';

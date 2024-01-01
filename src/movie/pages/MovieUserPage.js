@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Image,TouchableOpacity} from 'react-native';
+import {StyleSheet, View, Text, Image,TouchableOpacity,Modal} from 'react-native';
 import {connect} from "react-redux";
 import {HOST} from '../../config';
 import {getUserData} from '../../store/actions';
 import StorageUtil from "../../utils/StorageUtil";
-import {Modal,Provider} from "@ant-design/react-native";
+import {Provider,Button} from "@ant-design/react-native";
+import * as style from '../../theme/Style';
+import * as size from '../../theme/Size';
+import * as color from '../../theme/Color';
+
 class  MovieUserPage extends Component {
     constructor(props) {
         super(props);
@@ -13,7 +17,8 @@ class  MovieUserPage extends Component {
             allCategoryListByPageName:[],//按页面名称获取所有小类
             dataSource:[[]],//当前显示的小类，懒加载
             pageNum:1,//分类的数量
-            loading:false
+            loading:false,
+            visibleSexDialog:false
         }
     }
 
@@ -31,7 +36,7 @@ class  MovieUserPage extends Component {
             },
             { text: '确定', onPress: () => this.doLogout() },
         ]);
-    }
+    };
 
     /**
      * @author: wuwenqiang
@@ -42,7 +47,7 @@ class  MovieUserPage extends Component {
         this.props.dispatch(getUserData({}));
         StorageUtil.delete("token");
         this.props.navigation.push('MovieLoginPage');
-    }
+    };
 
     /**
      * @author: wuwenqiang
@@ -56,58 +61,95 @@ class  MovieUserPage extends Component {
      */
     goEditPage=(title,type,value,field,isAllowEmpty)=>{
         this.props.navigation.push('MovieEditPage',{title,type,value,field,isAllowEmpty});
-    }
+    };
+
+    setVisible = (visibleSexDialog)=>{
+        this.setState({visibleSexDialog});
+    };
+
+    /**
+     * @author: wuwenqiang
+     * @description: 选择性别
+     * @date: 2024-1-1 18:31
+     */
+    useCheckSex=(sex)=>{
+        let myUserData = JSON.parse(JSON.stringify(this.props.userData));
+        myUserData.sex = sex;
+        this.props.dispatch(getUserData(myUserData));//更新用户信息
+        this.setState({visibleSexDialog:false});
+    };
 
     render() {
         let {userData={}} = this.props;
-        let {avater,username,sex,telephone,email,birthday} = userData
+        let {avater,username,sex,telephone,email,birthday} = userData;
+        let {visibleSexDialog} = this.state;
         return (
             <Provider>
-                <View>
-                    <View style={styles.row}>
-                        <Text style={styles.title}>头像</Text>
-                        <Image roundAsCircle={true} style={styles.avater} source={{uri:HOST+avater}}/>
-                        <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    onRequestClose={() => {
+                        this.setVisible(false)
+                    }}
+                    visible={visibleSexDialog}
+                    style={styles.modalWrapper}
+                >
+                    <TouchableOpacity onPress={(e)=>this.setVisible(false)} style={styles.modalMask}/>
+                    <View style={styles.contentWrapper}>
+                        <TouchableOpacity style={styles.mask} onPress={(e)=>this.setVisible(false)}/>
+                        <View style={styles.modalContent}>
+                            <View style={styles.actionWrap}>
+                                <TouchableOpacity onPress={(e)=>this.useCheckSex('男')} style={{...styles.option,...styles.divider}}>
+                                    <Text>男</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={(e)=>this.useCheckSex('女')} style={styles.option}>
+                                    <Text>女</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <TouchableOpacity style={styles.cancelBtn} onPress={(e)=> this.setVisible(false)}><Text>取消</Text></TouchableOpacity>
+                        </View>
                     </View>
-                    <TouchableOpacity onPress={()=>{this.goEditPage("昵称","input",username,"username",false)}}>
+
+
+                </Modal>
+                <View style={styles.pageStyle}>
+                    <View style={styles.boxDecoration}>
                         <View style={styles.row}>
+                            <Text style={styles.title}>头像</Text>
+                            <Image roundAsCircle={true} style={styles.avater} source={{uri:HOST+avater}}/>
+                            <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
+                        </View>
+                        <TouchableOpacity style={styles.row} onPress={()=>{this.goEditPage("昵称","input",username,"username",false)}}>
                             <Text style={styles.title}>昵称</Text>
                             <Text>{username}</Text>
                             <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity onPress={()=>{this.goEditPage("性别","radio",sex,"sex",true)}}>
-                        <View style={styles.row}>
+                        <TouchableOpacity style={styles.row} onPress={()=>{this.setVisible(true)}}>
                             <Text style={styles.title}>性别</Text>
                             <Text>{sex}</Text>
                             <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity onPress={()=>{this.goEditPage("电话","input",telephone,"telephone",true)}}>
-                        <View style={styles.row}>
+                        <TouchableOpacity style={styles.row} onPress={()=>{this.goEditPage("电话","input",telephone,"telephone",true)}}>
                             <Text style={styles.title}>电话</Text>
                             <Text>{telephone}</Text>
                             <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity onPress={()=>{this.goEditPage("邮箱","input",email,"email",false)}}>
-                        <View style={styles.row}>
+                        <TouchableOpacity style={styles.row} onPress={()=>{this.goEditPage("邮箱","input",email,"email",false)}}>
                             <Text style={styles.title}>邮箱</Text>
                             <Text>{email}</Text>
                             <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity onPress={()=>{this.goEditPage("出生日期","date",birthday,"birthday",true)}}>
-                        <View style={styles.row}>
+                        <TouchableOpacity style={{...styles.row,...styles.lastRow}} onPress={()=>{this.goEditPage("出生日期","date",birthday,"birthday",true)}}>
                             <Text style={styles.title}>出生日期</Text>
                             <Text>{birthday}</Text>
                             <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                    </View>
+
 
                     <TouchableOpacity onPress={this.logout}>
                         <View style={styles.logoutBtn}><Text style={styles.textBtn}>退出登录</Text></View>
@@ -126,20 +168,82 @@ export default  connect((state)=>{
 })(MovieUserPage);
 
 const styles = StyleSheet.create({
+    modalWrapper:{
+      position: 'relative',
+        display:'flex',
+    },
+    modalMask:{
+        flex: 1,
+        backgroundColor: '#000',
+        opacity: 0.2,
+        position: 'absolute',
+        width: '100%',
+        height: '100%'
+    },
+    contentWrapper:{
+        display: 'flex',
+        flexDirection: 'column',
+        position:'relative',
+        zIndex: 1,
+        width: '100%',
+        height: '100%'
+    },
+    mask:{
+        flex: 1
+    },
+    modalContent:{
+        display: 'flex',
+        flexDirection: 'column',
+        padding: size.containerPaddingSize
+    },
+    cancelBtn:{
+        backgroundColor:color.whiteColor,
+        borderRadius:size.middleRadiusSize,
+        fontSize:size.middleFontSize,
+        padding:size.containerPaddingSize,
+        display:'flex',
+        justifyContent: 'center',
+        alignItems:'center'
+    },
+    actionWrap:{
+      ...style.boxDecoration,
+        marginBottom:size.containerPaddingSize,
+        paddingTop: 0,
+        paddingBottom: 0
+    },
+    option:{
+        padding:size.containerPaddingSize,
+        display:'flex',
+        alignItems:'center'
+    },
+    divider:{
+      borderBottomWidth:1,
+      borderBottomColor: color.borderColor
+    },
+    pageStyle:{
+        ...style.pageStyle
+    },
+    boxDecoration:{
+        ...style.boxDecoration,
+        paddingTop: 0
+    },
     row:{
         flexDirection:'row',
         display:"flex",
         alignItems:"center",
         borderBottomWidth:1,
-        borderBottomColor:"#ddd",
-        padding:20,
-        backgroundColor: "#fff"
+        borderBottomColor: color.disableColor,
+        paddingTop: size.containerPaddingSize,
+        paddingBottom: size.containerPaddingSize,
+    },
+    lastRow:{
+        borderBottomWidth: 0,
+        paddingBottom: 0
     },
     avater:{
-        width: 70,
-        height: 70,
-        backgroundColor: '#C0C0C0',
-        borderRadius:50,
+        width: size.bigAvaterSize,
+        height: size.bigAvaterSize,
+        borderRadius:size.bigAvaterSize,
         // 显示模式：缩略全显contain，拉升全显（会变形）stretch，裁剪后显示（默认）cover
         resizeMode:'cover',
     },
@@ -147,19 +251,19 @@ const styles = StyleSheet.create({
         flex:1
     },
     arrow:{
-        width: 20,
-        height: 20,
-        marginLeft:20
+        width: size.smallIconSize,
+        height: size.smallIconSize,
+        marginLeft:size.smallIconSize
     },
     logoutBtn:{
-        margin:20,
-        padding:10,
-        backgroundColor:"#f7453b",
+        marginTop: size.containerPaddingSize,
+        padding:size.containerPaddingSize,
+        backgroundColor: color.warnColor,
         alignItems: "center",
         justifyContent:"center",
-        borderRadius: 10,
+        borderRadius: size.middleRadiusSize,
     },
     textBtn:{
-        color:"#fff"
+        color:color.whiteColor
     }
 });

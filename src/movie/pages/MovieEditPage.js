@@ -22,7 +22,7 @@ class  MovieEditPage extends Component {
      */
     goBack=()=>{
         this.props.navigation.goBack();
-    }
+    };
 
 
     /**
@@ -42,9 +42,9 @@ class  MovieEditPage extends Component {
                             style={styles.input}
                             onChangeText={value=>this.setState({value})}
                             value={value}
-                        ></TextInput>
+                        />
                     </View>
-                )
+                );
             case "radio"://性别
                 return (
                     <View style={styles.radioBody}>
@@ -74,7 +74,7 @@ class  MovieEditPage extends Component {
                             cancelBtnText="取消"
                             showIcon={false}
                             onDateChange={value=>this.setState({value})}
-                        ></DatePicker>
+                        />
                     </View>
                 );
             default :
