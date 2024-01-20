@@ -20,25 +20,10 @@ class  MovieUserPage extends Component {
             pageNum:1,//分类的数量
             loading:false,
             visibleSexDialog:false,
+            visibleLogoutDialog:false,
             visibleDatePicker:false
         }
     }
-
-    /**
-     * @author: wuwenqiang
-     * @description: 退出登录弹窗
-     * @date: 2021-04-13 00:04
-     */
-    logout=()=>{
-        Modal.alert('', '是否退出', [
-            {
-                text: '取消',
-                onPress: () => console.log('cancel'),
-                style: 'cancel',
-            },
-            { text: '确定', onPress: () => this.doLogout() },
-        ]);
-    };
 
     /**
      * @author: wuwenqiang
@@ -46,9 +31,8 @@ class  MovieUserPage extends Component {
      * @date: 2021-04-13 00:04
      */
     doLogout=()=>{
-        this.props.dispatch(getUserData({}));
         StorageUtil.delete("token");
-        this.props.navigation.push('MovieLoginPage');
+        this.props.navigation.replace('MovieLoginPage');
     };
 
     /**
@@ -67,6 +51,11 @@ class  MovieUserPage extends Component {
 
     setVisibleSexDialog = (visibleSexDialog)=>{
         this.setState({visibleSexDialog});
+    };
+
+
+    setVisibleLogoutDialog = (visibleLogoutDialog)=>{
+        this.setState({visibleLogoutDialog});
     };
 
     /**
@@ -95,7 +84,7 @@ class  MovieUserPage extends Component {
 
     render() {
         let {avater,username,sex,telephone,email,birthday} = this.props.userData;
-        let {visibleSexDialog,visibleDatePicker} = this.state;
+        let {visibleSexDialog,visibleDatePicker,visibleLogoutDialog} = this.state;
         return (
             <Provider>
                 <Modal
@@ -112,10 +101,10 @@ class  MovieUserPage extends Component {
                         <TouchableOpacity style={styles.mask} onPress={(e)=>this.setVisibleSexDialog(false)}/>
                         <View style={styles.modalContent}>
                             <View style={styles.actionWrap}>
-                                <TouchableOpacity onPress={(e)=>this.useCheckSex('男')} style={{...styles.option,...styles.divider}}>
+                                <TouchableOpacity onPress={()=>this.useCheckSex('男')} style={{...styles.option,...styles.divider}}>
                                     <Text>男</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={(e)=>this.useCheckSex('女')} style={styles.option}>
+                                <TouchableOpacity onPress={()=>this.useCheckSex('女')} style={styles.option}>
                                     <Text>女</Text>
                                 </TouchableOpacity>
                             </View>
@@ -123,6 +112,34 @@ class  MovieUserPage extends Component {
                         </View>
                     </View>
                 </Modal>
+
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    onRequestClose={() => {
+                        this.setVisibleLogoutDialog(false)
+                    }}
+                    visible={visibleLogoutDialog}
+                    style={styles.modalWrapper}
+                >
+                    <TouchableOpacity onPress={(e)=>this.setVisibleLogoutDialog(false)} style={styles.modalMask}/>
+                    <View style={{...styles.contentWrapper,...styles.alignment}}>
+                        <View style={styles.alertDialog}>
+                            <Text style={styles.alertHeader}>
+                                是否退出登录
+                            </Text>
+                            <View style={styles.btnWrapper}>
+                                <TouchableOpacity style={styles.alertBtn}>
+                                    <Text>取消</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={this.doLogout} style={{...styles.alertBtn,...styles.alertBtnBorderLeft}}>
+                                    <Text style={styles.sureBtn}>确定</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
+
                 <DatePicker
                     visible={visibleDatePicker}
                     mode="date"
@@ -132,13 +149,14 @@ class  MovieUserPage extends Component {
                     format="YYYY-MM-DD"
                     confirmBtnText="确定"
                     cancelBtnText="取消"
+                    onDismiss={()=>this.setState({visibleDatePicker:false})}
                     onChange={value=>this.useCheckDate(value)}
                 />
                 <View style={styles.pageStyle}>
                     <View style={styles.boxDecoration}>
                         <View style={styles.row}>
                             <Text style={styles.title}>头像</Text>
-                            <Image roundAsCircle={true} style={styles.avater} source={{uri:HOST+avater}}/>
+                            <Image roundAsCircle={true} style={styles.avater} source={avater ? {uri:HOST+avater} : require('../../static/image/default_avater.png')}/>
                             <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
                         </View>
                         <TouchableOpacity style={styles.row} onPress={()=>{this.goEditPage("昵称","input",username,"username",false)}}>
@@ -147,7 +165,7 @@ class  MovieUserPage extends Component {
                             <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.row} onPress={()=>{this.setVisible(true)}}>
+                        <TouchableOpacity style={styles.row} onPress={()=>{this.setVisibleSexDialog(true)}}>
                             <Text style={styles.title}>性别</Text>
                             <Text>{sex}</Text>
                             <Image style={styles.arrow} source={require("../../static/image/icon_arrow.png")}/>
@@ -173,7 +191,7 @@ class  MovieUserPage extends Component {
                     </View>
 
 
-                    <TouchableOpacity onPress={this.logout}>
+                    <TouchableOpacity onPress={()=>this.setVisibleLogoutDialog(true)}>
                         <View style={styles.logoutBtn}><Text style={styles.textBtn}>退出登录</Text></View>
                     </TouchableOpacity>
                 </View>
@@ -210,6 +228,10 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%'
     },
+    alignment:{
+        justifyContent:'center',
+        alignItems:'center'
+    },
     mask:{
         flex: 1
     },
@@ -217,6 +239,41 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         padding: size.containerPaddingSize
+    },
+    alertDialog:{
+        width:'80%',
+        display:'flex',
+        flexDirection: 'column',
+        backgroundColor:color.whiteColor,
+        borderRadius:size.middleRadiusSize
+    },
+    alertHeader:{
+        width: '100%',
+        textAlign:'center',
+        padding: size.containerPaddingSize * 2,
+    },
+    btnWrapper:{
+        width:'100%',
+        display:'flex',
+        flexDirection:'row',
+        borderTopWidth: 1,
+        borderTopColor:color.disableColor,
+        borderStyle: 'solid'
+    },
+    alertBtn:{
+        flex:1,
+        display:'flex',
+        alignItems:'center',
+        justifyContent:'center',
+        padding:size.containerPaddingSize * 1.5
+    },
+    alertBtnBorderLeft:{
+        borderLeftWidth: 1,
+        borderLeftColor:color.disableColor,
+        borderStyle: 'solid'
+    },
+    sureBtn:{
+        color:color.warnColor
     },
     cancelBtn:{
         backgroundColor:color.whiteColor,

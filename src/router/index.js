@@ -11,6 +11,7 @@ import MovieSearchPage from '../movie/pages/MovieSearchPage';
 import DetailPage from "../movie/pages/MovieDetaiPage";
 import MovieUserPage from "../movie/pages/MovieUserPage";
 import MoviePlayerPage from "..//movie/pages/MoviePlayerPage";
+import MovieRegisterPage from "..//movie/pages/MovieRegisterPage";
 import MovieLoginPage from "../movie/pages/MovieLoginPage";
 import MovieEditPage from "../movie/pages/MovieEditPage";
 import NewMoviePage from "../movie/pages/NewMoviePage";
@@ -123,6 +124,12 @@ const BottomTab = createAppContainer(
       screen: MovieLoginPage,
       navigationOptions: {
         headerShown: false, //可以通过将header设为null来禁用StackNavigator的Navigation
+      },
+    },
+    MovieRegisterPage:{
+      screen: MovieRegisterPage,
+      navigationOptions: {
+        headerShown: false,
       },
     },
     MovieEditPage:{

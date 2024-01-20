@@ -231,3 +231,22 @@ export const insertCommentService = (item)=>{
     return HttpUtil.post(api.insertComment,item)
 };
 
+/**
+ * @author: wuwenqiang
+ * @description: 注册
+ * @date: 2024-01-20 12:31
+ */
+export const registerService = (item)=>{
+    return HttpUtil.put(api.register,item)
+};
+
+/**
+ * @author: wuwenqiang
+ * @description: 校验账号是否出存在
+ * @date: 2024-01-20 12:31
+ */
+export const verifyUserIdService = (userId) => {
+    return HttpUtil.get(`${api.getUserById}?userId=${userId}`)
+};
+
+

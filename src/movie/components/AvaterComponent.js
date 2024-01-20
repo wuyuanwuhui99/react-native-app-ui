@@ -22,11 +22,10 @@ class  AvaterComponent extends Component {
 
     render(){
         let {avater} = this.props.userData;
-        return avater ?
+        return (
             <TouchableOpacity onPress={this.goUserPage}>
-                <Image roundAsCircle={true} style={[styles.imageStyle,this.props.style]} source={{uri:HOST+avater}}></Image>
-            </TouchableOpacity>
-            :null
+                <Image roundAsCircle={true} style={[styles.imageStyle,this.props.style]} source={avater ? {uri:HOST+avater} : require('../../static/image/default_avater.png')}/>
+            </TouchableOpacity>)
     }
 
     goUserPage=()=>{
