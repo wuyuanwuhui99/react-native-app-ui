@@ -9,6 +9,7 @@ import * as style from '../../theme/Style';
 import * as size from '../../theme/Size';
 import * as color from '../../theme/Color';
 import {zerofull} from '../../utils/common';
+import OptionsDialogComponent from '../components/OptionsDialogComponent';
 
 class  MovieUserPage extends Component {
     constructor(props) {
@@ -67,7 +68,6 @@ class  MovieUserPage extends Component {
         let myUserData = JSON.parse(JSON.stringify(this.props.userData));
         myUserData.sex = sex;
         this.props.dispatch(getUserData(myUserData));//更新用户信息
-        this.setState({visibleSexDialog:false});
     };
 
     /**
@@ -87,31 +87,12 @@ class  MovieUserPage extends Component {
         let {visibleSexDialog,visibleDatePicker,visibleLogoutDialog} = this.state;
         return (
             <Provider>
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    onRequestClose={() => {
-                        this.setVisibleSexDialog(false)
-                    }}
-                    visible={visibleSexDialog}
-                    style={styles.modalWrapper}
-                >
-                    <TouchableOpacity onPress={(e)=>this.setVisibleSexDialog(false)} style={styles.modalMask}/>
-                    <View style={styles.contentWrapper}>
-                        <TouchableOpacity style={styles.mask} onPress={(e)=>this.setVisibleSexDialog(false)}/>
-                        <View style={styles.modalContent}>
-                            <View style={styles.actionWrap}>
-                                <TouchableOpacity onPress={()=>this.useCheckSex('男')} style={{...styles.option,...styles.divider}}>
-                                    <Text>男</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={()=>this.useCheckSex('女')} style={styles.option}>
-                                    <Text>女</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <TouchableOpacity style={styles.cancelBtn} onPress={(e)=> this.setVisibleSexDialog(false)}><Text>取消</Text></TouchableOpacity>
-                        </View>
-                    </View>
-                </Modal>
+                <OptionsDialogComponent
+                    options={['男','女']}
+                    visibleDialog={visibleSexDialog}
+                    onCancle={()=>this.setVisibleSexDialog(false)}
+                    onCheck={(item)=>this.useCheckSex(item)}
+                />
 
                 <Modal
                     animationType="slide"
@@ -129,7 +110,7 @@ class  MovieUserPage extends Component {
                                 是否退出登录
                             </Text>
                             <View style={styles.btnWrapper}>
-                                <TouchableOpacity style={styles.alertBtn}>
+                                <TouchableOpacity onPress={(e)=>this.setVisibleLogoutDialog(false)} style={styles.alertBtn}>
                                     <Text>取消</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={this.doLogout} style={{...styles.alertBtn,...styles.alertBtnBorderLeft}}>

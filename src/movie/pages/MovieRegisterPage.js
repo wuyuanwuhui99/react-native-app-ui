@@ -4,15 +4,19 @@ import {connect} from "react-redux";
 import {registerService,verifyUserIdService} from "../service"
 import {getToken, getUserData} from '../../store/actions';
 import StorageUtil from "../../utils/StorageUtil";
-import {Toast, Provider, ActivityIndicator} from '@ant-design/react-native';
+import {Toast, Provider, ActivityIndicator, DatePicker} from '@ant-design/react-native';
 import * as size from '../../theme/Size';
 import * as style from '../../theme/Style';
 import * as color from '../../theme/Color';
+import OptionsDialogComponent from "../components/OptionsDialogComponent";
+import {zerofull} from "../../utils/common";
 
 class MovieRegisterPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            visibleSexDialog:false,
+            visibleDatePicker:false,
             userId: '',
             password: "",
             comfirmPassword:'',
@@ -34,6 +38,28 @@ class MovieRegisterPage extends Component {
         });
     }
 
+    setVisibleSexDialog = (visibleSexDialog)=>{
+        this.setState({visibleSexDialog});
+    };
+
+    /**
+     * @author: wuwenqiang
+     * @description: 选择性别
+     * @date: 2024-01-20 14:22
+     */
+    useCheckSex = (sex) => {
+        this.setState({ sex })
+    };
+
+    /**
+     * @author: wuwenqiang
+     * @description: 日期选择
+     * @date: 2024-01-20 14:34
+     */
+    useCheckDate=(date)=>{
+        this.setState({visibleDatePicker:false,birthday:`${date.getFullYear()}-${zerofull(date.getMonth() + 1)}-${zerofull(date.getDate())}`})
+    };
+
     render() {
         const {
             userId,
@@ -43,13 +69,33 @@ class MovieRegisterPage extends Component {
             sex,
             telephone,
             email,
-            borthday,
+            birthday,
             region,
             sign,
-            loading
+            loading,
+            visibleSexDialog,
+            visibleDatePicker
         } = this.state;
         return (
             <Provider>
+                <OptionsDialogComponent
+                    options={['男','女']}
+                    visibleDialog={visibleSexDialog}
+                    onCancle={()=>this.setVisibleSexDialog(false)}
+                    onCheck={(item)=>this.useCheckSex(item)}
+                />
+                <DatePicker
+                    visible={visibleDatePicker}
+                    mode="date"
+                    minDate = {new Date('1970-01-01')}
+                    maxDate = {new Date()}
+                    value={new Date(birthday)}
+                    format="YYYY-MM-DD"
+                    confirmBtnText="确定"
+                    cancelBtnText="取消"
+                    onDismiss={()=>this.setState({visibleDatePicker:false})}
+                    onChange={value=>this.useCheckDate(value)}
+                />
                 <View style={styles.pageWrapper}>
                     <View style={styles.boxDecoration}>
                         <View style={styles.form}>
@@ -119,12 +165,15 @@ class MovieRegisterPage extends Component {
                                 <Text>性别:</Text>
                             </View>
 
-                            <TextInput
-                                onChangeText={text => this.setState({sex: text})}
-                                placeholder="请选择性别"
-                                style={styles.input}
-                                value={sex}
-                            />
+                            <TouchableOpacity onPress={()=>this.setVisibleSexDialog(true)} style={styles.input}>
+                                <TextInput
+                                    editable={false}
+                                    placeholder="请选择性别"
+                                    style={styles.inputText}
+                                    value={sex}
+                                />
+                            </TouchableOpacity>
+
                         </View>
 
                         <View style={styles.form}>
@@ -158,12 +207,16 @@ class MovieRegisterPage extends Component {
                                 <Text>出生日期:</Text>
                             </View>
 
-                            <TextInput
-                                onChangeText={text => this.setState({borthday: text})}
-                                placeholder="请选择出生日期"
-                                style={styles.input}
-                                value={borthday}
-                            />
+                            <TouchableOpacity onPress={()=>this.setState({visibleDatePicker:true})} style={styles.input}>
+                                <TextInput
+                                    editable={false}
+                                    onChangeText={text => this.setState({birthday: text})}
+                                    placeholder="请选择出生日期"
+                                    style={styles.inputText}
+                                    value={birthday}
+                                />
+                            </TouchableOpacity>
+
                         </View>
 
                         <View style={styles.form}>
@@ -207,7 +260,7 @@ class MovieRegisterPage extends Component {
      * @date: 2024-1-20 13:02
      */
     register = async () => {
-        let {userId, password, loading, comfirmPassword, username} = this.state;
+        const {userId, password, loading, comfirmPassword, username} = this.state;
         if (!userId) {
             Toast.fail('请输入账号');
         } else if (!password) {
@@ -226,7 +279,7 @@ class MovieRegisterPage extends Component {
             if(loading)return ;
             const pass = await this.verifyUserId();
             if(!pass){
-                return loading = false;
+                return this.state.loading = false;
             }
             this.setState({loading: true});
             registerService(this.state).then((res) => {
@@ -243,7 +296,6 @@ class MovieRegisterPage extends Component {
                 this.setState({loading: false});
             })
         }
-
     };
 
     /**
@@ -296,6 +348,10 @@ const styles = StyleSheet.create({
     },
     requireText:{
         color:color.warnColor
+    },
+    inputText:{
+        width: '100%',
+        color:color.blackColor
     },
     input: {
         flex: 1,
