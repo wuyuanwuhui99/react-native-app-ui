@@ -7,6 +7,9 @@ import StorageUtil from "../../utils/StorageUtil";
 import StarsComponent from "../components/StarsComponent";
 import RecommendComponent from "../components/RecommendComponent";
 import Loading from "../../common/Loading";
+import * as size from '../../theme/Size';
+import * as style from '../../theme/Style';
+import ListComponent from '../components/ListComponent';
 
 class  MovieSearchPage extends Component {
     constructor(props) {
@@ -23,7 +26,7 @@ class  MovieSearchPage extends Component {
     componentDidMount(){
         StorageUtil.get("historyLabels").then((res)=>{
             if(res){
-                this.setState({historyLabels:res.slice(0,20)})
+                this.setState({historyLabels:res})
             }
         });
     }
@@ -36,12 +39,12 @@ class  MovieSearchPage extends Component {
         let {placeholder,classify} = this.props.navigation.state.params;
         let {historyLabels,searching,searchResult,keyword,loading} = this.state;
         return (
-            <View style={styles.wrapper}>
+            <ScrollView style={styles.wrapper}>
                 <View style={styles.searchBarWrapper}>
                     <View style={styles.textInputWrapper}>
                         <TextInput
                             style={styles.textInput}
-                            onChangeText={this._onChangeText}
+                            onChangeText={this.onChangeText}
                             placeholder={placeholder}
                             value={keyword}
                             clearButtonMode={"while-editing"}
@@ -55,7 +58,7 @@ class  MovieSearchPage extends Component {
 
                     </View>
 
-                    <TouchableOpacity onPress={this._goSearch} >
+                    <TouchableOpacity onPress={this.goSearch} >
                         <View style={styles.button}>
                             <Text style={styles.searchText}>搜索</Text>
                         </View>
@@ -63,47 +66,41 @@ class  MovieSearchPage extends Component {
                 </View>
                 {
                     searching ?
-                    <View style={styles.flatList}>
-                        {
-                            loading?
+                        (
+                            loading ?
                                 null
-                            :<FlatList
-                                keyExtractor={(item, index) => index.toString()}
-                                data ={searchResult}
-                                renderItem = {
-                                    ({item,index}) => this._renderItem(item,index)
-                                }
-                            />
-                        }
-                    </View>
+                            :<ListComponent direction={'vertical'} movieList={searchResult}/>
+                        )
                      :
-                    <ScrollView>
-                        <View style={styles.categoryHeader}>
-                            <View style={styles.categoryLine}/>
-                            <Text style={styles.categoryTitle}>历史搜索</Text>
+                        <View>
+                            <View style={style.boxDecoration}>
+                                <View style={styles.categoryHeader}>
+                                    <View style={styles.categoryLine}/>
+                                    <Text style={styles.categoryTitle}>历史搜索</Text>
+                                </View>
+                                <View style={styles.historyWrapper}>
+                                    {
+                                        historyLabels.length > 0 ?
+                                            historyLabels.map((item,index)=>{
+                                            return (
+                                                <TouchableOpacity key={'historyLabels'+index} style={styles.labelWrapper} onPress={()=>this.onHistorySearch(item)}>
+                                                    <Text style={styles.labelText}>{item}</Text>
+                                                </TouchableOpacity>
+                                            )
+                                        }) :
+                                            <Text style={styles.noData}>暂无搜索记录</Text>
+                                    }
+                                </View>
+                            </View>
+                            <RecommendComponent {...this.props} direction={'vertical'} classify={classify}/>
                         </View>
-                        <View style={styles.historyWrapper}>
-                            {
-                                historyLabels.map((item,index)=>{
-                                    return (
-                                        <TouchableOpacity onPress={e=>this._onHistorySearch(item)}>
-                                            <View key={'historyLabels'+index} style={styles.labelWrapper}>
-                                                <Text style={styles.labelText}>{item}</Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                    )
-                                })
-                            }
-                        </View>
-                        <RecommendComponent {...this.props} direction={'horizontal'} classify={classify}/>
-                    </ScrollView>
                 }
                 <Loading></Loading>
-            </View>
+            </ScrollView>
         )
     }
 
-    _renderItem=(item,index)=>{
+    renderItem=(item,index)=>{
         return (
             <TouchableOpacity key={"searchResult"+index} onPress={e=>this.goDetail(item)}>
                 <View  style={styles.categoryView}>
@@ -119,64 +116,63 @@ class  MovieSearchPage extends Component {
                 </View>
             </TouchableOpacity>
         )
-    }
+    };
 
-    _goSearch= async () => {
-        let kw = this.state.keyword || this.props.navigation.state.params.placeholder
+    goSearch= async () => {
+        if(this.state.loading)return ;
+        let kw = this.state.keyword || this.props.navigation.state.params.placeholder;
         let {historyLabels} = this.state;
         let index = historyLabels.findIndex((item) => {
-            return item == kw;
+            return item === kw;
         });
-        if (index != -1) {
+        if (index !== -1) {
             historyLabels.splice(index, 1)
         }
         historyLabels.unshift(kw);
-        historyLabels = historyLabels.slice(0,20)
+        historyLabels = historyLabels.slice(0,20);
         this.state.pageNum = 1;
-        await this._onSearch(kw);
+        await this.onSearch(kw);
         //等待请求完成再设置缓存
         this.setState({historyLabels, pageNum: 1});
         StorageUtil.set("historyLabels", this.state.historyLabels);
 
-    }
+    };
 
-    _onHistorySearch=(keyword)=>{
+    onHistorySearch=(keyword)=>{
         this.state.keyword = keyword;
         this.setState({keyword});
-        this._goSearch();
-    }
+        this.goSearch();
+    };
 
 
-    _onChangeText=(value)=>{
+    onChangeText=(value)=>{
         this.state.keyword = value;
         this.setState({keyword:value});
         if(this.state.searching){
             this.setState({searching:false})
         }
-    }
+    };
 
-    _onSearch=(kw)=>{
-        return new Promise((resolve)=>{
-            let {pageNum,pageSize} = this.state;
-            this.setState({loading:true});
-            Loading.show();
-            searchService({keyword:kw,pageNum,pageSize}).then((res)=>{
-                this.setState({
-                    searchResult:res.data,
-                    total:res.total,
-                    searching:true
-                })
-            }).finally(()=>{
-                this.setState({loading:false});
-                Loading.hide();
-                resolve()
-            });
-        })
+    onSearch=(kw)=>{
+        let {pageNum,pageSize} = this.state;
+        this.setState({loading:true});
+        Loading.show();
+        return searchService({keyword:kw,pageNum,pageSize}).then((res)=>{
+            this.setState({
+                searchResult:res.data,
+                total:res.total,
+                searching:true
+            })
+        }).finally(()=>{
+            this.setState({loading:false});
+            Loading.hide();
+            resolve()
+        });
 
-    }
+
+    };
 
     goDetail=(item)=>{
-        console.log(item)
         this.props.navigation.push('DetailPage',item)
     }
 }
@@ -190,12 +186,13 @@ export default  connect((state)=>{
 
 const styles = StyleSheet.create({
     wrapper:{
-        flex:1
+        flex:1,
+        ...style.pageStyle
     },
     searchBarWrapper:{
         flexDirection:"row",
-        padding:20,
-        alignItems:"center"
+        alignItems:"center",
+        ...style.boxDecoration
     },
     textInputWrapper:{
         flex:1,
@@ -203,6 +200,11 @@ const styles = StyleSheet.create({
         backgroundColor:"#ddd",
         flexDirection:"row",
         alignItems:"center"
+    },
+    noData:{
+      textAlign:'center',
+        width:'100%',
+        padding: size.containerPaddingSize * 2
     },
     textInput:{
         flex:1,
@@ -231,7 +233,6 @@ const styles = StyleSheet.create({
         display:"flex",
         alignItems:"center",
         flexDirection:'row',
-        margin:20,
     },
     categoryLine:{
         width:4,
@@ -243,9 +244,8 @@ const styles = StyleSheet.create({
         marginLeft:5
     },
     historyWrapper:{
+        marginTop:size.containerPaddingSize,
         flexDirection:"row",
-        paddingLeft:20,
-        paddingBottom:20,
         flexWrap:"wrap"
     },
     labelWrapper:{
@@ -260,10 +260,6 @@ const styles = StyleSheet.create({
     },
     labelText:{
         color:"#333"
-    },
-    flatList:{
-        flex:1,
-        padding:20
     },
     movieName:{
         fontSize:18

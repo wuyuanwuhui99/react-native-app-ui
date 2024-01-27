@@ -15,7 +15,7 @@ export default class  RecommendComponent extends Component {
     static propTypes={
         classify:PropTypes.string,
         direction:PropTypes.string,
-        title:PropTypes.title
+        title:PropTypes.string
     };
 
     //设置默认属性方法一
@@ -43,6 +43,6 @@ export default class  RecommendComponent extends Component {
 
     render(){
         let {recommendList} = this.state;
-        return <ListComponent {...this.props} movieList={recommendList}/>
+        return <ListComponent direction={this.props.direction} {...this.props} movieList={recommendList}/>
     }
 }

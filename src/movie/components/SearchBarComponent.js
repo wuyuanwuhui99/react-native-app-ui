@@ -16,12 +16,12 @@ export default class  SearchBarComponent extends Component {
      //类型检测方法一
      static propTypes={
         classify:PropTypes.string,
-    }
+    };
 
     //设置默认属性方法一
     static defaultProps={
         classify:""
-    }
+    };
 
     render(){
         let {keyword} = this.state;
@@ -43,7 +43,7 @@ export default class  SearchBarComponent extends Component {
     }
 
     goSearch=()=>{
-        this.props.navigation.push('SearchPage',{placeholder:this.state.keyword,classify:this.props.classify});
+        this.props.navigation.push('MovieSearchPage',{placeholder:this.state.keyword,classify:this.props.classify});
     }
 }
 

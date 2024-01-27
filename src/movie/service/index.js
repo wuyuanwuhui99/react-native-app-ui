@@ -81,7 +81,7 @@ export const getUserMsgService = async(userId)=>{
  * @date: 2020-8-15 22:29
  */
 export const searchService=({keyword="",pageName=1,pageSize=20})=>{
-    return HttpUtil.get(`${api.search}?keyword=${keyword}&pageNum=${pageName}&pageSize=${pageSize}`);
+    return HttpUtil.get(`${api.getSearchResult}?keyword=${keyword}&pageNum=${pageName}&pageSize=${pageSize}`);
 };
 
 /**

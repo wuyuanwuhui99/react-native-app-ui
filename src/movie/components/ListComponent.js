@@ -33,6 +33,7 @@ export default class  ListComponent extends Component {
 
     render(){
         let {movieList,title,direction} = this.props;
+        // let gridMovieList = new Array(Math.ceil(movieList.length / 3));
         return (
             movieList.length > 0
                 ? <View style={styles.titleWrapper}>
@@ -41,20 +42,29 @@ export default class  ListComponent extends Component {
                         : null
                     }
                     {
-                        direction == "horizontal" ?
+                        direction === "horizontal" ?
                             <FlatList
                                 style={styles.movieList}
                                 horizontal={true}
                                 data ={movieList}
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem = {
-                                    ({item,index}) => this._renderItem(item,index)
+                                    ({item,index}) => this.renderItem(item,index)
                                 }
                             />
-                            : <View style={styles.gridWrapper}>
+                            : <View>
                                 {
-                                    movieList.map((item,index)=>{
-                                        return this._renderItem(item,index);
+                                    new Array(Math.ceil(movieList.length / 3)).fill(0).map((gItem,gIndex)=>{
+                                        return (
+                                            <View style={styles.gridRow}>
+                                                {
+                                                    movieList.slice(gIndex*3,(gIndex+1) * 3).map((mItem,mIndex)=>{
+                                                        return this.renderItem(mItem,mIndex);
+                                                    })
+                                                }
+
+                                            </View>
+                                        )
                                     })
                                 }
                             </View>
@@ -64,12 +74,12 @@ export default class  ListComponent extends Component {
         )
     }
 
-    _renderItem=(item,index)=>{
+    renderItem=(item,index)=>{
         let {direction} = this.props;
         return (
-            <TouchableOpacity onPress={()=>this.goDetail(item)} key={"_renderItem"+index}>
-                <View key={"movieImg"+index} style={direction === 'horizontal' ? styles.movieItem : [styles.movieItemVertical,{marginTop: index>2? 20 : 0,marginRight:index%3==2?0:10}]}>
-                    <Image resizeMode='cover' style={styles.movieImg} source={{uri:item.localImg ? HOST + item.localImg :item.img}}/>
+            <TouchableOpacity onPress={()=>this.goDetail(item)} key={item.id}>
+                <View key={"movieImg"+index} style={direction === 'horizontal' ? styles.movieItem : [styles.movieItemVertical,{marginLeft:index === 0 ? 0 : size.containerPaddingSize}]}>
+                    <Image resizeMode='cover' style={direction === 'horizontal' ? styles.movieImg: styles.movieImgVertical} source={{uri:item.localImg ? HOST + item.localImg :item.img}}/>
                     <View style={styles.movieNameWrapper}><Text numberOfLines={1}>{item.movieName}</Text></View>
                 </View>
             </TouchableOpacity>
@@ -114,13 +124,19 @@ const styles = StyleSheet.create({
         borderRadius:size.middleRadiusSize,
         marginBottom:size.smallMarginSize
     },
+    movieImgVertical:{
+        borderRadius:size.middleRadiusSize,
+        marginBottom:size.smallMarginSize,
+        width:(width - size.containerPaddingSize * 6)/3,
+        height: (width - size.containerPaddingSize * 6)/3 * size.movieHeightSize / size.movieWidthSize
+    },
     movieNameWrapper:{
         width:size.movieWidthSize,
         overflow:"hidden",
         alignItems:"center"
     },
     movieItemVertical:{
-        width:(width - size.containerPaddingSize * 2)/3,
+        width:(width - size.containerPaddingSize * 6)/3,
         justifyContent:"center",
         display:"flex",
         alignItems:"center",
@@ -135,10 +151,9 @@ const styles = StyleSheet.create({
     movieList:{
         marginTop: size.containerPaddingSize
     },
-    gridWrapper:{
-        display: "flex",
-        flexDirection:"row",
-        flexWrap: 'wrap',
-        ...style.boxDecoration
-    },
+    gridRow:{
+        display:'flex',
+        flexDirection: 'row',
+        marginTop:size.containerPaddingSize
+    }
 });
