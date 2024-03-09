@@ -117,6 +117,15 @@ class  MovieMyPage extends Component {
         })
     };
 
+    /**
+     * @description: 跳转到音乐首页
+     * @date: 2023-12-27 22:38
+     * @author wuwenqiang
+     */
+    goMusicHome=()=>{
+        this.props.navigation.push('MusicHome')
+    };
+
     render() {
         let {historyList,userMsg,favoriteList,viewList,showHistoryList,showFavoriteList,showViewList} = this.state;
         let {userData={}} = this.props;
@@ -222,11 +231,12 @@ class  MovieMyPage extends Component {
                         <Text style={styles.pannelTitle}>电影圈</Text>
                         <Image style={styles.arrowIcon} source={arrow}/>
                     </View>
-                    <View style={styles.panelBox}>
+
+                    <TouchableOpacity style={styles.panelBox} onPress={()=>this.goMusicHome()}>
                         <Image style={styles.panelIcon} source={require("../../static/image/icon_music.png")}/>
                         <Text style={styles.pannelTitle}>音乐</Text>
                         <Image style={styles.arrowIcon} source={arrow}/>
-                    </View>
+                    </TouchableOpacity>
                     <View style={{...styles.panelBox,...styles.lastPanelBox}}>
                         <Image style={styles.panelIcon} source={require("../../static/image/icon_app.png")}/>
                         <Text style={styles.pannelTitle}>小程序</Text>
